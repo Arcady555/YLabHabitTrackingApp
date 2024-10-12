@@ -48,7 +48,7 @@ public class Utility {
      */
     public static LocalDate setPlannedNextPerform(Habit habit) {
         LocalDate date = habit.getPlannedPrevPerform();
-        while (date.isAfter(LocalDate.now())) {
+        while (date.isBefore(LocalDate.now())) {
             date = date.plus(habit.getFrequency());
         }
         return date;

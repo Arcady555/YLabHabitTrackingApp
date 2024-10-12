@@ -1,6 +1,7 @@
 package ru.parfenov.homework_1.server.pages.client;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import ru.parfenov.homework_1.server.model.Habit;
 import ru.parfenov.homework_1.server.model.User;
 import ru.parfenov.homework_1.server.pages.UserMenuPage;
@@ -15,6 +16,7 @@ import java.util.Optional;
 
 import static ru.parfenov.homework_1.server.utility.Utility.setPlannedNextPerform;
 
+@Slf4j
 @RequiredArgsConstructor
 public class UpdateHabitPage implements UserMenuPage {
     private final User user;

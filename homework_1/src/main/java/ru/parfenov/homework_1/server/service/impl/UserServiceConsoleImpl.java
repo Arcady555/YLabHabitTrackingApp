@@ -1,6 +1,7 @@
 package ru.parfenov.homework_1.server.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import ru.parfenov.homework_1.server.enums.user.Role;
 import ru.parfenov.homework_1.server.model.Habit;
 import ru.parfenov.homework_1.server.model.User;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @RequiredArgsConstructor
 public class UserServiceConsoleImpl implements UserService {
     private final UserStore store;

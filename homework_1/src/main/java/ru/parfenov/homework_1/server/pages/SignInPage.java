@@ -1,6 +1,7 @@
 package ru.parfenov.homework_1.server.pages;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import ru.parfenov.homework_1.server.enums.user.Role;
 import ru.parfenov.homework_1.server.model.User;
 import ru.parfenov.homework_1.server.service.HabitService;
@@ -12,6 +13,7 @@ import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.Optional;
 
+@Slf4j
 @RequiredArgsConstructor
 public class SignInPage {
     private final UserService userService;

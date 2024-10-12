@@ -1,6 +1,7 @@
 package ru.parfenov.homework_1.server.pages.client;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import ru.parfenov.homework_1.server.model.Habit;
 import ru.parfenov.homework_1.server.model.User;
 import ru.parfenov.homework_1.server.pages.UserMenuPage;
@@ -11,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Optional;
 
+@Slf4j
 @RequiredArgsConstructor
 public class PerformHabitPage implements UserMenuPage {
     private final User user;

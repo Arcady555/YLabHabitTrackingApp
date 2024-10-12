@@ -1,5 +1,6 @@
 package ru.parfenov.homework_1.server.store.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import ru.parfenov.homework_1.server.enums.user.Role;
 import ru.parfenov.homework_1.server.model.Habit;
 import ru.parfenov.homework_1.server.model.User;
@@ -11,8 +12,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 public class UserStoreConsoleImpl implements UserStore {
-    private static int userId = 1;
+    private static int userId = 0;
     private final Map<Integer, User> userMap = new HashMap<>();
 
     public UserStoreConsoleImpl() {

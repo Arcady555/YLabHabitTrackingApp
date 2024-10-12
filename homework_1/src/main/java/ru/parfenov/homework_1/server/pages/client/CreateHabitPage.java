@@ -1,6 +1,7 @@
 package ru.parfenov.homework_1.server.pages.client;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import ru.parfenov.homework_1.server.model.User;
 import ru.parfenov.homework_1.server.pages.UserMenuPage;
 import ru.parfenov.homework_1.server.service.HabitService;
@@ -11,8 +12,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.Period;
-import java.time.temporal.ChronoUnit;
+import java.time.format.DateTimeParseException;
 
+@Slf4j
 @RequiredArgsConstructor
 public class CreateHabitPage implements UserMenuPage {
     private final User user;
@@ -20,7 +22,7 @@ public class CreateHabitPage implements UserMenuPage {
     BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
     @Override
-    public void run() throws IOException, InterruptedException {
+    public void run() throws IOException {
         System.out.println("Will the habit useful for You?  0 - YES,  another key - NO");
         String answerUseful = reader.readLine();
         boolean usefulness = answerUseful.equals("0");
@@ -31,9 +33,14 @@ public class CreateHabitPage implements UserMenuPage {
         System.out.println("Enter description of habit");
         String description = reader.readLine();
 
-        System.out.println("Enter date of first perform");
-        String firstPerformStr = reader.readLine();
-        LocalDate firstPerform = LocalDate.parse(firstPerformStr);
+        System.out.println("Enter date of first perform(format 2024-10-15)");
+        LocalDate firstPerform = LocalDate.now();
+        try {
+            firstPerform = LocalDate.parse(reader.readLine());
+        } catch (DateTimeParseException e) {
+            System.out.println("Please enter correct format!");
+            run();
+        }
         if (firstPerform.isBefore(LocalDate.now())) {
             System.out.println("Please enter correct!");
             run();
@@ -47,6 +54,5 @@ public class CreateHabitPage implements UserMenuPage {
         System.out.println(habitService
                 .create(user, usefulness, name, description, LocalDate.now(), firstPerform, frequency)
         );
-        Thread.sleep(5000);
     }
 }

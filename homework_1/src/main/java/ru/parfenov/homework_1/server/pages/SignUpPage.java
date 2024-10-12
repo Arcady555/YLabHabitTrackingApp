@@ -1,6 +1,7 @@
 package ru.parfenov.homework_1.server.pages;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import ru.parfenov.homework_1.server.service.UserService;
 
 import java.io.BufferedReader;
@@ -9,6 +10,7 @@ import java.io.InputStreamReader;
 
 import static ru.parfenov.homework_1.server.utility.Utility.validationEmail;
 
+@Slf4j
 @RequiredArgsConstructor
 public class SignUpPage {
     private final UserService service;
@@ -44,6 +46,5 @@ public class SignUpPage {
                 System.out.println(service.findByEmail(email).get());
             }
         }
-        //Thread.sleep(5000);
     }
 }

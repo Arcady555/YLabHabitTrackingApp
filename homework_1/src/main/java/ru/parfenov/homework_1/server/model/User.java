@@ -39,7 +39,7 @@ public class User {
                 "id='" + id + '\'' +
                 "email='" + email + '\'' +
                 ", password='" + password + '\'' +
-                ", password='" + name + '\'' +
+                ", name='" + name + '\'' +
                 ", role=" + role +
                 ", blocked=" + blocked +
                 ", habits=" + habitsList +

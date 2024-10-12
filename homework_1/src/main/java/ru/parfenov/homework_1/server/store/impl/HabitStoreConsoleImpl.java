@@ -1,5 +1,6 @@
 package ru.parfenov.homework_1.server.store.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import ru.parfenov.homework_1.server.model.Habit;
 import ru.parfenov.homework_1.server.model.User;
 import ru.parfenov.homework_1.server.store.HabitStore;
@@ -9,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 public class HabitStoreConsoleImpl implements HabitStore {
     private static long habitId = 0L;
     private final Map<Long, Habit> habitMap = new HashMap<>();

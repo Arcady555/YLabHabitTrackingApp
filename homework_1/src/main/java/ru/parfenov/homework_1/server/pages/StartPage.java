@@ -1,6 +1,7 @@
 package ru.parfenov.homework_1.server.pages;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import ru.parfenov.homework_1.server.service.HabitService;
 import ru.parfenov.homework_1.server.service.UserService;
 
@@ -12,6 +13,7 @@ import java.io.InputStreamReader;
  * Выводит текст - меню для пользователя.
  * Войти в приложение можно или через регистрацию, или через ввод своего email
  */
+@Slf4j
 @RequiredArgsConstructor
 public class StartPage {
     private final UserService userService;
@@ -23,7 +25,7 @@ public class StartPage {
                 Please enter:
                 1 - registration
                 or
-                2 - enter id
+                2 - enter email
                 """);
         String enter = reader.readLine();
         switch (enter) {

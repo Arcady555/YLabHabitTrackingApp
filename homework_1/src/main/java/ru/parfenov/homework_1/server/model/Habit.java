@@ -24,4 +24,23 @@ public class Habit {
     private LocalDate lastRealPerform;
     private Period frequency;
     private int performsAmount;
+
+    @Override
+    public String toString() {
+        return "Habit{" +
+                "id=" + id +
+                ", user=" + user.getEmail() +
+                ", usefulness=" + usefulness +
+                ", active=" + active +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", dateOfCreate=" + dateOfCreate +
+                ", plannedFirstPerform=" + plannedFirstPerform +
+                ", plannedPrevPerform=" + plannedPrevPerform +
+                ", plannedNextPerform=" + plannedNextPerform +
+                ", lastRealPerform=" + lastRealPerform +
+                ", frequency=" + frequency +
+                ", performsAmount=" + performsAmount +
+                '}';
+    }
 }
