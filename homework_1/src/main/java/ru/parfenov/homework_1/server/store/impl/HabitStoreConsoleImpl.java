@@ -24,6 +24,11 @@ public class HabitStoreConsoleImpl implements HabitStore {
     }
 
     @Override
+    public Habit delete(long habitId) {
+        return habitMap.remove(habitId);
+    }
+
+    @Override
     public List<Habit> findByUser(User user) {
         List<Habit> result = new ArrayList<>();
         for (Habit habit : habitMap.values()) {
@@ -45,15 +50,5 @@ public class HabitStoreConsoleImpl implements HabitStore {
     @Override
     public Habit delete(Habit user) {
         return null;
-    }
-
-    @Override
-    public List<Habit> findAll() {
-        return List.of();
-    }
-
-    @Override
-    public List<Habit> findByParameters(int id) {
-        return List.of();
     }
 }

@@ -27,7 +27,8 @@ public class PerformHabitPage implements UserMenuPage {
         try {
             habitId = Long.parseLong(answerId);
         } catch (NumberFormatException e) {
-            System.out.println("Please enter the NUMBER!" + System.lineSeparator());
+            log.error("Please enter the NUMBER!!", e);
+            System.out.println(System.lineSeparator());
             run();
         }
         Optional<Habit> optionalHabit = habitService.findById(habitId);

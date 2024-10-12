@@ -25,6 +25,7 @@ public class ClientPage implements UserMenuPage {
                 new PerformHabitPage(user, habitService),
                 new CreateHabitPage(user, habitService),
                 new YourHabitListPage(user, habitService),
+                new YourHabitListByParametersPage(user, habitService),
                 new UpdateHabitPage(user, habitService),
                 new HabitsStatisticPage(user, habitService)
         );
@@ -35,15 +36,16 @@ public class ClientPage implements UserMenuPage {
                     1 - perform habit
                     2 - create habit
                     3 - view all Your habits
-                    4 - Your habit: view, edit or delete
-                    5 - view statistic
-                    6 - exit
+                    4 - find Your habits by parameters
+                    5 - Your habit: view, edit or delete
+                    6 - view statistic
+                    7 - exit
                     """);
             String answerStr = reader.readLine();
             UserMenuPage clientMenuPage;
             try {
                 int answer = Integer.parseInt(answerStr);
-                if (answer == 6) return;
+                if (answer == 7) return;
                 clientMenuPage = clientMenuList.get(answer);
                 if (clientMenuPage == null) {
                     System.out.println("Please enter correct" + System.lineSeparator());
@@ -52,7 +54,8 @@ public class ClientPage implements UserMenuPage {
                 assert clientMenuPage != null;
                 clientMenuPage.run();
             } catch (NumberFormatException e) {
-                System.out.println("Please enter the NUMBER!" + System.lineSeparator());
+                log.error("Please enter the NUMBER!!", e);
+                System.out.println(System.lineSeparator());
                 run();
             }
         }

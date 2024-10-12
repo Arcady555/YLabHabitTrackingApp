@@ -42,8 +42,7 @@ public class SignUpPage {
                 System.out.println("No password!");
                 run();
             } else {
-                service.createByReg(email, password, name);
-                System.out.println(service.findByEmail(email).get());
+                System.out.println(service.createByReg(email, password, name));
             }
         }
     }

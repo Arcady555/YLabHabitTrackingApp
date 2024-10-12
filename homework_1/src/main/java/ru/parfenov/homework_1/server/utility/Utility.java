@@ -1,5 +1,6 @@
 package ru.parfenov.homework_1.server.utility;
 
+import lombok.extern.slf4j.Slf4j;
 import ru.parfenov.homework_1.server.model.Habit;
 
 import java.io.BufferedReader;
@@ -7,6 +8,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Period;
 
+@Slf4j
 public class Utility {
     public static String adminEmail = "admin@habit.ru";
     public static String adminPassword = "123";
@@ -18,13 +20,18 @@ public class Utility {
         return true;
     }
 
-    public static Period enterFrequency(BufferedReader reader) {
-        int daysAmount = 0;
+    public static Period enterFrequency(BufferedReader reader) throws IOException {
+        String frequencyStr = reader.readLine();
+        return getPeriodFromString(frequencyStr);
+    }
+
+    public static Period getPeriodFromString(String str) {
+        int daysAmount;
         Period frequency = null;
         try {
-            daysAmount = Integer.parseInt(reader.readLine());
-        } catch (NumberFormatException | IOException e) {
-            System.out.println("Please enter the NUMBER!");
+            daysAmount = Integer.parseInt(str);
+        } catch (NumberFormatException e) {
+            log.error("Please enter the NUMBER!!", e);
             return frequency;
         }
         if (daysAmount < 1 || daysAmount > 90) {

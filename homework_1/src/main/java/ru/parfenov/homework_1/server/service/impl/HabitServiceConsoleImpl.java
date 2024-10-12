@@ -10,10 +10,13 @@ import ru.parfenov.homework_1.server.utility.Utility;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static ru.parfenov.homework_1.server.utility.Utility.setPlannedNextPerform;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -35,6 +38,7 @@ public class HabitServiceConsoleImpl implements HabitService {
                 user,
                 usefulness,
                 true,
+                1,
                 name,
                 description,
                 dateOfCreate,
@@ -45,8 +49,12 @@ public class HabitServiceConsoleImpl implements HabitService {
                 frequency,
                 0
         );
-        habitStore.create(habit);
-        return habit;
+        return habitStore.create(habit);
+    }
+
+    @Override
+    public boolean delete(long habitId) {
+        return habitStore.delete(habitId) != null;
     }
 
     @Override
@@ -63,6 +71,12 @@ public class HabitServiceConsoleImpl implements HabitService {
         boolean result = false;
         if (!validationPerform(habit)) {
             LocalDate date = LocalDate.now();
+
+            int streaksAmount = habit.getStreaksAmount();
+            if (date.isAfter(habit.getPlannedNextPerform())) {
+                streaksAmount++;
+                habit.setStreaksAmount(streaksAmount);
+            }
             habit.setLastRealPerform(date);
 
             habit.setPlannedPrevPerform(habit.getPlannedNextPerform());
@@ -77,17 +91,20 @@ public class HabitServiceConsoleImpl implements HabitService {
             int newPerformsAmount = ++performsAmount;
             habit.setPerformsAmount(newPerformsAmount);
 
-            habitStore.update(habit);
-            result = habitStore.findById(habit.getId()).getLastRealPerform().isEqual(date)
-                    &&
-                    habitStore.findById(habit.getId()).getPerformsAmount() == newPerformsAmount;
+            result = habitStore.update(habit) == habit;
         }
         return  result;
     }
 
     @Override
-    public Habit update(Habit habit) {
-        return null;
+    public boolean update(Habit habit, boolean usefulness, boolean active, String name, String description, Period frequency) {
+        habit.setUseful(usefulness);
+        habit.setActive(active);
+        habit.setName(name);
+        habit.setDescription(description);
+        habit.setFrequency(frequency);
+        habit.setPlannedNextPerform(setPlannedNextPerform(habit));
+        return habitStore.update(habit) == habit;
     }
 
     @Override
@@ -149,8 +166,12 @@ public class HabitServiceConsoleImpl implements HabitService {
                     ) {
                         int period = (int) ChronoUnit.DAYS.between(dateFrom, dateTo);
                         int hundredPercent = period / habit.getFrequency().getDays();
-                        float realPercent = (float) hundredPercent / habit.getPerformsAmount();
-                        result = "From " + dateFrom + " to " + dateTo + ", the habit was completed by " + realPercent;
+                        if (habit.getPerformsAmount() != 0) {
+                            float realPercent = (float) hundredPercent / habit.getPerformsAmount();
+                            result = "From " + dateFrom + " to " + dateTo + ", the habit was completed by " + realPercent;
+                        } else {
+                            result = "The habit is no completed yet";
+                        }
                     } else {
                         result = "Not correct date!";
                     }
@@ -159,6 +180,24 @@ public class HabitServiceConsoleImpl implements HabitService {
                 }
             } else {
                 result = "The habit is not exist. No statistic";
+            }
+        }
+        return result;
+    }
+
+    public List<Habit> findByParameters(
+            User user,
+            String usefulness,
+            String active,
+            String  name,
+            String description,
+            String dateOfCreate,
+            String frequency
+    ) {
+        List<Habit> result = new ArrayList<>();
+        for (Habit habit : findByUser(user)) {
+            if (select (habit, usefulness, active, name, description, dateOfCreate, frequency)) {
+                result.add(habit);
             }
         }
         return result;
@@ -176,6 +215,43 @@ public class HabitServiceConsoleImpl implements HabitService {
                         habit.getPlannedFirstPerform() :
                         habit.getPlannedPrevPerform();
         return LocalDate.now().isAfter(date) || LocalDate.now().isEqual(date);
+    }
 
+    private boolean select(Habit habit,
+                           String usefulness,
+                           String active,
+                           String  name,
+                           String description,
+                           String dateOfCreate,
+                           String frequency) {
+        boolean check1 = usefulness.isEmpty() ||
+                (usefulness.equals("true") && habit.isUseful()) ||
+                (usefulness.equals("false") && !habit.isUseful());
+        boolean check2 = active.isEmpty() ||
+                (active.equals("true") && habit.isActive()) ||
+                (active.equals("false") && !habit.isActive());
+        boolean check3 = name.isEmpty() || habit.getName().contains(name);
+        boolean check4 = description.isEmpty() || habit.getDescription().contains(description);
+        boolean check5 = dateOfCreate.isEmpty() || checkDateOfCreate(habit.getDateOfCreate(), dateOfCreate);
+        boolean check6 = frequency.isEmpty() || checkFrequency(habit.getFrequency(), frequency);
+
+        return check1 && check2 && check3 && check4 && check5 && check6;
+    }
+
+    private boolean checkDateOfCreate(LocalDate habitDateOfCreate, String dateOfCreateStr) {
+        boolean result = false;
+        LocalDate localDate;
+            try {
+                localDate = LocalDate.parse(dateOfCreateStr);
+                result = localDate.isEqual(habitDateOfCreate);
+            } catch (DateTimeParseException e) {
+                log.error("Please enter correct format!", e);
+            }
+        return result;
+    }
+
+    private boolean checkFrequency(Period habitPeriod, String periodStr) {
+        Period period = Utility.getPeriodFromString(periodStr);
+        return habitPeriod.equals(period);
     }
 }

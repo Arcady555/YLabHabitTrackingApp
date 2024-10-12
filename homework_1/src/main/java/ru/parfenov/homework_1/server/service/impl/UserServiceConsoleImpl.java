@@ -3,7 +3,6 @@ package ru.parfenov.homework_1.server.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.parfenov.homework_1.server.enums.user.Role;
-import ru.parfenov.homework_1.server.model.Habit;
 import ru.parfenov.homework_1.server.model.User;
 import ru.parfenov.homework_1.server.service.UserService;
 import ru.parfenov.homework_1.server.store.UserStore;
@@ -18,10 +17,9 @@ public class UserServiceConsoleImpl implements UserService {
     private final UserStore store;
 
     @Override
-    public void createByReg(String email, String password, String name) {
-        List<Habit> list = new ArrayList<>();
-        User user = new User(0, email, password, name, Role.CLIENT, false, list);
-        store.create(user);
+    public User createByReg(String email, String password, String name) {
+        User user = new User(0, email, password, name, Role.CLIENT, false);
+        return store.create(user);
     }
 
     @Override
@@ -56,7 +54,24 @@ public class UserServiceConsoleImpl implements UserService {
     }
 
     @Override
-    public List<User> findByParameters(Role role, String name, String block, String habit) {
-        return store.findByParameters(role, name, block, habit);
+    public List<User> findByParameters(String role, String name, String block, String habit) {
+        List<User> result = new ArrayList<>();
+        for (User user : findAll()) {
+            if (select (user, role, name, block, habit)) {
+                result.add(user);
+            }
+        }
+        return result;
+    }
+
+    private boolean select(User user, String roleStr, String name, String block, String habit) {
+        Role role = roleStr.equals("ADMIN") ? Role.ADMIN : (roleStr.equals("CLIENT") ? Role.CLIENT : null);
+        boolean check1 = role == null || user.getRole().equals(role);
+        boolean check2 = name.isEmpty() || user.getName().contains(name);
+        boolean check3 = block.isEmpty() ||
+                (block.equals("true") && user.isBlocked()) ||
+                (block.equals("false") && !user.isBlocked());
+
+        return check1 && check2 && check3;
     }
 }

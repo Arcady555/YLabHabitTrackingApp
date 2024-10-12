@@ -38,7 +38,8 @@ public class CreateHabitPage implements UserMenuPage {
         try {
             firstPerform = LocalDate.parse(reader.readLine());
         } catch (DateTimeParseException e) {
-            System.out.println("Please enter correct format!");
+            log.error("Please enter correct format!", e);
+            System.out.println(System.lineSeparator());
             run();
         }
         if (firstPerform.isBefore(LocalDate.now())) {

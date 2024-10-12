@@ -2,7 +2,6 @@ package ru.parfenov.homework_1.server.pages.admin;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.parfenov.homework_1.server.enums.user.Role;
 import ru.parfenov.homework_1.server.model.User;
 import ru.parfenov.homework_1.server.pages.UserMenuPage;
 import ru.parfenov.homework_1.server.service.UserService;
@@ -19,18 +18,9 @@ public class UsersByParametersPage implements UserMenuPage {
 
     @Override
     public void run() throws IOException {
-        System.out.println("Enter user role 0 - ADMIN,  1 - CLIENT");
-        String answer = reader.readLine();
-        Role role;
-        switch (answer) {
-            case "0" -> role = Role.ADMIN;
-            case "2" -> role = Role.CLIENT;
-            default -> {
-                role = null;
-                System.out.println("Please enter correct" + System.lineSeparator());
-                run();
-            }
-        }
+        System.out.println("Enter user role 0 - ADMIN,  1 - CLIENT, another key - not parameter");
+        String answerRole = reader.readLine();
+        String role = answerRole.equals("0") ? "ADMIN" : (answerRole.equals("1") ? "CLIENT" : null);
 
         System.out.println("Enter user name");
         String name = reader.readLine();

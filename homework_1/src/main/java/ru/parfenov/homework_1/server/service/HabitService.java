@@ -19,13 +19,25 @@ public interface HabitService {
             Period frequency
     );
 
+    boolean delete(long habitId);
+
     Optional<Habit> findById(long id);
 
     List<Habit> findByUser(User user);
 
+    List<Habit> findByParameters(
+            User user,
+            String usefulness,
+            String active,
+            String name,
+            String description,
+            String dateOfCreate,
+            String frequency
+    );
+
     boolean perform(Habit habit);
 
-    Habit update(Habit habit);
+    boolean update(Habit habit, boolean usefulness, boolean active, String name, String description, Period frequency);
 
     String remind(long habitId);
 

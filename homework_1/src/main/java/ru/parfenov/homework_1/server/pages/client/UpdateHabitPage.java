@@ -14,8 +14,6 @@ import java.io.InputStreamReader;
 import java.time.Period;
 import java.util.Optional;
 
-import static ru.parfenov.homework_1.server.utility.Utility.setPlannedNextPerform;
-
 @Slf4j
 @RequiredArgsConstructor
 public class UpdateHabitPage implements UserMenuPage {
@@ -31,7 +29,8 @@ public class UpdateHabitPage implements UserMenuPage {
         try {
             habitId = Long.parseLong(answerId);
         } catch (NumberFormatException e) {
-            System.out.println("Please enter the NUMBER!" + System.lineSeparator());
+            log.error("Please enter the NUMBER!!", e);
+            System.out.println(System.lineSeparator());
             run();
         }
         Optional<Habit> optionalHabit = habitService.findById(habitId);
@@ -41,40 +40,44 @@ public class UpdateHabitPage implements UserMenuPage {
                 run();
             } else {
                 Habit habit = optionalHabit.get();
+                System.out.println(habit + System.lineSeparator());
+
+                System.out.println("Do You wont to delete the habit? 0 - YES,  another key - NO");
+                if (reader.readLine().equals("0")) {
+                    System.out.println(habitService.delete(habitId) ? "The habit is deleted!" : "The habit is NOT deleted!");
+                    run();
+                }
 
                 System.out.println("Do you want to change usefulness?" + System.lineSeparator() + "0 - yes, another key - no");
-                String answerUseful = reader.readLine();
-                if (answerUseful.equals("0")) {
-                    habit.setUsefulness(!habit.isUsefulness());
-                }
+                boolean usefulness = reader.readLine().equals("0") != habit.isUseful();
 
                 System.out.println("Do you want to change active?" + System.lineSeparator() + "0 - yes, another key - no");
-                String answerActive = reader.readLine();
-                if (answerActive.equals("0")) {
-                    habit.setActive(!habit.isActive());
-                }
+                boolean active = reader.readLine().equals("0") != habit.isActive();
 
                 System.out.println("Do you want to change name?" + System.lineSeparator() + "0 - yes, another key - no");
-                String answerName = reader.readLine();
-                if (answerActive.equals("0")) {
-                    habit.setName(answerName);
+                String name = habit.getName();
+                if (reader.readLine().equals("0")) {
+                    System.out.println("Enter new name");
+                    name = reader.readLine();
                 }
 
                 System.out.println("Do you want to change description?" + System.lineSeparator() + "0 - yes, another key - no");
-                String answerDescription = reader.readLine();
-                if (answerDescription.equals("0")) {
-                    habit.setDescription(answerDescription);
+                String description = habit.getDescription();
+                if (reader.readLine().equals("0")) {
+                    System.out.println("Enter new description");
+                    description = reader.readLine();
                 }
 
                 System.out.println("Do you want to change frequency?" + System.lineSeparator() + "0 - yes, another key - no");
-                String answerFrequency = reader.readLine();
-                if (answerFrequency.equals("0")) {
-                    Period frequency = Utility.enterFrequency(reader);
+                Period frequency = habit.getFrequency();
+                if (reader.readLine().equals("0")) {
+                    System.out.println("Enter new frequency");
+                    frequency = Utility.enterFrequency(reader);
                     if (frequency == null) run();
-                    habit.setFrequency(frequency);
-                    habit.setPlannedNextPerform(setPlannedNextPerform(habit));
                 }
-                System.out.println(habitService.update(habit));
+
+                System.out.println(habitService.update(habit, usefulness, active, name, description, frequency) ?
+                        "The habit is updated!" : "The habit is NOT updated!");
             }
         } else {
             System.out.println("Habit is not exist!" + System.lineSeparator());

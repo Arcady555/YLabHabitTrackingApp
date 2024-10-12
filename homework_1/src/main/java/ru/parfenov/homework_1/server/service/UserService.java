@@ -1,13 +1,12 @@
 package ru.parfenov.homework_1.server.service;
 
-import ru.parfenov.homework_1.server.enums.user.Role;
 import ru.parfenov.homework_1.server.model.User;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
-    void createByReg(String email, String password, String name);
+    User createByReg(String email, String password, String name);
 
     Optional<User> findByEmail(String email);
 
@@ -21,5 +20,13 @@ public interface UserService {
 
     User update(User user);
 
-    List<User> findByParameters(Role role, String name, String block, String habit);
+    /**
+     * Метод предполагает поиск по параметрам (всем или некоторые можно не указать)
+     * @param role
+     * @param name
+     * @param block
+     * @param habit
+     * @return
+     */
+    List<User> findByParameters(String role, String name, String block, String habit);
 }

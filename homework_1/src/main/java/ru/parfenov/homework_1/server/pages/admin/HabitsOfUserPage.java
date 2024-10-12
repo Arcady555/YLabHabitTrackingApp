@@ -31,5 +31,19 @@ public class HabitsOfUserPage implements UserMenuPage {
                 System.out.println(habit);
             }
         }
+        System.out.println("Do You wont to delete some habit? 0 - YES,  another key - NO");
+        if (reader.readLine().equals("0")) {
+            System.out.println("Enter habit ID");
+            String answerId = reader.readLine();
+            long habitId;
+            try {
+                habitId = Long.parseLong(answerId);
+                System.out.println(habitService.delete(habitId) ? "The habit is deleted!" : "The habit is NOT deleted!");
+            } catch (NumberFormatException e) {
+                log.error("Please enter the NUMBER!", e);
+                System.out.println(System.lineSeparator());
+                run();
+            }
+        }
     }
 }

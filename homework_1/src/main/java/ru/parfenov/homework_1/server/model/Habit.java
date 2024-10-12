@@ -13,8 +13,9 @@ import java.time.LocalDate;
 public class Habit {
     private long id;
     private User user;
-    private boolean usefulness;
+    private boolean useful;
     private boolean active;
+    private int streaksAmount;
     private String name;
     private String description;
     private LocalDate dateOfCreate;
@@ -30,8 +31,9 @@ public class Habit {
         return "Habit{" +
                 "id=" + id +
                 ", user=" + user.getEmail() +
-                ", usefulness=" + usefulness +
+                ", usefulness=" + useful +
                 ", active=" + active +
+                ", streaksAmount=" + streaksAmount +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", dateOfCreate=" + dateOfCreate +
