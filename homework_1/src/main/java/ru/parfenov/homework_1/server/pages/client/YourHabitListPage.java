@@ -9,6 +9,9 @@ import ru.parfenov.homework_1.server.service.HabitService;
 
 import java.io.IOException;
 
+/**
+ * Страница вывода списка всех привычек юзера
+ */
 @Slf4j
 @RequiredArgsConstructor
 public class YourHabitListPage implements UserMenuPage {

@@ -12,6 +12,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Optional;
 
+/**
+ * Страница, где клиент после ввода ID привычки сообщил приложению, что он совершил текущее выполнение
+ */
 @Slf4j
 @RequiredArgsConstructor
 public class PerformHabitPage implements UserMenuPage {

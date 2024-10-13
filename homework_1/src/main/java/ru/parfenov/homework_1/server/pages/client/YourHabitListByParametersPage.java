@@ -11,6 +11,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+/**
+ * Страница, где клиент может вывести отсортированный по параметрам список своих привычек,
+ * если их уже стало так много
+ */
 @Slf4j
 @RequiredArgsConstructor
 public class YourHabitListByParametersPage implements UserMenuPage {

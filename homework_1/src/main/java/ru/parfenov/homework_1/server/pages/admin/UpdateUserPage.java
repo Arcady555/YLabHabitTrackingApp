@@ -13,6 +13,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Optional;
 
+/**
+ * Страница, где админ может подкорректировать данные по юзеру
+ * (кроме емайл, ведь это уникальный параметр, как идентификатор)
+ */
 @Slf4j
 @RequiredArgsConstructor
 public class UpdateUserPage implements UserMenuPage {

@@ -13,6 +13,11 @@ import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
+/**
+ *  Страница, где клиент может увидеть статистику по выполнению всех своих привычек
+ *  Любой период(входящий в рамки). Достаточно ввести 2 даты - от и до
+ *  Если какая-либо из привычек в рамки не влезает - там так и напишут
+ */
 @Slf4j
 @RequiredArgsConstructor
 public class HabitsStatisticPage implements UserMenuPage {

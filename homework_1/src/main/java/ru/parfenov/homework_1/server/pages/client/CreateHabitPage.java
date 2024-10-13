@@ -14,6 +14,9 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeParseException;
 
+/**
+ * Страница, где клиент создаст свою привычку
+ */
 @Slf4j
 @RequiredArgsConstructor
 public class CreateHabitPage implements UserMenuPage {

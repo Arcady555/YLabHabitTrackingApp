@@ -13,6 +13,9 @@ import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * Страница, где зарегистрированные пользователи заходят в приложение.
+ */
 @Slf4j
 @RequiredArgsConstructor
 public class SignInPage {

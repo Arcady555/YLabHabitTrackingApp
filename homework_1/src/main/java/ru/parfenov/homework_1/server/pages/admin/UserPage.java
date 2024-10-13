@@ -11,6 +11,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Optional;
 
+/**
+ * Страница вывода инфы по юзеру
+ */
 @Slf4j
 @RequiredArgsConstructor
 public class UserPage implements UserMenuPage {

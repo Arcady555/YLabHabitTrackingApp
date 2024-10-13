@@ -16,11 +16,29 @@ import ru.parfenov.homework_1.server.enums.user.Role;
 @Getter
 @Setter
 public class User {
+    /**
+     * Уникальный идентификатор юзера. Даётся хранилищем
+     */
     private int id;
+    /**
+     * Емайл юзера, заявленный при регистрации. Должен быть уникальным для хранилища
+     */
     private String email;
+    /**
+     * Пароль, который придумал юзер при регистрации
+     */
     private String password;
+    /**
+     * Имя, которое дал себе юзер при регистрации. Может не давать
+     */
     private String name;
+    /**
+     * Роль юзера. Всегда -- Client. Если только админ её не поменяет.
+     */
     private Role role;
+    /**
+     * И админ сможет юзера ещё и заблокировать. А пока пусть будет false)))
+     */
     private boolean blocked;
 
     @Override

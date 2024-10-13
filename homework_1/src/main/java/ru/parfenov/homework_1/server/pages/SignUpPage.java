@@ -10,6 +10,9 @@ import java.io.InputStreamReader;
 
 import static ru.parfenov.homework_1.server.utility.Utility.validationEmail;
 
+/**
+ * Страница регистрации пользователя.
+ */
 @Slf4j
 @RequiredArgsConstructor
 public class SignUpPage {

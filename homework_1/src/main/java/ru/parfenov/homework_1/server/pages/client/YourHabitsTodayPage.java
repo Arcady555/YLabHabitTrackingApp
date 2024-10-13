@@ -9,6 +9,9 @@ import ru.parfenov.homework_1.server.service.HabitService;
 
 import java.io.IOException;
 
+/**
+ * Зайдя на эту страницу, клиент увидит все свои привычки, которые необходимо выполнить сегодня
+ */
 @Slf4j
 @RequiredArgsConstructor
 public class YourHabitsTodayPage implements UserMenuPage {
@@ -17,7 +20,7 @@ public class YourHabitsTodayPage implements UserMenuPage {
     @Override
     public void run() throws IOException, InterruptedException {
         System.out.println("Hello dear!!!!" + System.lineSeparator() + "It's your habits today :");
-        for (Habit habit : habitService.findByUser(user)) {
+        for (Habit habit : habitService.todayPerforms(user)) {
             System.out.println(habit);
             System.out.println(habitService.remind(habit.getId()));
         }

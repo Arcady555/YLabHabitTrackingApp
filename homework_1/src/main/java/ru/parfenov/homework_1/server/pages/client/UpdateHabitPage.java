@@ -14,6 +14,9 @@ import java.io.InputStreamReader;
 import java.time.Period;
 import java.util.Optional;
 
+/**
+ * Страница, где клиент может изменить данные по своей привычке
+ */
 @Slf4j
 @RequiredArgsConstructor
 public class UpdateHabitPage implements UserMenuPage {

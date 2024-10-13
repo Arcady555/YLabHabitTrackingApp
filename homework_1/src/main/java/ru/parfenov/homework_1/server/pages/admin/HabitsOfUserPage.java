@@ -13,6 +13,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Optional;
 
+/**
+ * Страница, на которой админ может вывести список всех привычек нужного юзера.
+ * При желании, может удалить некоторые привычки (если есть для этого причины(законодательство или политика сайта) )
+ */
 @Slf4j
 @RequiredArgsConstructor
 public class HabitsOfUserPage implements UserMenuPage {

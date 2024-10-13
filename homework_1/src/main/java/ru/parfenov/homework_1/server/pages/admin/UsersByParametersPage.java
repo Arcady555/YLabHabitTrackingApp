@@ -10,6 +10,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+/**
+ * Страница, где админ может вывести список юзеров, введя параметры, под которые они подпадают
+ */
 @Slf4j
 @RequiredArgsConstructor
 public class UsersByParametersPage implements UserMenuPage {

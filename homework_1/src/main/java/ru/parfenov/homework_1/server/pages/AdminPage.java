@@ -11,6 +11,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 
+/**
+ * Страница, на которую попадает админ после идентификации. Даёт доступ к его меню,
+ * которое открывает соответствующие страницы
+ */
 @Slf4j
 @RequiredArgsConstructor
 public class AdminPage implements UserMenuPage {
