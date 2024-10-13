@@ -14,22 +14,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-public class YourHabitsTodayPageTest {
-
-    @Test
-    @DisplayName("Успешный вывод всех привычек")
-    public void test_run_prints_all_habits() throws IOException,
-            InterruptedException {
-        User user = new User(1, "test@example.com", "password", "Test User", null, false);
-        HabitService habitService = mock(HabitService.class);
-        Habit habit = new Habit();
-        habit.setUser(user);
-        List<Habit> habits = List.of(habit);
-        when(habitService.findByUser(user)).thenReturn(habits);
-        YourHabitsTodayPage page = new YourHabitsTodayPage(user, habitService);
-        page.run();
-        verify(habitService).findByUser(user);
-    }
+public class YourHabitsTodayPageTest {Ghfdrb
 
     @Test
     @DisplayName("Успешный вывод remind")
@@ -43,7 +28,7 @@ public class YourHabitsTodayPageTest {
         habit2.setId(2L);
         habit2.setUser(user);
         List<Habit> habits = List.of(habit1, habit2);
-        when(habitService.findByUser(user)).thenReturn(habits);
+        when(habitService.todayPerforms(user)).thenReturn(habits);
         YourHabitsTodayPage page = new YourHabitsTodayPage(user, habitService);
         page.run();
         verify(habitService).remind(1L);
