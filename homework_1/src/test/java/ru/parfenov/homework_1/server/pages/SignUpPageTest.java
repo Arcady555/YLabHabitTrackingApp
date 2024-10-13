@@ -14,9 +14,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 public class SignUpPageTest {
-    UserService mockService;
-    SignUpPage signUpPage;
-    BufferedReader mockReader;
+    public UserService mockService;
+    public SignUpPage signUpPage;
+    public BufferedReader mockReader;
 
     @BeforeEach
     public void init() {
