@@ -21,6 +21,8 @@ public interface HabitService {
 
     boolean delete(long habitId);
 
+    void deleteByUser(User user);
+
     Optional<Habit> findById(long id);
 
     List<Habit> findByUser(User user);

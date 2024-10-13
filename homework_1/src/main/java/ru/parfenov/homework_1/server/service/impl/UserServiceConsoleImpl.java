@@ -54,17 +54,17 @@ public class UserServiceConsoleImpl implements UserService {
     }
 
     @Override
-    public List<User> findByParameters(String role, String name, String block, String habit) {
+    public List<User> findByParameters(String role, String name, String block) {
         List<User> result = new ArrayList<>();
         for (User user : findAll()) {
-            if (select (user, role, name, block, habit)) {
+            if (select (user, role, name, block)) {
                 result.add(user);
             }
         }
         return result;
     }
 
-    private boolean select(User user, String roleStr, String name, String block, String habit) {
+    private boolean select(User user, String roleStr, String name, String block) {
         Role role = roleStr.equals("ADMIN") ? Role.ADMIN : (roleStr.equals("CLIENT") ? Role.CLIENT : null);
         boolean check1 = role == null || user.getRole().equals(role);
         boolean check2 = name.isEmpty() || user.getName().contains(name);

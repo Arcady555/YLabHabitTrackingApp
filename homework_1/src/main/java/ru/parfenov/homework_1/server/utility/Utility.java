@@ -53,11 +53,11 @@ public class Utility {
      * @param habit Модель ПРИВЫЧКА
      * @return дату, которую можно засетить
      */
-    public static LocalDate setPlannedNextPerform(Habit habit) {
-        LocalDate date = habit.getPlannedPrevPerform();
+    public static void setPlannedNextPerform(Habit habit) {
+        LocalDate date = habit.getPlannedPrevPerform() != null ? habit.getPlannedPrevPerform() : habit.getPlannedFirstPerform();
         while (date.isBefore(LocalDate.now())) {
             date = date.plus(habit.getFrequency());
         }
-        return date;
+        habit.setPlannedNextPerform(date);
     }
 }

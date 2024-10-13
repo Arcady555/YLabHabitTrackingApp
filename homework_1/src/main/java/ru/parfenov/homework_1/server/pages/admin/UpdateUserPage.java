@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import ru.parfenov.homework_1.server.enums.user.Role;
 import ru.parfenov.homework_1.server.model.User;
 import ru.parfenov.homework_1.server.pages.UserMenuPage;
+import ru.parfenov.homework_1.server.service.HabitService;
 import ru.parfenov.homework_1.server.service.UserService;
 
 import java.io.BufferedReader;
@@ -15,21 +16,23 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 public class UpdateUserPage implements UserMenuPage {
-    private final UserService service;
+    private final UserService userService;
+    private final HabitService habitService;
     BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
     @Override
     public void run() throws IOException, InterruptedException {
         System.out.println("Enter the email of the user");
         String email = reader.readLine();
-        Optional<User> userOptional = service.findByEmail(email);
+        Optional<User> userOptional = userService.findByEmail(email);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             System.out.println(user);
             System.out.println("Do you want to delete the user?" + System.lineSeparator() + "0 - yes, another key - no");
             String answerDelete = reader.readLine();
             if (answerDelete.equals("0")) {
-                System.out.println(service.delete(user) ? "User is deleted!" : "User is NOT deleted!");
+                habitService.deleteByUser(user);
+                System.out.println(userService.delete(user) ? "User is deleted!" : "User is NOT deleted!");
             } else {
                 System.out.println(
                         "Do you want to blocK the user?" +
@@ -68,7 +71,7 @@ public class UpdateUserPage implements UserMenuPage {
                     String newPassword = reader.readLine();
                     user.setPassword(newPassword);
                 }
-                System.out.println(service.update(user));
+                System.out.println(userService.update(user));
                 Thread.sleep(5000);
             }
         } else {

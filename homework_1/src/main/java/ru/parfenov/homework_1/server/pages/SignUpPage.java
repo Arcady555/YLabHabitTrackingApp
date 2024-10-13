@@ -17,11 +17,12 @@ public class SignUpPage {
     BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
     public void run() throws IOException {
-        System.out.println("Enter Your name");
+        System.out.println("Enter Your name (or exit)");
         String name = reader.readLine();
         if (name.isEmpty()) {
            name = "no name";
         }
+        if (name.equals("exit")) return;
         System.out.println("Enter Your email");
         String email = reader.readLine();
         if (email.isEmpty()) {

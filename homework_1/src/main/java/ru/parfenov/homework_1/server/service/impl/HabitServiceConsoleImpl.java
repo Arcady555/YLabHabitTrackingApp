@@ -58,6 +58,16 @@ public class HabitServiceConsoleImpl implements HabitService {
     }
 
     @Override
+    public void deleteByUser(User user) {
+        List<Habit> list = findByUser(user);
+        for (Habit habit : list) {
+            if (habit.getUser().equals(user)) {
+                delete(habit.getId());
+            }
+        }
+    }
+
+    @Override
     public Optional<Habit> findById(long id) {
         return Optional.ofNullable(habitStore.findById(id));
     }
@@ -85,7 +95,7 @@ public class HabitServiceConsoleImpl implements HabitService {
              * придётся накрутить несколько периодов, чтобы выставить корректный срок следующего выполнения
              * (после сегодняшней даты)
              */
-            habit.setPlannedNextPerform(Utility.setPlannedNextPerform(habit));
+            setPlannedNextPerform(habit);
 
             int performsAmount = habit.getPerformsAmount();
             int newPerformsAmount = ++performsAmount;
@@ -103,7 +113,7 @@ public class HabitServiceConsoleImpl implements HabitService {
         habit.setName(name);
         habit.setDescription(description);
         habit.setFrequency(frequency);
-        habit.setPlannedNextPerform(setPlannedNextPerform(habit));
+        setPlannedNextPerform(habit);
         return habitStore.update(habit) == habit;
     }
 

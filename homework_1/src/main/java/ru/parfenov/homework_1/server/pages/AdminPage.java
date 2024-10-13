@@ -24,7 +24,7 @@ public class AdminPage implements UserMenuPage {
                 new AllUsersPage(userService),
                 new UserPage(userService),
                 new UsersByParametersPage(userService),
-                new UpdateUserPage(userService),
+                new UpdateUserPage(userService, habitService),
                 new HabitsOfUserPage(userService, habitService)
         );
         while (true) {

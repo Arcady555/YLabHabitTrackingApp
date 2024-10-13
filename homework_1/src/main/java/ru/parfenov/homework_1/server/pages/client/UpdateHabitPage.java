@@ -78,6 +78,7 @@ public class UpdateHabitPage implements UserMenuPage {
 
                 System.out.println(habitService.update(habit, usefulness, active, name, description, frequency) ?
                         "The habit is updated!" : "The habit is NOT updated!");
+                System.out.println(habitService.findById(habitId));
             }
         } else {
             System.out.println("Habit is not exist!" + System.lineSeparator());

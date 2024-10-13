@@ -25,8 +25,7 @@ public interface UserService {
      * @param role
      * @param name
      * @param block
-     * @param habit
      * @return
      */
-    List<User> findByParameters(String role, String name, String block, String habit);
+    List<User> findByParameters(String role, String name, String block);
 }

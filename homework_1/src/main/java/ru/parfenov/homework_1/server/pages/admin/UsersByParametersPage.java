@@ -31,10 +31,7 @@ public class UsersByParametersPage implements UserMenuPage {
         String answerBlock = reader.readLine();
         String block = answerBlock.equals("0") ? "true" : (answerBlock.equals("1") ? "false" : "");
 
-        System.out.println("Enter habit (part of the text in the name or description)");
-        String habit = reader.readLine();
-
-        for (User user : service.findByParameters(role, name, block, habit)) {
+        for (User user : service.findByParameters(role, name, block)) {
             System.out.println(user);
         }
     }

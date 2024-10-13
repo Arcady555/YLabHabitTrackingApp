@@ -22,8 +22,9 @@ public class SignInPage {
     BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
     public void run() throws IOException, InterruptedException {
-        System.out.println("Enter email");
+        System.out.println("Enter email(or exit)");
         String email = reader.readLine();
+        if (email.equals("exit")) return;
         System.out.println("Enter password");
         String password = reader.readLine();
         Optional<User> userOptional = userService.findByEmailAndPassword(email, password);
