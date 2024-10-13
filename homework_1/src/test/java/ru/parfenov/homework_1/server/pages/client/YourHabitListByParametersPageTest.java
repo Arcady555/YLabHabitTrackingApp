@@ -1,6 +1,5 @@
 package ru.parfenov.homework_1.server.pages.client;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.parfenov.homework_1.server.enums.user.Role;
@@ -21,23 +20,15 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 public class YourHabitListByParametersPageTest {
-    User user;
-    HabitService habitService;
-    YourHabitListByParametersPage page;
-    BufferedReader reader;
-
-    @BeforeEach
-    public void init() {
-        user = new User(1, "test@example.com", "password", "Test User", Role.CLIENT, false);
-        habitService = mock(HabitService.class);
-        page = new YourHabitListByParametersPage(user, habitService);
-        reader = mock(BufferedReader.class);
-    }
 
     @Test
     @DisplayName("Успешный вывод всех привычек")
     public void test_valid_parameters_return_habits() throws
             IOException, InterruptedException {
+        User user = new User(1, "test@example.com", "password", "Test User", Role.CLIENT, false);
+        HabitService habitService = mock(HabitService.class);
+        YourHabitListByParametersPage page = new YourHabitListByParametersPage(user, habitService);
+        BufferedReader reader = mock(BufferedReader.class);
         page.reader = reader;
 
         when(reader.readLine()).thenReturn("0", "0", "exercise",
@@ -60,6 +51,10 @@ public class YourHabitListByParametersPageTest {
     @DisplayName("Ввод 0 или 1 для полезности и активности")
     public void test_usefulness_and_active_input() throws IOException,
             InterruptedException {
+        User user = new User(1, "test@example.com", "password", "Test User", Role.CLIENT, false);
+        HabitService habitService = mock(HabitService.class);
+        YourHabitListByParametersPage page = new YourHabitListByParametersPage(user, habitService);
+        BufferedReader reader = mock(BufferedReader.class);
         page.reader = reader;
 
         when(reader.readLine()).thenReturn("0", "1", "", "", "", "");
@@ -74,6 +69,10 @@ public class YourHabitListByParametersPageTest {
     @DisplayName("Возврат привычек по параметрам")
     public void test_habit_service_returns_matching_habits() throws
             IOException, InterruptedException {
+        User user = new User(1, "test@example.com", "password", "Test User", Role.CLIENT, false);
+        HabitService habitService = mock(HabitService.class);
+        YourHabitListByParametersPage page = new YourHabitListByParametersPage(user, habitService);
+        BufferedReader reader = mock(BufferedReader.class);
         page.reader = reader;
 
         when(reader.readLine()).thenReturn("0", "0", "exercise", "", "", "");
@@ -93,6 +92,10 @@ public class YourHabitListByParametersPageTest {
     @DisplayName("Вывод с remind")
     public void test_print_habit_with_reminder() throws IOException,
             InterruptedException {
+        User user = new User(1, "test@example.com", "password", "Test User", Role.CLIENT, false);
+        HabitService habitService = mock(HabitService.class);
+        YourHabitListByParametersPage page = new YourHabitListByParametersPage(user, habitService);
+        BufferedReader reader = mock(BufferedReader.class);
         page.reader = reader;
 
         when(reader.readLine()).thenReturn("0", "0", "", "", "", "");
@@ -113,6 +116,10 @@ public class YourHabitListByParametersPageTest {
     @DisplayName("Не валидные параметры")
     public void test_invalid_usefulness_and_active_input() throws
             IOException, InterruptedException {
+        User user = new User(1, "test@example.com", "password", "Test User", Role.CLIENT, false);
+        HabitService habitService = mock(HabitService.class);
+        YourHabitListByParametersPage page = new YourHabitListByParametersPage(user, habitService);
+        BufferedReader reader = mock(BufferedReader.class);
         page.reader = reader;
 
         when(reader.readLine()).thenReturn("invalid", "invalid", "",
@@ -127,6 +134,10 @@ public class YourHabitListByParametersPageTest {
     @DisplayName("ввод пустых строк")
     public void test_empty_string_inputs() throws IOException,
             InterruptedException {
+        User user = new User(1, "test@example.com", "password", "Test User", Role.CLIENT, false);
+        HabitService habitService = mock(HabitService.class);
+        YourHabitListByParametersPage page = new YourHabitListByParametersPage(user, habitService);
+        BufferedReader reader = mock(BufferedReader.class);
         page.reader = reader;
 
         when(reader.readLine()).thenReturn("0", "0", "", "", "", "");
@@ -140,6 +151,10 @@ public class YourHabitListByParametersPageTest {
     @Test
     @DisplayName("Выброс IO Exception")
     public void test_io_exception_during_input_reading() throws IOException {
+        User user = new User(1, "test@example.com", "password", "Test User", Role.CLIENT, false);
+        HabitService habitService = mock(HabitService.class);
+        YourHabitListByParametersPage page = new YourHabitListByParametersPage(user, habitService);
+        BufferedReader reader = mock(BufferedReader.class);
         page.reader = reader;
 
         when(reader.readLine()).thenThrow(new IOException("IO Exception"));

@@ -14,20 +14,13 @@ import java.util.List;
 import static org.mockito.Mockito.*;
 
 public class UsersByParametersPageTest {
-    UserService mockService;
-    UsersByParametersPage page;
-    BufferedReader mockReader;
-
-    @BeforeEach
-    public void init() {
-        mockService = mock(UserService.class);
-        page = new UsersByParametersPage(mockService);
-        mockReader = mock(BufferedReader.class);
-    }
 
     @Test
     @DisplayName("Поиск по роли")
     public void test_correct_role_input() throws IOException {
+        UserService mockService = mock(UserService.class);
+        UsersByParametersPage page = new UsersByParametersPage(mockService);
+        BufferedReader mockReader = mock(BufferedReader.class);
         page.reader = mockReader;
 
         when(mockReader.readLine()).thenReturn("0", "", "");
@@ -43,6 +36,9 @@ public class UsersByParametersPageTest {
     @Test
     @DisplayName("Поиск по имени")
     public void test_correct_name_input() throws IOException {
+        UserService mockService = mock(UserService.class);
+        UsersByParametersPage page = new UsersByParametersPage(mockService);
+        BufferedReader mockReader = mock(BufferedReader.class);
         page.reader = mockReader;
 
         when(mockReader.readLine()).thenReturn("", "John", "");
@@ -58,6 +54,9 @@ public class UsersByParametersPageTest {
     @Test
     @DisplayName("Поиск по статусу")
     public void test_correct_block_status_input() throws IOException {
+        UserService mockService = mock(UserService.class);
+        UsersByParametersPage page = new UsersByParametersPage(mockService);
+        BufferedReader mockReader = mock(BufferedReader.class);
         page.reader = mockReader;
 
         when(mockReader.readLine()).thenReturn("", "", "0");
@@ -73,6 +72,9 @@ public class UsersByParametersPageTest {
     @Test
     @DisplayName("Поиск по имени и блоку")
     public void test_empty_name_input() throws IOException {
+        UserService mockService = mock(UserService.class);
+        UsersByParametersPage page = new UsersByParametersPage(mockService);
+        BufferedReader mockReader = mock(BufferedReader.class);
         page.reader = mockReader;
 
         when(mockReader.readLine()).thenReturn("0", "", "1");
@@ -92,6 +94,9 @@ public class UsersByParametersPageTest {
     @Test
     @DisplayName("Поиск по всеми 3м параметрам")
     public void test_empty_habit_input() throws IOException {
+        UserService mockService = mock(UserService.class);
+        UsersByParametersPage page = new UsersByParametersPage(mockService);
+        BufferedReader mockReader = mock(BufferedReader.class);
         page.reader = mockReader;
 
         when(mockReader.readLine()).thenReturn("1", "John", "0");

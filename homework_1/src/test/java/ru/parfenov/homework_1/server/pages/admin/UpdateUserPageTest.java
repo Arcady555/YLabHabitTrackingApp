@@ -1,6 +1,5 @@
 package ru.parfenov.homework_1.server.pages.admin;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.parfenov.homework_1.server.enums.user.Role;
@@ -17,23 +16,15 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class UpdateUserPageTest {
-    UserService service;
-    HabitService habitService;
-    UpdateUserPage updateUserPage;
-    BufferedReader reader;
-
-    @BeforeEach
-    public void init() {
-        service = mock(UserService.class);
-        habitService = mock(HabitService.class);
-        updateUserPage = new UpdateUserPage(service, habitService);
-        reader = mock(BufferedReader.class);
-    }
 
     @Test
     @DisplayName("Изменение блока юзера")
     public void test_block_user_confirmation() throws IOException,
             InterruptedException {
+        UserService service = mock(UserService.class);
+        HabitService habitService = mock(HabitService.class);
+        UpdateUserPage updateUserPage = new UpdateUserPage(service, habitService);
+        BufferedReader reader = mock(BufferedReader.class);
         User user = new User(1, "test@example.com", "password", "Test User", Role.CLIENT, false);
 
         when(service.findByEmail("test@example.com")).thenReturn(Optional.of(user));
@@ -49,6 +40,10 @@ public class UpdateUserPageTest {
     @DisplayName("Изменение роли юзера")
     public void test_change_user_role_to_admin() throws IOException,
             InterruptedException {
+        UserService service = mock(UserService.class);
+        HabitService habitService = mock(HabitService.class);
+        UpdateUserPage updateUserPage = new UpdateUserPage(service, habitService);
+        BufferedReader reader = mock(BufferedReader.class);
         User user = new User(1, "test@example.com", "password", "Test User", Role.CLIENT, false);
 
         when(service.findByEmail("test@example.com")).thenReturn(Optional.of(user));
@@ -64,6 +59,10 @@ public class UpdateUserPageTest {
     @DisplayName("Неправильный ввод")
     public void test_handle_invalid_input() throws IOException,
             InterruptedException {
+        UserService service = mock(UserService.class);
+        HabitService habitService = mock(HabitService.class);
+        UpdateUserPage updateUserPage = new UpdateUserPage(service, habitService);
+        BufferedReader reader = mock(BufferedReader.class);
         User user = new User(1, "test@example.com", "password", "Test User", Role.CLIENT, false);
 
         when(service.findByEmail("test@example.com")).thenReturn(Optional.of(user));
@@ -79,6 +78,10 @@ public class UpdateUserPageTest {
     @DisplayName("Ничего не изменили")
     public void test_no_changes_made_to_user() throws IOException,
             InterruptedException {
+        UserService service = mock(UserService.class);
+        HabitService habitService = mock(HabitService.class);
+        UpdateUserPage updateUserPage = new UpdateUserPage(service, habitService);
+        BufferedReader reader = mock(BufferedReader.class);
         User user = new User(1, "test@example.com", "password", "Test User", Role.CLIENT, false);
 
         when(service.findByEmail("test@example.com")).thenReturn(Optional.of(user));
@@ -95,6 +98,10 @@ public class UpdateUserPageTest {
     @Test
     @DisplayName("Проброс IOException")
     public void test_handle_io_exception() throws IOException {
+        UserService service = mock(UserService.class);
+        HabitService habitService = mock(HabitService.class);
+        UpdateUserPage updateUserPage = new UpdateUserPage(service, habitService);
+        BufferedReader reader = mock(BufferedReader.class);
 
         when(reader.readLine()).thenThrow(new IOException());
 

@@ -18,23 +18,15 @@ import java.util.Optional;
 import static org.mockito.Mockito.*;
 
 public class HabitsOfUserPageTest {
-    UserService userService;
-    HabitService habitService;
-    BufferedReader reader;
-    HabitsOfUserPage page;
-
-    @BeforeEach
-    public void init() {
-        userService = mock(UserService.class);
-        habitService = mock(HabitService.class);
-        reader = mock(BufferedReader.class);
-        page = new HabitsOfUserPage(userService, habitService);
-    }
 
     @Test
     @DisplayName("Найден юзер по емайл и вывод его списка привычек")
     public void test_user_found_and_habits_listed() throws
             IOException, InterruptedException {
+        UserService userService = mock(UserService.class);
+        HabitService habitService = mock(HabitService.class);
+        BufferedReader reader = mock(BufferedReader.class);
+        HabitsOfUserPage page = new HabitsOfUserPage(userService, habitService);
         page.reader = reader;
 
         User user = new User(1, "test@example.com", "password", "Test User", null, false);
@@ -53,6 +45,10 @@ public class HabitsOfUserPageTest {
     @DisplayName("Удаление 1ой привычки у юзера")
     public void test_user_deletes_habit_successfully() throws
             IOException, InterruptedException {
+        UserService userService = mock(UserService.class);
+        HabitService habitService = mock(HabitService.class);
+        BufferedReader reader = mock(BufferedReader.class);
+        HabitsOfUserPage page = new HabitsOfUserPage(userService, habitService);
         page.reader = reader;
 
         User user = new User(1, "test@example.com", "password", "Test User", null, false);
@@ -70,6 +66,10 @@ public class HabitsOfUserPageTest {
     @DisplayName("Юзер ввел валидный ID привычки для удаления.")
     public void test_valid_habit_id_for_deletion() throws IOException,
             InterruptedException {
+        UserService userService = mock(UserService.class);
+        HabitService habitService = mock(HabitService.class);
+        BufferedReader reader = mock(BufferedReader.class);
+        HabitsOfUserPage page = new HabitsOfUserPage(userService, habitService);
         page.reader = reader;
 
         User user = new User(1, "test@example.com", "password", "Test User", null, false);
@@ -87,6 +87,10 @@ public class HabitsOfUserPageTest {
     @DisplayName(" Емайл не найден")
     public void test_user_email_not_found() throws IOException,
             InterruptedException {
+        UserService userService = mock(UserService.class);
+        HabitService habitService = mock(HabitService.class);
+        BufferedReader reader = mock(BufferedReader.class);
+        HabitsOfUserPage page = new HabitsOfUserPage(userService, habitService);
         page.reader = reader;
 
         when(reader.readLine()).thenReturn("unknown@example.com");
@@ -101,6 +105,10 @@ public class HabitsOfUserPageTest {
     @DisplayName("Ввод пустой строки вместо  ID привычки")
     public void test_empty_habit_id_input() throws IOException,
             InterruptedException {
+        UserService userService = mock(UserService.class);
+        HabitService habitService = mock(HabitService.class);
+        BufferedReader reader = mock(BufferedReader.class);
+        HabitsOfUserPage page = new HabitsOfUserPage(userService, habitService);
         page.reader = reader;
         User user = new User(1, "test@example.com", "password", "Test User", null, false);
 
