@@ -1,5 +1,6 @@
 package ru.parfenov.homework_1.server.pages.client;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.parfenov.homework_1.server.enums.user.Role;
@@ -20,11 +21,18 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 public class YourHabitListByParametersPageTest {
-    User user = new User(1, "test@example.com", "password", "Test User", Role.CLIENT, false);
-    HabitService habitService = mock(HabitService.class);
-    YourHabitListByParametersPage page = new
-            YourHabitListByParametersPage(user, habitService);
-    BufferedReader reader = mock(BufferedReader.class);
+    User user;
+    HabitService habitService;
+    YourHabitListByParametersPage page;
+    BufferedReader reader;
+
+    @BeforeEach
+    public void init() {
+        user = new User(1, "test@example.com", "password", "Test User", Role.CLIENT, false);
+        habitService = mock(HabitService.class);
+        page = new YourHabitListByParametersPage(user, habitService);
+        reader = mock(BufferedReader.class);
+    }
 
     @Test
     @DisplayName("Успешный вывод всех привычек")

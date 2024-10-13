@@ -1,5 +1,6 @@
 package ru.parfenov.homework_1.server.pages.client;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.parfenov.homework_1.server.model.Habit;
@@ -14,9 +15,14 @@ import java.util.List;
 import static org.mockito.Mockito.*;
 
 public class YourHabitListPageTest {
-    User user = new User(1, "test@example.com", "password", "Test User", null, false);
-    HabitService habitService = mock(HabitService.class);
+    User user;
+    HabitService habitService;
 
+    @BeforeEach
+    public void init() {
+        user = new User(1, "test@example.com", "password", "Test User", null, false);
+        habitService = mock(HabitService.class);
+    }
 
     @Test
     @DisplayName("Успешный вывод всех привычек")

@@ -1,5 +1,6 @@
 package ru.parfenov.homework_1.server.pages.admin;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.parfenov.homework_1.server.model.Habit;
@@ -17,10 +18,18 @@ import java.util.Optional;
 import static org.mockito.Mockito.*;
 
 public class HabitsOfUserPageTest {
-    UserService userService = mock(UserService.class);
-    HabitService habitService = mock(HabitService.class);
-    BufferedReader reader = mock(BufferedReader.class);
-    HabitsOfUserPage page = new HabitsOfUserPage(userService, habitService);
+    UserService userService;
+    HabitService habitService;
+    BufferedReader reader;
+    HabitsOfUserPage page;
+
+    @BeforeEach
+    public void init() {
+        userService = mock(UserService.class);
+        habitService = mock(HabitService.class);
+        reader = mock(BufferedReader.class);
+        page = new HabitsOfUserPage(userService, habitService);
+    }
 
     @Test
     @DisplayName("Найден юзер по емайл и вывод его списка привычек")

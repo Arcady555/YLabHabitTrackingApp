@@ -1,7 +1,9 @@
 package ru.parfenov.homework_1.server.pages.client;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
 import ru.parfenov.homework_1.server.model.Habit;
 import ru.parfenov.homework_1.server.model.User;
 import ru.parfenov.homework_1.server.service.HabitService;
@@ -13,8 +15,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class YourHabitsTodayPageTest {
-    User user = new User(1, "test@example.com", "password", "Test User", null, false);
-    HabitService habitService = mock(HabitService.class);
+    User user;
+    HabitService habitService;
+
+    @BeforeEach
+    public void init() {
+        user = new User(1, "test@example.com", "password", "Test User", null, false);
+        habitService = mock(HabitService.class);
+    }
 
     @Test
     @DisplayName("Успешный вывод всех привычек")

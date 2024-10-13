@@ -1,5 +1,6 @@
 package ru.parfenov.homework_1.server.pages.client;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.parfenov.homework_1.server.model.User;
@@ -12,10 +13,19 @@ import java.util.List;
 import static org.mockito.Mockito.*;
 
 public class HabitsStatisticPageTest {
-    User user = new User(1, "test@example.com", "password", "Test User", null, false);
-    HabitService habitService = mock(HabitService.class);
-    HabitsStatisticPage page = new HabitsStatisticPage(user, habitService);
-    BufferedReader reader = mock(BufferedReader.class);
+    User user;
+    HabitService habitService;
+    HabitsStatisticPage page;
+    BufferedReader reader;
+
+    @BeforeEach
+    public void init() {
+        user = new User(1, "test@example.com", "password", "Test User", null, false);
+        habitService = mock(HabitService.class);
+        page = new HabitsStatisticPage(user, habitService);
+        reader = mock(BufferedReader.class);
+    }
+
 
     @Test
     @DisplayName("Ввод дат")

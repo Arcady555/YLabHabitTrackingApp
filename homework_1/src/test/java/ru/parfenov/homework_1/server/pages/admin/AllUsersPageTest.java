@@ -1,5 +1,6 @@
 package ru.parfenov.homework_1.server.pages.admin;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.parfenov.homework_1.server.enums.user.Role;
@@ -13,7 +14,12 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class AllUsersPageTest {
-    UserService mockService = mock(UserService.class);
+    UserService mockService;
+
+    @BeforeEach
+    public void init() {
+        mockService = mock(UserService.class);
+    }
 
     @Test
     @DisplayName("Корректный вывод")

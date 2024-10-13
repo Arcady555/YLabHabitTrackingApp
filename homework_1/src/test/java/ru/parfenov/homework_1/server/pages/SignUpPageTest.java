@@ -1,5 +1,6 @@
 package ru.parfenov.homework_1.server.pages;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.parfenov.homework_1.server.model.User;
@@ -13,9 +14,16 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 public class SignUpPageTest {
-    UserService mockService = mock(UserService.class);
-    SignUpPage signUpPage = new SignUpPage(mockService);
-    BufferedReader mockReader = mock(BufferedReader.class);
+    UserService mockService;
+    SignUpPage signUpPage;
+    BufferedReader mockReader;
+
+    @BeforeEach
+    public void init() {
+        mockService = mock(UserService.class);
+        signUpPage = new SignUpPage(mockService);
+        mockReader = mock(BufferedReader.class);
+    }
 
     @Test
     @DisplayName("Успешная регистрация юзера")

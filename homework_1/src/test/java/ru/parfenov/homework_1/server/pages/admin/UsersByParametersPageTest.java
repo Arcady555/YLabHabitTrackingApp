@@ -1,5 +1,6 @@
 package ru.parfenov.homework_1.server.pages.admin;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.parfenov.homework_1.server.enums.user.Role;
@@ -13,9 +14,16 @@ import java.util.List;
 import static org.mockito.Mockito.*;
 
 public class UsersByParametersPageTest {
-    UserService mockService = mock(UserService.class);
-    UsersByParametersPage page = new UsersByParametersPage(mockService);
-    BufferedReader mockReader = mock(BufferedReader.class);
+    UserService mockService;
+    UsersByParametersPage page;
+    BufferedReader mockReader;
+
+    @BeforeEach
+    public void init() {
+        mockService = mock(UserService.class);
+        page = new UsersByParametersPage(mockService);
+        mockReader = mock(BufferedReader.class);
+    }
 
     @Test
     @DisplayName("Поиск по роли")

@@ -1,5 +1,6 @@
 package ru.parfenov.homework_1.server.pages.admin;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.parfenov.homework_1.server.enums.user.Role;
@@ -16,10 +17,18 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class UpdateUserPageTest {
-    UserService service = mock(UserService.class);
-    HabitService habitService = mock(HabitService.class);
-    UpdateUserPage updateUserPage = new UpdateUserPage(service, habitService);
-    BufferedReader reader = mock(BufferedReader.class);
+    UserService service;
+    HabitService habitService;
+    UpdateUserPage updateUserPage;
+    BufferedReader reader;
+
+    @BeforeEach
+    public void init() {
+        service = mock(UserService.class);
+        habitService = mock(HabitService.class);
+        updateUserPage = new UpdateUserPage(service, habitService);
+        reader = mock(BufferedReader.class);
+    }
 
     @Test
     @DisplayName("Изменение блока юзера")

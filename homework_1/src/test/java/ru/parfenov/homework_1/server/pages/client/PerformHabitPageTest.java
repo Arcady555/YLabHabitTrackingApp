@@ -1,7 +1,9 @@
 package ru.parfenov.homework_1.server.pages.client;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import ru.parfenov.homework_1.server.enums.user.Role;
 import ru.parfenov.homework_1.server.model.Habit;
 import ru.parfenov.homework_1.server.model.User;
 import ru.parfenov.homework_1.server.service.HabitService;
@@ -16,12 +18,18 @@ import java.util.Optional;
 import static org.mockito.Mockito.*;
 
 public class PerformHabitPageTest {
-    User user = new User(1, "user@example.com", "password",
-            "User", null, false);
-    HabitService habitService = mock(HabitService.class);
-    Habit habit = new Habit(1, user, true, true, 0, "Habit",
-            "Description", LocalDate.now(), LocalDate.now(), LocalDate.now(),
-            LocalDate.now(), LocalDate.now(), Period.ofDays(1), 0);
+    User user;
+    HabitService habitService;
+    Habit habit;
+
+    @BeforeEach
+    public void init() {
+        user = new User(1, "user@example.com", "password", "User", null, false);
+        habitService = mock(HabitService.class);
+        habit = new Habit(1, user, true, true, 0, "Habit",
+                "Description", LocalDate.now(), LocalDate.now(), LocalDate.now(),
+                LocalDate.now(), LocalDate.now(), Period.ofDays(1), 0);
+    }
 
     @Test
     @DisplayName("Успешное выполнение привычки с валидным ID")

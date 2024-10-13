@@ -1,5 +1,6 @@
 package ru.parfenov.homework_1.server.pages.admin;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.parfenov.homework_1.server.model.User;
@@ -13,9 +14,16 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class UserPageTest {
-    UserService mockService = mock(UserService.class);
-    UserPage userPage = new UserPage(mockService);
-    BufferedReader mockReader = mock(BufferedReader.class);
+    UserService mockService;
+    UserPage userPage;
+    BufferedReader mockReader;
+
+    @BeforeEach
+    public void init() {
+        mockService = mock(UserService.class);
+        userPage = new UserPage(mockService);
+        mockReader = mock(BufferedReader.class);
+    }
 
     @Test
     @DisplayName("Успешное отображение юзера при вводе валидного емайла")
