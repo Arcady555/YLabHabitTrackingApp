@@ -1,6 +1,5 @@
 package ru.parfenov.homework_1.server.pages;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.parfenov.homework_1.server.model.User;
@@ -14,20 +13,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 public class SignUpPageTest {
-    public UserService mockService;
-    public SignUpPage signUpPage;
-    public BufferedReader mockReader;
-
-    @BeforeEach
-    public void init() {
-        mockService = mock(UserService.class);
-        signUpPage = new SignUpPage(mockService);
-        mockReader = mock(BufferedReader.class);
-    }
 
     @Test
     @DisplayName("Успешная регистрация юзера")
     public void test_user_creation_with_valid_input() throws IOException {
+        UserService mockService = mock(UserService.class);
+        SignUpPage signUpPage = new SignUpPage(mockService);
+        BufferedReader mockReader = mock(BufferedReader.class);
         signUpPage.reader = mockReader;
 
         when(mockReader.readLine()).thenReturn("John Doe",
@@ -45,6 +37,9 @@ public class SignUpPageTest {
     @Test
     @DisplayName("Регистрация с дефолтным именем")
     public void test_default_name_assignment() throws IOException {
+        UserService mockService = mock(UserService.class);
+        SignUpPage signUpPage = new SignUpPage(mockService);
+        BufferedReader mockReader = mock(BufferedReader.class);
         signUpPage.reader = mockReader;
 
         when(mockReader.readLine()).thenReturn("",
@@ -62,6 +57,9 @@ public class SignUpPageTest {
     @Test
     @DisplayName("Выброс IOException")
     public void test_io_exceptions_during_input() throws IOException {
+        UserService mockService = mock(UserService.class);
+        SignUpPage signUpPage = new SignUpPage(mockService);
+        BufferedReader mockReader = mock(BufferedReader.class);
         signUpPage.reader = mockReader;
 
         when(mockReader.readLine()).thenThrow(new IOException("IO Exception"));
