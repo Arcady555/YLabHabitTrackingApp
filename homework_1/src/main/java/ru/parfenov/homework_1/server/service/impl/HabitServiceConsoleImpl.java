@@ -177,8 +177,18 @@ public class HabitServiceConsoleImpl implements HabitService {
                         int period = (int) ChronoUnit.DAYS.between(dateFrom, dateTo);
                         int hundredPercent = period / habit.getFrequency().getDays();
                         if (habit.getPerformsAmount() != 0) {
-                            float realPercent = (float) hundredPercent / habit.getPerformsAmount();
-                            result = "From " + dateFrom + " to " + dateTo + ", the habit was completed by " + realPercent;
+                            float realPercent = (float) hundredPercent / habit.getPerformsAmount() * 100;
+                            result = "From " +
+                                    dateFrom +
+                                    " to " +
+                                    dateTo +
+                                    ", the habit was completed by " +
+                                    realPercent +
+                                    "%." +
+                                    System.lineSeparator() +
+                                    "And during all time of the habit there were " +
+                                    (habit.getStreaksAmount() - 1) +
+                                    "cases of going beyond the execution schedule.";
                         } else {
                             result = "The habit is no completed yet";
                         }
