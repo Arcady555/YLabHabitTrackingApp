@@ -19,7 +19,7 @@ public class YourHabitListPageTest {
     @Test
     @DisplayName("Успешный вывод всех привычек")
     public void test_retrieve_and_print_habits() throws IOException, InterruptedException {
-        User user = new User(1, "test@example.com", "password", "Test User", null, false);
+        User user = new User(1, "test@example.com", "password", "1", "Test User", null, false);
         HabitService habitService = mock(HabitService.class);
         Habit habit1 = new Habit();
         habit1.setId(1L);
@@ -38,7 +38,7 @@ public class YourHabitListPageTest {
     @DisplayName("Успешный вывод remind")
     public void test_remind_method_called_for_each_habit() throws
             IOException, InterruptedException {
-        User user = new User(1, "test@example.com", "password", "Test User", null, false);
+        User user = new User(1, "test@example.com", "password", "1", "Test User", null, false);
         HabitService habitService = mock(HabitService.class);
         Habit habit1 = new Habit();
         habit1.setId(1L);
@@ -59,7 +59,7 @@ public class YourHabitListPageTest {
     @DisplayName("Успешный вывод юзера без привычек")
     public void test_no_habits_for_user() throws IOException,
             InterruptedException {
-        User user = new User(1, "test@example.com", "password", "Test User", null, false);
+        User user = new User(1, "test@example.com", "password", "1", "Test User", null, false);
         HabitService habitService = mock(HabitService.class);
         when(habitService.findByUser(user)).thenReturn(Collections.emptyList());
         YourHabitListPage page = new YourHabitListPage(user, habitService);
@@ -71,7 +71,7 @@ public class YourHabitListPageTest {
     @DisplayName("Успешный вывод юзера с большим списком привычек")
     public void test_large_number_of_habits() throws IOException,
             InterruptedException {
-        User user = new User(1, "test@example.com", "password", "Test User", null, false);
+        User user = new User(1, "test@example.com", "password", "1", "Test User", null, false);
         HabitService habitService = mock(HabitService.class);
         List<Habit> habits = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
@@ -90,7 +90,7 @@ public class YourHabitListPageTest {
     @DisplayName("Успешный вывод пустого remind")
     public void test_remind_returns_null_or_empty_string() throws
             IOException, InterruptedException {
-        User user = new User(1, "test@example.com", "password", "Test User", null, false);
+        User user = new User(1, "test@example.com", "password", "1", "Test User", null, false);
         HabitService habitService = mock(HabitService.class);
         Habit habit = new Habit();
         habit.setId(1L);

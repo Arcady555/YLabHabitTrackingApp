@@ -14,7 +14,7 @@ public class UserStoreConsoleImplTest {
     @DisplayName("Успешное создание юзера")
     public void test_create_user_adds_to_user_map_with_unique_id() {
         UserStoreConsoleImpl userStore = new UserStoreConsoleImpl();
-        User newUser = new User(0, "test@example.com", "password",
+        User newUser = new User(0, "test@example.com", "password", "1",
                 "Test User", Role.CLIENT, false);
         userStore.create(newUser);
         assertNotNull(userStore.findById(newUser.getId()));
@@ -24,7 +24,7 @@ public class UserStoreConsoleImplTest {
     @DisplayName("Успешный поиск юзера по емайл")
     public void test_find_by_email_returns_correct_user() {
         UserStoreConsoleImpl userStore = new UserStoreConsoleImpl();
-        User newUser = new User(0, "test@example.com", "password",
+        User newUser = new User(0, "test@example.com", "password", "1",
                 "Test User", Role.CLIENT, false);
         userStore.create(newUser);
         User foundUser = userStore.findByEmail("test@example.com");
@@ -35,7 +35,7 @@ public class UserStoreConsoleImplTest {
     @DisplayName("Успешный поиск юзера по ID")
     public void test_find_by_id_returns_correct_user() {
         UserStoreConsoleImpl userStore = new UserStoreConsoleImpl();
-        User newUser = new User(0, "test@example.com", "password",
+        User newUser = new User(0, "test@example.com", "password", "1",
                 "Test User", Role.CLIENT, false);
         userStore.create(newUser);
         User foundUser = userStore.findById(newUser.getId());
@@ -55,7 +55,7 @@ public class UserStoreConsoleImplTest {
     @DisplayName("Успешное обновление юзера")
     public void test_update_user_replaces_existing_data() {
         UserStoreConsoleImpl userStore = new UserStoreConsoleImpl();
-        User newUser = new User(0, "test@example.com", "password",
+        User newUser = new User(0, "test@example.com", "password", "1",
                 "Test User", Role.CLIENT, false);
         userStore.create(newUser);
         newUser.setName("Updated Name");
@@ -83,7 +83,7 @@ public class UserStoreConsoleImplTest {
     public void test_update_non_existent_user_returns_null() {
         UserStoreConsoleImpl userStore = new UserStoreConsoleImpl();
         User nonExistentUser = new User(999,
-                "nonexistent@example.com", "password", "Nonexistent", Role.CLIENT,
+                "nonexistent@example.com", "password", "1", "Nonexistent", Role.CLIENT,
                 false);
         assertNull(userStore.update(nonExistentUser));
     }

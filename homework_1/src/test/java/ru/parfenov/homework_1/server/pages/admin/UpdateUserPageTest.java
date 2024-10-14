@@ -25,7 +25,7 @@ public class UpdateUserPageTest {
         HabitService habitService = mock(HabitService.class);
         UpdateUserPage updateUserPage = new UpdateUserPage(service, habitService);
         BufferedReader reader = mock(BufferedReader.class);
-        User user = new User(1, "test@example.com", "password", "Test User", Role.CLIENT, false);
+        User user = new User(1, "test@example.com", "password", "1", "Test User", Role.CLIENT, false);
 
         when(service.findByEmail("test@example.com")).thenReturn(Optional.of(user));
         when(reader.readLine()).thenReturn("test@example.com", "1", "0");
@@ -44,7 +44,7 @@ public class UpdateUserPageTest {
         HabitService habitService = mock(HabitService.class);
         UpdateUserPage updateUserPage = new UpdateUserPage(service, habitService);
         BufferedReader reader = mock(BufferedReader.class);
-        User user = new User(1, "test@example.com", "password", "Test User", Role.CLIENT, false);
+        User user = new User(1, "test@example.com", "password", "1", "Test User", Role.CLIENT, false);
 
         when(service.findByEmail("test@example.com")).thenReturn(Optional.of(user));
         when(reader.readLine()).thenReturn("test@example.com", "1", "1", "0");
@@ -63,7 +63,7 @@ public class UpdateUserPageTest {
         HabitService habitService = mock(HabitService.class);
         UpdateUserPage updateUserPage = new UpdateUserPage(service, habitService);
         BufferedReader reader = mock(BufferedReader.class);
-        User user = new User(1, "test@example.com", "password", "Test User", Role.CLIENT, false);
+        User user = new User(1, "test@example.com", "password", "1", "Test User", Role.CLIENT, false);
 
         when(service.findByEmail("test@example.com")).thenReturn(Optional.of(user));
         when(reader.readLine()).thenReturn("test@example.com", "invalid");
@@ -82,7 +82,7 @@ public class UpdateUserPageTest {
         HabitService habitService = mock(HabitService.class);
         UpdateUserPage updateUserPage = new UpdateUserPage(service, habitService);
         BufferedReader reader = mock(BufferedReader.class);
-        User user = new User(1, "test@example.com", "password", "Test User", Role.CLIENT, false);
+        User user = new User(1, "test@example.com", "password", "1", "Test User", Role.CLIENT, false);
 
         when(service.findByEmail("test@example.com")).thenReturn(Optional.of(user));
         when(reader.readLine()).thenReturn("test@example.com", "1",

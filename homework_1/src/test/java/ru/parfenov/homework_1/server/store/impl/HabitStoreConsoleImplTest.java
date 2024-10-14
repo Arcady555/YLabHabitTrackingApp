@@ -28,7 +28,7 @@ public class HabitStoreConsoleImplTest {
     @DisplayName("Поиск привычек по юзеру")
     public void test_find_habits_by_user() {
         HabitStoreConsoleImpl store = new HabitStoreConsoleImpl();
-        User user = new User(1, "user@example.com", "password",
+        User user = new User(1, "user@example.com", "password", "1",
                 "User", null, false);
         Habit habit1 = new Habit();
         habit1.setUser(user);
@@ -52,7 +52,7 @@ public class HabitStoreConsoleImplTest {
     @DisplayName("Поиск привычек по юзеру без привычек")
     public void test_find_habits_for_user_with_no_habits() {
         HabitStoreConsoleImpl store = new HabitStoreConsoleImpl();
-        User user = new User(1, "user@example.com", "password",
+        User user = new User(1, "user@example.com", "password", "1",
                 "User", null, false);
         List<Habit> habits = store.findByUser(user);
         assertTrue(habits.isEmpty());

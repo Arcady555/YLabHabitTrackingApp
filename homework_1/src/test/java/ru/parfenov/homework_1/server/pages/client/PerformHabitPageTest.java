@@ -21,7 +21,7 @@ public class PerformHabitPageTest {
     @DisplayName("Успешное выполнение привычки с валидным ID")
     public void test_valid_habit_id_performed_successfully() throws
             IOException, InterruptedException {
-        User user = new User(1, "user@example.com", "password", "User", null, false);
+        User user = new User(1, "user@example.com", "password", "1", "User", null, false);
         HabitService habitService = mock(HabitService.class);
         Habit habit = new Habit(1, user, true, true, 0, "Habit",
                 "Description", LocalDate.now(), LocalDate.now(), LocalDate.now(),
@@ -39,7 +39,7 @@ public class PerformHabitPageTest {
     @DisplayName("Не успешное выполнение привычки с валидным ID")
     public void test_valid_habit_id_not_performed() throws
             IOException, InterruptedException {
-        User user = new User(1, "user@example.com", "password", "User", null, false);
+        User user = new User(1, "user@example.com", "password", "1", "User", null, false);
         HabitService habitService = mock(HabitService.class);
         Habit habit = new Habit(1, user, true, true, 0, "Habit",
                 "Description", LocalDate.now(), LocalDate.now(), LocalDate.now(),
@@ -57,7 +57,7 @@ public class PerformHabitPageTest {
     @DisplayName("Успешное выполнение привычки, принадлежащей юзеру")
     public void test_valid_habit_id_belongs_to_user() throws
             IOException, InterruptedException {
-        User user = new User(1, "user@example.com", "password", "User", null, false);
+        User user = new User(1, "user@example.com", "password", "1", "User", null, false);
         HabitService habitService = mock(HabitService.class);
         Habit habit = new Habit(1, user, true, true, 0, "Habit",
                 "Description", LocalDate.now(), LocalDate.now(), LocalDate.now(),
@@ -74,7 +74,7 @@ public class PerformHabitPageTest {
     @DisplayName("Привычка не найдена")
     public void test_valid_habit_id_does_not_exist() throws
             IOException, InterruptedException {
-        User user = new User(1, "user@example.com", "password", "User", null, false);
+        User user = new User(1, "user@example.com", "password", "1", "User", null, false);
         HabitService habitService = mock(HabitService.class);
         Habit habit = new Habit(1, user, true, true, 0, "Habit",
                 "Description", LocalDate.now(), LocalDate.now(), LocalDate.now(),

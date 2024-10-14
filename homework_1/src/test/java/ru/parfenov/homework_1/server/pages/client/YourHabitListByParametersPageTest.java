@@ -25,7 +25,7 @@ public class YourHabitListByParametersPageTest {
     @DisplayName("Успешный вывод всех привычек")
     public void test_valid_parameters_return_habits() throws
             IOException, InterruptedException {
-        User user = new User(1, "test@example.com", "password", "Test User", Role.CLIENT, false);
+        User user = new User(1, "test@example.com", "password", "1", "Test User", Role.CLIENT, false);
         HabitService habitService = mock(HabitService.class);
         YourHabitListByParametersPage page = new YourHabitListByParametersPage(user, habitService);
         BufferedReader reader = mock(BufferedReader.class);
@@ -51,7 +51,7 @@ public class YourHabitListByParametersPageTest {
     @DisplayName("Ввод 0 или 1 для полезности и активности")
     public void test_usefulness_and_active_input() throws IOException,
             InterruptedException {
-        User user = new User(1, "test@example.com", "password", "Test User", Role.CLIENT, false);
+        User user = new User(1, "test@example.com", "password", "1", "Test User", Role.CLIENT, false);
         HabitService habitService = mock(HabitService.class);
         YourHabitListByParametersPage page = new YourHabitListByParametersPage(user, habitService);
         BufferedReader reader = mock(BufferedReader.class);
@@ -69,7 +69,7 @@ public class YourHabitListByParametersPageTest {
     @DisplayName("Возврат привычек по параметрам")
     public void test_habit_service_returns_matching_habits() throws
             IOException, InterruptedException {
-        User user = new User(1, "test@example.com", "password", "Test User", Role.CLIENT, false);
+        User user = new User(1, "test@example.com", "password", "1", "Test User", Role.CLIENT, false);
         HabitService habitService = mock(HabitService.class);
         YourHabitListByParametersPage page = new YourHabitListByParametersPage(user, habitService);
         BufferedReader reader = mock(BufferedReader.class);
@@ -92,7 +92,7 @@ public class YourHabitListByParametersPageTest {
     @DisplayName("Вывод с remind")
     public void test_print_habit_with_reminder() throws IOException,
             InterruptedException {
-        User user = new User(1, "test@example.com", "password", "Test User", Role.CLIENT, false);
+        User user = new User(1, "test@example.com", "password", "1", "Test User", Role.CLIENT, false);
         HabitService habitService = mock(HabitService.class);
         YourHabitListByParametersPage page = new YourHabitListByParametersPage(user, habitService);
         BufferedReader reader = mock(BufferedReader.class);
@@ -116,7 +116,7 @@ public class YourHabitListByParametersPageTest {
     @DisplayName("Не валидные параметры")
     public void test_invalid_usefulness_and_active_input() throws
             IOException, InterruptedException {
-        User user = new User(1, "test@example.com", "password", "Test User", Role.CLIENT, false);
+        User user = new User(1, "test@example.com", "password", "1", "Test User", Role.CLIENT, false);
         HabitService habitService = mock(HabitService.class);
         YourHabitListByParametersPage page = new YourHabitListByParametersPage(user, habitService);
         BufferedReader reader = mock(BufferedReader.class);
@@ -134,7 +134,7 @@ public class YourHabitListByParametersPageTest {
     @DisplayName("ввод пустых строк")
     public void test_empty_string_inputs() throws IOException,
             InterruptedException {
-        User user = new User(1, "test@example.com", "password", "Test User", Role.CLIENT, false);
+        User user = new User(1, "test@example.com", "password", "1", "Test User", Role.CLIENT, false);
         HabitService habitService = mock(HabitService.class);
         YourHabitListByParametersPage page = new YourHabitListByParametersPage(user, habitService);
         BufferedReader reader = mock(BufferedReader.class);
@@ -151,7 +151,7 @@ public class YourHabitListByParametersPageTest {
     @Test
     @DisplayName("Выброс IO Exception")
     public void test_io_exception_during_input_reading() throws IOException {
-        User user = new User(1, "test@example.com", "password", "Test User", Role.CLIENT, false);
+        User user = new User(1, "test@example.com", "password", "1","Test User", Role.CLIENT, false);
         HabitService habitService = mock(HabitService.class);
         YourHabitListByParametersPage page = new YourHabitListByParametersPage(user, habitService);
         BufferedReader reader = mock(BufferedReader.class);

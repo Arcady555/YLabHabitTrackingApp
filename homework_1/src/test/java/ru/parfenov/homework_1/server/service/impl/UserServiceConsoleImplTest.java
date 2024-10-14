@@ -22,7 +22,7 @@ public class UserServiceConsoleImplTest {
         UserStore mockStore = mock(UserStore.class);
         UserServiceConsoleImpl userService = new
                 UserServiceConsoleImpl(mockStore);
-        User user = new User(0, "test@example.com", "password", "Test User", Role.CLIENT, false);
+        User user = new User(0, "test@example.com", "password", "1", "Test User", Role.CLIENT, false);
         when(mockStore.create(any(User.class))).thenReturn(user);
 
         User createdUser = userService.createByReg("test@example.com",
@@ -39,7 +39,7 @@ public class UserServiceConsoleImplTest {
         UserStore mockStore = mock(UserStore.class);
         UserServiceConsoleImpl userService = new
                 UserServiceConsoleImpl(mockStore);
-        User user = new User(1, "test@example.com", "password", "Test User", Role.CLIENT, false);
+        User user = new User(1, "test@example.com", "password", "1", "Test User", Role.CLIENT, false);
         when(mockStore.findByEmail("test@example.com")).thenReturn(user);
 
         Optional<User> foundUser = userService.findByEmail("test@example.com");
@@ -54,7 +54,7 @@ public class UserServiceConsoleImplTest {
         UserStore mockStore = mock(UserStore.class);
         UserServiceConsoleImpl userService = new
                 UserServiceConsoleImpl(mockStore);
-        User user = new User(1, "test@example.com", "password", "Test User", Role.CLIENT, false);
+        User user = new User(1, "test@example.com", "password", "1", "Test User", Role.CLIENT, false);
         when(mockStore.findById(1)).thenReturn(user);
 
         Optional<User> foundUser = userService.findById(1);
@@ -69,7 +69,7 @@ public class UserServiceConsoleImplTest {
         UserStore mockStore = mock(UserStore.class);
         UserServiceConsoleImpl userService = new
                 UserServiceConsoleImpl(mockStore);
-        User user = new User(1, "test@example.com", "password", "Test User", Role.CLIENT, false);
+        User user = new User(1, "test@example.com", "password", "1", "Test User", Role.CLIENT, false);
         when(mockStore.findByEmailAndPassword("test@example.com",
                 "password")).thenReturn(user);
 

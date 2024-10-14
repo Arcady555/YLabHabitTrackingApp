@@ -25,7 +25,7 @@ public class UsersByParametersPageTest {
 
         when(mockReader.readLine()).thenReturn("0", "", "");
         List<User> expectedUsers = List.of(new User(1,
-                "admin@example.com", "pass", "Admin", Role.ADMIN, false));
+                "admin@example.com", "pass", "1", "Admin", Role.ADMIN, false));
         when(mockService.findByParameters("ADMIN", "", "")).thenReturn(expectedUsers);
 
         page.run();
@@ -43,7 +43,7 @@ public class UsersByParametersPageTest {
 
         when(mockReader.readLine()).thenReturn("", "John", "");
         List<User> expectedUsers = List.of(new User(2,
-                "john@example.com", "pass", "John", Role.CLIENT, false));
+                "john@example.com", "pass", "1", "John", Role.CLIENT, false));
         when(mockService.findByParameters(null, "John", "")).thenReturn(expectedUsers);
 
         page.run();
@@ -61,7 +61,7 @@ public class UsersByParametersPageTest {
 
         when(mockReader.readLine()).thenReturn("", "", "0");
         List<User> expectedUsers = List.of(new User(3,
-                "blocked@example.com", "pass", "BlockedUser", Role.CLIENT, true));
+                "blocked@example.com", "pass", "1", "BlockedUser", Role.CLIENT, true));
         when(mockService.findByParameters(null, "", "true")).thenReturn(expectedUsers);
 
         page.run();
@@ -79,9 +79,9 @@ public class UsersByParametersPageTest {
 
         when(mockReader.readLine()).thenReturn("0", "", "1");
         List<User> expectedUsers = List.of(
-                new User(5, "admin1@example.com", "pass", "Admin1",
+                new User(5, "admin1@example.com", "pass", "1", "Admin1",
                         Role.ADMIN, false),
-                new User(6, "admin2@example.com", "pass", "Admin2",
+                new User(6, "admin2@example.com", "pass", "2", "Admin2",
                         Role.ADMIN, false)
         );
         when(mockService.findByParameters("ADMIN", "", "false")).thenReturn(expectedUsers);
@@ -101,9 +101,9 @@ public class UsersByParametersPageTest {
 
         when(mockReader.readLine()).thenReturn("1", "John", "0");
         List<User> expectedUsers = List.of(
-                new User(7, "john1@example.com", "pass", "John1",
+                new User(7, "john1@example.com", "pass", "1", "John1",
                         Role.CLIENT, true),
-                new User(8, "john2@example.com", "pass", "John2", Role.CLIENT, true)
+                new User(8, "john2@example.com", "pass", "1", "John2", Role.CLIENT, true)
         );
         when(mockService.findByParameters("CLIENT", "John", "true")).thenReturn(expectedUsers);
 

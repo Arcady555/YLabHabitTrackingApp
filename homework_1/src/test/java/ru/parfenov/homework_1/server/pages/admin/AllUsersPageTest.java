@@ -18,8 +18,8 @@ public class AllUsersPageTest {
     @DisplayName("Корректный вывод")
     public void test_retrieves_and_prints_all_users() {
         UserService mockService = mock(UserService.class);
-        List<User> users = List.of(new User(1, "email1@example.com", "pass1", "User1", Role.CLIENT, false),
-                new User(2, "email2@example.com", "pass2", "User2", Role.ADMIN, false));
+        List<User> users = List.of(new User(1, "email1@example.com", "pass1", "1", "User1", Role.CLIENT, false),
+                new User(2, "email2@example.com", "pass2", "2", "User2", Role.ADMIN, false));
         when(mockService.findAll()).thenReturn(users);
         AllUsersPage allUsersPage = new AllUsersPage(mockService);
         allUsersPage.run();
@@ -31,7 +31,7 @@ public class AllUsersPageTest {
     public void test_find_all_returns_complete_list() {
         UserService mockService = mock(UserService.class);
         List<User> users = List.of(new User(1, "email1@example.com",
-                "pass1", "User1", Role.CLIENT, false));
+                "pass1", "1", "User1", Role.CLIENT, false));
         when(mockService.findAll()).thenReturn(users);
         AllUsersPage allUsersPage = new AllUsersPage(mockService);
         allUsersPage.run();
@@ -43,7 +43,7 @@ public class AllUsersPageTest {
     public void test_run_executes_without_exceptions() {
         UserService mockService = mock(UserService.class);
         List<User> users = List.of(new User(1, "email1@example.com",
-                "pass1", "User1", Role.CLIENT, false));
+                "pass1", "1", "User1", Role.CLIENT, false));
         when(mockService.findAll()).thenReturn(users);
         AllUsersPage allUsersPage = new AllUsersPage(mockService);
         assertDoesNotThrow(allUsersPage::run);

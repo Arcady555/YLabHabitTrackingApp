@@ -29,7 +29,7 @@ public class HabitsOfUserPageTest {
         HabitsOfUserPage page = new HabitsOfUserPage(userService, habitService);
         page.reader = reader;
 
-        User user = new User(1, "test@example.com", "password", "Test User", null, false);
+        User user = new User(1, "test@example.com", "password", "1", "Test User", null, false);
         Habit habit = new Habit(1, user, true, true, 0, "Test Habit", "Description", LocalDate.now(), LocalDate.now(), LocalDate.now(), LocalDate.now(), LocalDate.now(), Period.ofDays(1), 0);
 
         when(reader.readLine()).thenReturn("test@example.com");
@@ -51,7 +51,7 @@ public class HabitsOfUserPageTest {
         HabitsOfUserPage page = new HabitsOfUserPage(userService, habitService);
         page.reader = reader;
 
-        User user = new User(1, "test@example.com", "password", "Test User", null, false);
+        User user = new User(1, "test@example.com", "password", "1", "Test User", null, false);
 
         when(reader.readLine()).thenReturn("test@example.com", "0", "1");
         when(userService.findByEmail("test@example.com")).thenReturn(Optional.of(user));
@@ -72,7 +72,7 @@ public class HabitsOfUserPageTest {
         HabitsOfUserPage page = new HabitsOfUserPage(userService, habitService);
         page.reader = reader;
 
-        User user = new User(1, "test@example.com", "password", "Test User", null, false);
+        User user = new User(1, "test@example.com", "password", "1", "Test User", null, false);
 
         when(reader.readLine()).thenReturn("test@example.com", "0", "2");
         when(userService.findByEmail("test@example.com")).thenReturn(Optional.of(user));
@@ -110,7 +110,7 @@ public class HabitsOfUserPageTest {
         BufferedReader reader = mock(BufferedReader.class);
         HabitsOfUserPage page = new HabitsOfUserPage(userService, habitService);
         page.reader = reader;
-        User user = new User(1, "test@example.com", "password", "Test User", null, false);
+        User user = new User(1, "test@example.com", "password", "1", "Test User", null, false);
 
         when(reader.readLine()).thenReturn("test@example.com", "0", "");
         when(userService.findByEmail("test@example.com")).thenReturn(Optional.of(user));

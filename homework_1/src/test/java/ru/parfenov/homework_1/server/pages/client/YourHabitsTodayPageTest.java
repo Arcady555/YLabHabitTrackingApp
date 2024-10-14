@@ -19,7 +19,7 @@ public class YourHabitsTodayPageTest {
     @Test
     @DisplayName("Успешный вывод remind")
     public void test_run_calls_remind_for_each_habit() throws IOException, InterruptedException {
-        User user = new User(1, "test@example.com", "password", "Test User", null, false);
+        User user = new User(1, "test@example.com", "password", "1", "Test User", null, false);
         HabitService habitService = mock(HabitService.class);
         Habit habit1 = new Habit();
         habit1.setId(1L);
@@ -38,7 +38,7 @@ public class YourHabitsTodayPageTest {
     @Test
     @DisplayName("Успешный вывод разных привычек")
     public void test_run_handles_multiple_habits() throws IOException, InterruptedException {
-        User user = new User(1, "test@example.com", "password", "Test User", null, false);
+        User user = new User(1, "test@example.com", "password", "1", "Test User", null, false);
         HabitService habitService = mock(HabitService.class);
         Habit habit1 = new Habit();
         habit1.setId(1L);
@@ -58,7 +58,7 @@ public class YourHabitsTodayPageTest {
     @Test
     @DisplayName("Корректный вывод всех деталей привычки")
     public void test_run_outputs_correct_habit_details() throws IOException, InterruptedException {
-        User user = new User(1, "test@example.com", "password", "Test User", null, false);
+        User user = new User(1, "test@example.com", "password", "1", "Test User", null, false);
         HabitService habitService = mock(HabitService.class);
         Habit habit = new Habit();
         habit.setName("Exercise");
@@ -75,7 +75,7 @@ public class YourHabitsTodayPageTest {
     @Test
     @DisplayName("У пользователя нет привычек - корректный вывод")
     public void test_run_handles_no_habits_gracefully() throws IOException, InterruptedException {
-        User user = new User(1, "test@example.com", "password", "Test User", null, false);
+        User user = new User(1, "test@example.com", "password", "1", "Test User", null, false);
         HabitService habitService = mock(HabitService.class);
         when(habitService.findByUser(user)).thenReturn(List.of());
         YourHabitsTodayPage page = new YourHabitsTodayPage(user, habitService);

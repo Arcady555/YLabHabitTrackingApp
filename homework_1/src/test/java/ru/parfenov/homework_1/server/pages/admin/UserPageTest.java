@@ -25,7 +25,7 @@ public class UserPageTest {
 
         when(mockReader.readLine()).thenReturn("test@example.com");
 
-        User user = new User(1, "test@example.com", "password", "Test User", null, false);
+        User user = new User(1, "test@example.com", "password", "1", "Test User", null, false);
         when(mockReader.readLine()).thenReturn("test@example.com");
         when(mockService.findByEmail("test@example.com")).thenReturn(Optional.of(user));
 

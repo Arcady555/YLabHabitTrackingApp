@@ -22,7 +22,7 @@ public class HabitServiceConsoleImplTest {
         HabitStore habitStore = mock(HabitStore.class);
         HabitServiceConsoleImpl service = new
                 HabitServiceConsoleImpl(habitStore);
-        User user = new User(1, "test@example.com", "password", "Test User", null, false);
+        User user = new User(1, "test@example.com", "password", "1", "Test User", null, false);
                 LocalDate dateOfCreate = LocalDate.now();
         LocalDate firstPerform = dateOfCreate.plusDays(1);
         Period frequency = Period.ofDays(1);

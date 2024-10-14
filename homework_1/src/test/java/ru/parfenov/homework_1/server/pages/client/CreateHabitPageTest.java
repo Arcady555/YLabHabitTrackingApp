@@ -18,7 +18,7 @@ public class CreateHabitPageTest {
     @DisplayName("Ввод 0 -> привычка полезная")
     public void test_usefulness_input_zero() throws IOException {
         HabitService habitService = mock(HabitService.class);
-        User user = new User(1, "test@example.com", "password", "Test User", Role.CLIENT, false);
+        User user = new User(1, "test@example.com", "password", "1", "Test User", Role.CLIENT, false);
         CreateHabitPage createHabitPage = new CreateHabitPage(user, habitService);
         BufferedReader reader = mock(BufferedReader.class);
         createHabitPage.reader = reader;
@@ -36,7 +36,7 @@ public class CreateHabitPageTest {
     public void test_valid_future_date_for_first_performance() throws
             IOException {
         HabitService habitService = mock(HabitService.class);
-        User user = new User(1, "test@example.com", "password", "Test User", Role.CLIENT, false);
+        User user = new User(1, "test@example.com", "password", "1", "Test User", Role.CLIENT, false);
         CreateHabitPage createHabitPage = new CreateHabitPage(user, habitService);
         BufferedReader reader = mock(BufferedReader.class);
         createHabitPage.reader = reader;
