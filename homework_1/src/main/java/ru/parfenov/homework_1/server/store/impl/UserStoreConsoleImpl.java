@@ -17,7 +17,7 @@ public class UserStoreConsoleImpl implements UserStore {
     private final Map<Integer, User> userMap = new HashMap<>();
 
     public UserStoreConsoleImpl() {
-        User user = new User(1, Utility.adminEmail, Utility.adminPassword, "ADMIN", Role.ADMIN, false);
+        User user = new User(1, Utility.adminEmail, Utility.adminPassword, Utility.adminPassword, "ADMIN", Role.ADMIN, false);
         create(user);
     }
     @Override

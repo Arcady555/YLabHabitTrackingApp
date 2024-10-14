@@ -10,6 +10,7 @@ import ru.parfenov.homework_1.server.store.UserStore;
 import ru.parfenov.homework_1.server.store.impl.HabitStoreConsoleImpl;
 import ru.parfenov.homework_1.server.store.impl.UserStoreConsoleImpl;
 
+import javax.mail.MessagingException;
 import java.io.IOException;
 
 public class ServerClass {
@@ -17,7 +18,7 @@ public class ServerClass {
      * Запуск хранилищ и сервисов
      * Вывод стартовой страницы
      */
-    public void run() throws IOException, InterruptedException {
+    public void run() throws IOException, InterruptedException, MessagingException {
 
         UserStore userStore = new UserStoreConsoleImpl();
         UserService userService = new UserServiceConsoleImpl(userStore);

@@ -29,6 +29,10 @@ public class User {
      */
     private String password;
     /**
+     * Рандомно сгенерированная строка, ввод которой позволит юзеру сбросить пароль и ввести новый
+     */
+    private String resetPassword;
+    /**
      * Имя, которое дал себе юзер при регистрации. Может не давать
      */
     private String name;

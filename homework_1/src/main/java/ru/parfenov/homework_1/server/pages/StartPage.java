@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import ru.parfenov.homework_1.server.service.HabitService;
 import ru.parfenov.homework_1.server.service.UserService;
 
+import javax.mail.MessagingException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -20,7 +21,7 @@ public class StartPage {
     private final HabitService habitService;
     BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
-    public void run() throws IOException, InterruptedException {
+    public void run() throws IOException, InterruptedException, MessagingException {
         System.out.println("""
                 Please enter:
                 1 - registration

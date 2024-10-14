@@ -6,6 +6,7 @@ import ru.parfenov.homework_1.server.enums.user.Role;
 import ru.parfenov.homework_1.server.model.User;
 import ru.parfenov.homework_1.server.service.UserService;
 import ru.parfenov.homework_1.server.store.UserStore;
+import ru.parfenov.homework_1.server.utility.Utility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +19,8 @@ public class UserServiceConsoleImpl implements UserService {
 
     @Override
     public User createByReg(String email, String password, String name) {
-        User user = new User(0, email, password, name, Role.CLIENT, false);
+        String resetPassword = Utility.generateForResetPassword();
+        User user = new User(0, email, password, resetPassword, name, Role.CLIENT, false);
         return store.create(user);
     }
 

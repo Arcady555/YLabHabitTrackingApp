@@ -7,11 +7,15 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.Random;
 
 @Slf4j
 public class Utility {
     public static String adminEmail = "admin@habit.ru";
     public static String adminPassword = "123";
+    public static String emailOfApp = "info@YLabHabitApp.com";
+    public static String hostOfApp = "smtp.mail.ru";
+    public static String mailPassword = "kXinQZRNeLj42W29VyK4";
 
     private Utility() {
     }
@@ -59,5 +63,9 @@ public class Utility {
             date = date.plus(habit.getFrequency());
         }
         habit.setPlannedNextPerform(date);
+    }
+
+    public static String generateForResetPassword() {
+        return new Random(10000).toString();
     }
 }
