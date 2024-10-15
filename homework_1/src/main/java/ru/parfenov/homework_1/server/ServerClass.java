@@ -1,5 +1,6 @@
 package ru.parfenov.homework_1.server;
 
+import ru.parfenov.homework_1.server.email_send.cases.RemindViaEmail;
 import ru.parfenov.homework_1.server.pages.StartPage;
 import ru.parfenov.homework_1.server.service.HabitService;
 import ru.parfenov.homework_1.server.service.UserService;
@@ -27,6 +28,8 @@ public class ServerClass {
         HabitService habitService = new HabitServiceConsoleImpl(habitStore);
 
         StartPage page = new StartPage(userService, habitService);
+        RemindViaEmail remindViaEmail = new RemindViaEmail(userService, habitService);
         page.run();
+        remindViaEmail.run();
     }
 }

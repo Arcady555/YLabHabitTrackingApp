@@ -2,7 +2,7 @@ package ru.parfenov.homework_1.server.pages;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.parfenov.homework_1.server.email_send.ResetPasswordViaEmail;
+import ru.parfenov.homework_1.server.email_send.cases.ResetPasswordViaEmail;
 import ru.parfenov.homework_1.server.enums.user.Role;
 import ru.parfenov.homework_1.server.model.User;
 import ru.parfenov.homework_1.server.pages.client.ResetPasswordPage;
@@ -37,8 +37,8 @@ public class SignInPage {
         if (userOptional1.isPresent()) {
             System.out.println("Forgot password? - 0, another key - Enter password");
             if (reader.readLine().equals("0")) {
-                ResetPasswordViaEmail resetPassword = new ResetPasswordViaEmail(email, userService);
-                resetPassword.run();
+                ResetPasswordViaEmail resetPasswordViaEmail = new ResetPasswordViaEmail(email, userOptional1.get());
+                resetPasswordViaEmail.run();
                 ResetPasswordPage resetPasswordPage = new ResetPasswordPage(userOptional1.get(), userService);
                 resetPasswordPage.run();
                 run();
