@@ -50,10 +50,9 @@ public class AdminPage implements UserMenuPage {
                 if (adminMenuPage == null) {
                     System.out.println("Please enter correct" + System.lineSeparator());
                     run();
-
+                } else {
+                    adminMenuPage.run();
                 }
-                assert adminMenuPage != null;
-                adminMenuPage.run();
             } catch (NumberFormatException e) {
                 log.error("Please enter the NUMBER!!", e);
                 System.out.println(System.lineSeparator());

@@ -14,7 +14,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * Класс формирует данные для отправки на емайл юзеров сообщений. Ежедневно.
+ * Класс формирует данные для отправки  сообщений на емайлы юзеров. Ежедневно.
  * С напоминанием, какие привычки им необходимо выполнить сегодня
  */
 @Slf4j
@@ -29,9 +29,9 @@ public class RemindViaEmail {
             public void run() {
                 List<User> userList = userService.findAll();
                 for (User user : userList) {
-                    StringBuilder builder = new StringBuilder("Hello dear!!!!" + System.lineSeparator() + "It's your habits today :" + System.lineSeparator());
+                    StringBuilder builder = new StringBuilder("Hello dear!!!!" + System.lineSeparator() + "These are your habits today :" + System.lineSeparator());
                     for (Habit habit : habitService.todayPerforms(user)) {
-                        builder.append(habit.getId()).append(habit.getName());
+                        builder.append(habit.getId()).append(" ").append(habit.getName());
                     }
                     SendViaEmail sendViaEmail = new SendViaEmail(user.getEmail(), "Remind your habit performs today", builder.toString());
                     try {

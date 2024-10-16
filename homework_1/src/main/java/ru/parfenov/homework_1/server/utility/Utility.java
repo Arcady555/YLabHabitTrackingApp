@@ -13,9 +13,15 @@ import java.util.Random;
 public class Utility {
     public static String adminEmail = "admin@habit.ru";
     public static String adminPassword = "123";
+    /**
+     * Сюда вписывается емайл, зарегистрированный на Mail.ru
+     */
     public static String emailOfApp = "info@YLabHabitApp.com";
     public static String hostOfApp = "smtp.mail.ru";
-    public static String mailPassword = "kXinQZRNeLj42W29VyK4";
+    /**
+     * Сюда вписывается пароль, сгенерированный в личном кабинете на Mail.ru
+     */
+    public static String mailPassword = "password";
 
     private Utility() {
     }
@@ -55,7 +61,6 @@ public class Utility {
      * придётся накрутить несколько периодов, чтобы выставить корректный срок следующего выполнения
      * (после сегодняшней даты)
      * @param habit Модель ПРИВЫЧКА
-     * @return дату, которую можно засетить
      */
     public static void setPlannedNextPerform(Habit habit) {
         LocalDate date = habit.getPlannedPrevPerform() != null ? habit.getPlannedPrevPerform() : habit.getPlannedFirstPerform();

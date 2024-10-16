@@ -58,7 +58,7 @@ public class HabitServiceConsoleImpl implements HabitService {
     }
 
     @Override
-    public void deleteByUser(User user) {
+    public void deleteWithUser(User user) {
         List<Habit> list = findByUser(user);
         for (Habit habit : list) {
             if (habit.getUser().equals(user)) {
@@ -140,8 +140,12 @@ public class HabitServiceConsoleImpl implements HabitService {
     @Override
     public List<Habit> todayPerforms(User user) {
         List<Habit> list = habitStore.findByUser(user);
-        List<Habit> result = new ArrayList<>();
+        List<Habit> activeList = new ArrayList<>();
         for (Habit habit : list) {
+            if (habit.isActive()) activeList.add(habit);
+        }
+        List<Habit> result = new ArrayList<>();
+        for (Habit habit : activeList) {
             if (habit.getPlannedNextPerform().isEqual(LocalDate.now()) ||
                     habit.getPlannedNextPerform().isBefore(LocalDate.now()))
             {

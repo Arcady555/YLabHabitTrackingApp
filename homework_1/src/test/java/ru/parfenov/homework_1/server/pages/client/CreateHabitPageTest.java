@@ -22,8 +22,9 @@ public class CreateHabitPageTest {
         CreateHabitPage createHabitPage = new CreateHabitPage(user, habitService);
         BufferedReader reader = mock(BufferedReader.class);
         createHabitPage.reader = reader;
+        String firstPerformDate = LocalDate.now().plusDays(10L).toString();
 
-        when(reader.readLine()).thenReturn("0", "Exercise", "Daily exercise", "2024-10-15", "30");
+        when(reader.readLine()).thenReturn("0", "Exercise", "Daily exercise", firstPerformDate, "30");
 
         createHabitPage.run();
 
@@ -40,12 +41,13 @@ public class CreateHabitPageTest {
         CreateHabitPage createHabitPage = new CreateHabitPage(user, habitService);
         BufferedReader reader = mock(BufferedReader.class);
         createHabitPage.reader = reader;
+        String firstPerformDate = LocalDate.now().plusDays(10L).toString();
 
-        when(reader.readLine()).thenReturn("0", "Exercise", "Daily exercise", "2024-10-15", "30");
+        when(reader.readLine()).thenReturn("0", "Exercise", "Daily exercise", firstPerformDate, "30");
 
         createHabitPage.run();
 
         verify(habitService).create(any(), anyBoolean(), anyString(),
-                anyString(), any(), eq(LocalDate.parse("2024-10-15")), any());
+                anyString(), any(), eq(LocalDate.parse(firstPerformDate)), any());
     }
 }

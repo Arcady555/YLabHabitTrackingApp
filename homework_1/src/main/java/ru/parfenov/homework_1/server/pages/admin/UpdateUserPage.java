@@ -35,7 +35,7 @@ public class UpdateUserPage implements UserMenuPage {
             System.out.println("Do you want to delete the user?" + System.lineSeparator() + "0 - yes, another key - no");
             String answerDelete = reader.readLine();
             if (answerDelete.equals("0")) {
-                habitService.deleteByUser(user);
+                habitService.deleteWithUser(user);
                 System.out.println(userService.delete(user) ? "User is deleted!" : "User is NOT deleted!");
             } else {
                 System.out.println(
