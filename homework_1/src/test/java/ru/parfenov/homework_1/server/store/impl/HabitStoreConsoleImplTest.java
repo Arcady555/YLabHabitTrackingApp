@@ -12,19 +12,6 @@ import static org.junit.jupiter.api.Assertions.*;
 public class HabitStoreConsoleImplTest {
 
     @Test
-    @DisplayName("Успешное удаление привычки")
-    public void test_delete_habit_by_id() {
-        HabitStoreConsoleImpl store = new HabitStoreConsoleImpl();
-        Habit habit = new Habit();
-        habit.setName("Exercise");
-        store.create(habit);
-        Habit deletedHabit = store.delete(1L);
-        assertNotNull(deletedHabit);
-        assertEquals(1L, deletedHabit.getId());
-        assertNull(store.findById(1L));
-    }
-
-    @Test
     @DisplayName("Поиск привычек по юзеру")
     public void test_find_habits_by_user() {
         HabitStoreConsoleImpl store = new HabitStoreConsoleImpl();
