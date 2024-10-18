@@ -19,6 +19,10 @@ public class UserRepositoryJdbcImpl implements UserRepository {
         this.connection = Utility.loadConnection();
     }
 
+    public UserRepositoryJdbcImpl(Connection connection) {
+        this.connection = connection;
+    }
+
     @Override
     public User create(User user) {
         try (PreparedStatement statement = connection.prepareStatement(

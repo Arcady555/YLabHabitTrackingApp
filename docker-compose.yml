@@ -10,11 +10,6 @@ services:
       - PGDATA=/var/lib/postgresql/data
     volumes:
       - ./db_car_shop/shortcut/data:/var/lib/postgresql/data
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready", "-q", "-d", "y_lab_habit_tracker", "-U", "role_arcady" ]
-      interval: 5s
-      timeout: 5s
-      retries: 5
     ports:
       - "5432:5432"
     restart: always
