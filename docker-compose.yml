@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+  db_habit_tracker:
+    image: postgres
+    container_name: db_habit_tracker
+    environment:
+      - POSTGRES_PASSWORD=8210
+      - POSTGRES_USER=role_arcady
+      - POSTGRES_DB=y_lab_habit_tracker
+      - PGDATA=/var/lib/postgresql/data
+    volumes:
+      - ./db_car_shop/shortcut/data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: always

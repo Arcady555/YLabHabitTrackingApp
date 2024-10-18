@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <property name="now" value="now()" dbms="postgresql"/>
+    <changeSet id="01" author="Arcady555">
+
+        <createSequence
+                startValue="1"
+                incrementBy="1"
+                sequenceName="ht_users"/>
+
+        <createSequence
+                startValue="1"
+                incrementBy="1"
+                sequenceName="ht_habits"/>
+
+        <sql>
+            CREATE SCHEMA IF NOT EXISTS ht_schema;
+        </sql>
+
+        <createTable tableName="users" schemaName="ht_schema" remarks="Пользователи приложения">
+            <column name="id" type="int" defaultValueComputed="nextval('ht_users')" remarks="id"/>
+            <column name="email" type="varchar(100)" remarks="емайл пользователя">
+                <constraints unique="true"/>
+            </column>
+            <column name="password" type="varchar(100)" remarks="пароль для входа в приложение"/>
+            <column name="reset_password" type="varchar(100)" remarks="код для сброса пароля"/>
+            <column name="name" type="varchar(50)" remarks="имя пользователя"/>
+            <column name="user_role" type="varchar(50)" remarks="роль пользователя - админ и тд"/>
+            <column name="blocked" type="boolean" remarks="заблокирован или нет"/>
+        </createTable>
+
+        <createTable tableName="habits" schemaName=" ht_schema" remarks="привычки">
+            <column name="id" type="bigint" defaultValueComputed="nextval('ht_habits')" remarks="id"/>
+            <column name="user_id" type="int" remarks="id создателя привычки">
+                <constraints nullable="false"/>
+            </column>
+            <column name="useful" type="boolean" remarks="полезность привычки"/>
+            <column name="active" type="boolean" remarks="актуальность привычки"/>
+            <column name="streaks_amount" type="int" remarks="количество стриков"/>
+            <column name="name" type="varchar(50)" remarks="название привычки"/>
+            <column name="description" type="varchar" remarks="описание привычки"/>
+            <column name="date_of_create" type="date" remarks="дата создания записи"/>
+            <column name="planned_first_perform" type="date"
+                    remarks="запланированная дата первого выполнения привычки"/>
+            <column name="planned_prev_perform" type="date" remarks="дата предыдущего выполнения по графику"/>
+            <column name="planned_next_perform" type="date" remarks="дата следующего выполнения по графику"/>
+            <column name="last_real_perform" type="date" remarks="дата последнего реального выполнения привычки"/>
+            <column name="frequency" type="int" remarks="периодичность выполнения привычки"/>
+            <column name="performs_amount" type="int" remarks="количество реальных выполнений привычки"/>
+        </createTable>
+
+    </changeSet>
+</databaseChangeLog>
