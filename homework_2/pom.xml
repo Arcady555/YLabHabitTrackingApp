@@ -159,6 +159,7 @@
                 </executions>
                 <configuration>
                     <propertyFile>app.properties</propertyFile>
+                    <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
                 </configuration>
             </plugin>
         </plugins>
