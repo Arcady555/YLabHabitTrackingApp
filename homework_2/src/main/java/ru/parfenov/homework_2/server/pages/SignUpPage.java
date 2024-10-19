@@ -33,7 +33,7 @@ public class SignUpPage {
             System.out.println("no email!!!");
             run();
         }
-        if (!validationEmail(email)) {//////////////
+        if (!validationEmail(email)) {
             System.out.println("not correct email!");
             run();
         }
