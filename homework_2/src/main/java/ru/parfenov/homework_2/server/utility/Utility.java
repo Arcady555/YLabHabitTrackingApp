@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.Properties;
 import java.util.Random;
+import java.util.regex.Pattern;
 
 @Slf4j
 public class Utility {
@@ -33,7 +34,11 @@ public class Utility {
     }
 
     public static boolean validationEmail(String email) {
-        return true;
+        String regexPattern = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
+                + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
+        return Pattern.compile(regexPattern)
+                .matcher(email)
+                .matches();
     }
 
     public static Period getPeriodFromString(String str) throws IOException {
@@ -77,7 +82,7 @@ public class Utility {
 
     public static Connection loadConnection() throws ClassNotFoundException, SQLException, IOException {
         Properties prop = new Properties();
-        prop.load(new FileInputStream("homework_2/src/main/resources/db/app.properties"));
+        prop.load(new FileInputStream("homework_2/src/main/resources/app.properties"));
         Connection connection;
         String url = prop.getProperty("url");
         String username = prop.getProperty("username");

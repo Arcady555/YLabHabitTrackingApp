@@ -126,6 +126,18 @@ public class HabitRepositoryJdbcImpl implements HabitRepository {
         return habit;
     }
 
+    /**
+     * Любой запрос в БД - дорогое удовольствие. Попытаемся уменьшить его вес за счет дополнительной
+     * суеты в стеке, ведь некоторые параметры для замены могут не заполнить.
+     *
+     * @param habitId id привычки, которую надо обновить
+     * @param newUsefulness полезность
+     * @param newActive активность
+     * @param newName название
+     * @param newDescription описание
+     * @param newFrequency частота
+     * @return привычка с обновлёнными полями
+     */
     @Override
     public Habit updateByUser(long habitId, String newUsefulness, String newActive, String newName, String newDescription, String newFrequency) {
         String request = getRequestForUpdateByUser(newUsefulness, newActive, newName, newDescription, newFrequency);
@@ -153,6 +165,19 @@ public class HabitRepositoryJdbcImpl implements HabitRepository {
         return null;
     }
 
+    /**
+     * Любой запрос в БД - дорогое удовольствие. Попытаемся уменьшить его вес за счет дополнительной
+     * суеты в стеке, ведь некоторые параметры поиска могут не заполнить.
+     *
+     * @param user Модель -user
+     * @param usefulness полезность
+     * @param active активность
+     * @param name название
+     * @param description описание
+     * @param dateOfCreate дата создания
+     * @param frequency частота выполнения
+     * @return список привычек юзера по заданным параметрам
+     */
     @Override
     public List<Habit> findByParameters(User user, String usefulness, String active, String name, String description, String dateOfCreate, String frequency) {
         if (usefulness.isEmpty() && active.isEmpty() && name.isEmpty() && description.isEmpty() && dateOfCreate.isEmpty() && frequency.isEmpty()) {
