@@ -23,7 +23,6 @@ public class InitContainer {
             postgreSQLContainer.getUsername(),
             postgreSQLContainer.getPassword());
 
-
     public InitContainer() throws SQLException {
     }
 }

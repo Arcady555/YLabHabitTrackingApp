@@ -24,6 +24,11 @@ public class HabitRepositoryJdbcImpl implements HabitRepository {
         this.connection = Utility.loadConnection();
     }
 
+    public HabitRepositoryJdbcImpl(Connection connection, UserRepository userRepository) {
+        this.userRepository = userRepository;
+        this.connection = connection;
+    }
+
     @Override
     public Habit create(Habit habit) {
         try (PreparedStatement statement = connection.prepareStatement(

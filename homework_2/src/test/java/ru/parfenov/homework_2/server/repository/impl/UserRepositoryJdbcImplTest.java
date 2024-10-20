@@ -10,6 +10,15 @@ import java.sql.SQLException;
 class UserRepositoryJdbcImplTest {
     @Container
     public static InitContainer initContainer;
+
+    static {
+        try {
+            initContainer = new InitContainer();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private static UserRepositoryJdbcImpl userRepository;
 
     @BeforeAll
