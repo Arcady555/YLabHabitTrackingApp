@@ -31,6 +31,10 @@ docker exec -it db_car_shop psql -U role_arcady postgres
 ```
 CREATE DATABASE y_lab_habit_tracker;
 exit 
+```
+
+В последующем, если вам придётся заново стартовать этот контейнер, выполните в командной строке следующие манипуляции:
+![image](images/containerRestart.png)
 
 Перейдите в корень проекта(блок homework_2) через командную строку:
 ```
