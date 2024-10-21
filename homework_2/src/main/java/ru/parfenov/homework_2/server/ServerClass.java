@@ -10,6 +10,7 @@ import ru.parfenov.homework_2.server.service.HabitService;
 import ru.parfenov.homework_2.server.service.UserService;
 import ru.parfenov.homework_2.server.service.impl.HabitServiceConsoleImpl;
 import ru.parfenov.homework_2.server.service.impl.UserServiceConsoleImpl;
+import ru.parfenov.homework_2.server.utility.LiquibaseUpdate;
 
 public class ServerClass {
 
@@ -19,6 +20,8 @@ public class ServerClass {
      * Запуск класса, отвечающего за ежедневную рассылку напоминаний на емайлы
      */
     public void run() throws Exception {
+        LiquibaseUpdate liquibaseUpdate = new LiquibaseUpdate();
+        liquibaseUpdate.run();
 
         UserRepository userRepository = new UserRepositoryJdbcImpl();
         UserService userService = new UserServiceConsoleImpl(userRepository);

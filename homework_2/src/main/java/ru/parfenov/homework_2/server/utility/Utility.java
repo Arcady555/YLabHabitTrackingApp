@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -77,7 +78,7 @@ public class Utility {
     }
 
     public static String generateForResetPassword() {
-        return new Random(10000).toString();
+        return Integer.toString( (int) (Math.random() * 10000));
     }
 
     public static Connection loadConnection() throws ClassNotFoundException, SQLException, IOException {
