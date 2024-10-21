@@ -38,7 +38,7 @@ exit
 
 Перейдите в корень проекта(блок homework_2) через командную строку:
 ```
-cd /home/......../IdeaProjects/YLabCarShopService/homework_2
+cd /home/......../IdeaProjects/YLabHabitTrackingApp/homework_2
 ``` 
 и выполните команды:
 ```
