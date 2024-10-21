@@ -8,14 +8,16 @@ import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.LiquibaseException;
 import liquibase.resource.ClassLoaderResourceAccessor;
+import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.SQLException;
 
+@RequiredArgsConstructor
 public class LiquibaseUpdate {
+    private final Connection connection;
     public void run() throws SQLException, IOException, ClassNotFoundException, LiquibaseException {
-        java.sql.Connection connection = Utility.loadConnection();
-
         Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection));
 
         Liquibase liquibase = new liquibase.Liquibase("db/changelog.xml", new ClassLoaderResourceAccessor(), database);
