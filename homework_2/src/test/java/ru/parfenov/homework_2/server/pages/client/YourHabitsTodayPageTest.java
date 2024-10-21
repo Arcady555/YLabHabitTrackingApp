@@ -2,14 +2,17 @@ package ru.parfenov.homework_2.server.pages.client;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
+import ru.parfenov.homework_2.server.enums.user.Role;
 import ru.parfenov.homework_2.server.model.Habit;
 import ru.parfenov.homework_2.server.model.User;
 import ru.parfenov.homework_2.server.service.HabitService;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -79,5 +82,41 @@ public class YourHabitsTodayPageTest {
         when(habitService.findByUser(user)).thenReturn(List.of());
         YourHabitsTodayPage page = new YourHabitsTodayPage(user, habitService);
         page.run();
+    }
+
+    @Test
+    @DisplayName("Нормальное выполнение без выдачи исключений")
+    public void test_normal_execution_no_exceptions() {
+        User user = new User(1, "test@example.com", "password",
+                "reset", "Test User", Role.CLIENT, false);
+        HabitService habitService = mock(HabitService.class);
+        when(habitService.todayPerforms(user)).thenReturn(List.of());
+
+        YourHabitsTodayPage page = new YourHabitsTodayPage(user, habitService);
+
+        assertDoesNotThrow(() -> page.run());
+    }
+
+    @Test
+    @DisplayName("Возврат пустого списка для сегодняшних привычек.")
+    public void test_empty_list_for_today_habits() throws IOException, InterruptedException {
+        User user = new User(1, "test@example.com", "password",
+                "reset", "Test User", Role.CLIENT, false);
+        HabitService habitService = mock(HabitService.class);
+        when(habitService.todayPerforms(user)).thenReturn(List.of());
+
+        YourHabitsTodayPage page = new YourHabitsTodayPage(user, habitService);
+
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outContent));
+
+        page.run();
+
+        String expectedOutput = "Hello dear!!!!" +
+                System.lineSeparator() + "It's your habits today :" +
+                System.lineSeparator();
+        assertEquals(expectedOutput, outContent.toString());
+
+        System.setOut(System.out);
     }
 }

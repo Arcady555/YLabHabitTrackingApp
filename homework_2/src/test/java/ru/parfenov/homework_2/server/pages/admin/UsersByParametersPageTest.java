@@ -91,7 +91,7 @@ public class UsersByParametersPageTest {
     }
 
     @Test
-    @DisplayName("Поиск по всеми 3м параметрам")
+    @DisplayName("Поиск по всем 3м параметрам")
     public void test_empty_habit_input() throws IOException {
         UserService mockService = mock(UserService.class);
         UsersByParametersPage page = new UsersByParametersPage(mockService);
@@ -110,4 +110,47 @@ public class UsersByParametersPageTest {
 
         verify(mockService).findByParameters("CLIENT", "John", "true");
     }
+
+    @Test
+    @DisplayName("Ввод роли -> client")
+    public void test_interprets_role_input_correctly() throws IOException {
+        UserService mockService = mock(UserService.class);
+        UsersByParametersPage page = new UsersByParametersPage(mockService);
+        BufferedReader mockReader = mock(BufferedReader.class);
+        page.reader = mockReader;
+
+        when(mockReader.readLine()).thenReturn("1", "John", "1");
+        page.run();
+
+        verify(mockService).findByParameters("CLIENT", "John", "false");
+    }
+
+    @Test
+    @DisplayName("Ввод блока -> true")
+    public void test_interprets_block_input_correctly() throws IOException {
+        UserService mockService = mock(UserService.class);
+        UsersByParametersPage page = new UsersByParametersPage(mockService);
+        BufferedReader mockReader = mock(BufferedReader.class);
+        page.reader = mockReader;
+
+        when(mockReader.readLine()).thenReturn("0", "John", "0");
+        page.run();
+
+        verify(mockService).findByParameters("ADMIN", "John", "true");
+    }
+
+    @Test
+    @DisplayName("Ввод роли -> null")
+    public void test_handles_invalid_role_input() throws IOException {
+        UserService mockService = mock(UserService.class);
+        UsersByParametersPage page = new UsersByParametersPage(mockService);
+        BufferedReader mockReader = mock(BufferedReader.class);
+        page.reader = mockReader;
+
+        when(mockReader.readLine()).thenReturn("invalid", "John", "1");
+        page.run();
+
+        verify(mockService).findByParameters(null, "John", "false");
+    }
+
 }

@@ -51,4 +51,22 @@ public class CreateHabitPageTest {
         verify(habitService).create(any(), anyBoolean(), anyString(),
                 anyString(), any(), eq(LocalDate.parse(firstPerformDate)), any());
     }
+
+    @Test
+    @DisplayName("Создание привычки с предоставленными входными данными.")
+    public void test_calls_habit_service_create() throws IOException {
+        User user = new User();
+        HabitService habitService = mock(HabitService.class);
+        CreateHabitPage createHabitPage = new CreateHabitPage(user,
+                habitService);
+        BufferedReader reader = mock(BufferedReader.class);
+        createHabitPage.reader = reader;
+        LocalDate date = LocalDate.now().plusDays(30L);
+        when(reader.readLine()).thenReturn("0", "Exercise", "Daily exercise", date.toString(), "30");
+
+        createHabitPage.run();
+
+        verify(habitService).create(any(), anyBoolean(), anyString(),
+                anyString(), any(), any(), any());
+    }
 }

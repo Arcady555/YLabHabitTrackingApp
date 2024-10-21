@@ -2,6 +2,7 @@ package ru.parfenov.homework_2.server.pages.admin;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import ru.parfenov.homework_2.server.enums.user.Role;
 import ru.parfenov.homework_2.server.model.Habit;
 import ru.parfenov.homework_2.server.model.User;
 import ru.parfenov.homework_2.server.service.HabitService;
@@ -112,6 +113,87 @@ public class HabitsOfUserPageTest {
         User user = new User(1, "test@example.com", "password", "1", "Test User", null, false);
 
         when(reader.readLine()).thenReturn("test@example.com", "0", "");
+        when(userService.findByEmail("test@example.com")).thenReturn(Optional.of(user));
+
+        page.run();
+
+        verify(habitService, never()).delete(anyLong());
+    }
+
+    @Test
+    @DisplayName("Отказ удалить привычку")
+    public void test_no_habits_deleted_continues_operation() throws
+            IOException, InterruptedException {
+        UserService userService = mock(UserService.class);
+        HabitService habitService = mock(HabitService.class);
+        BufferedReader reader = mock(BufferedReader.class);
+        HabitsOfUserPage page = new HabitsOfUserPage(userService, habitService);
+        page.reader = reader;
+
+        User user = new User(1, "test@example.com", "password",
+                "reset", "Test User", Role.CLIENT, false);
+
+        when(reader.readLine()).thenReturn("test@example.com", "1");
+        when(userService.findByEmail("test@example.com")).thenReturn(Optional.of(user));
+
+        page.run();
+
+        verify(habitService, never()).delete(anyLong());
+    }
+
+    @Test
+    @DisplayName("Согласие удалить привычку")
+    public void test_handles_user_input_and_prompts_for_deletion()
+            throws IOException, InterruptedException {
+        UserService userService = mock(UserService.class);
+        HabitService habitService = mock(HabitService.class);
+        BufferedReader reader = mock(BufferedReader.class);
+        HabitsOfUserPage page = new HabitsOfUserPage(userService, habitService);
+        page.reader = reader;
+
+        User user = new User(1, "test@example.com", "password",
+                "reset", "Test User", Role.CLIENT, false);
+
+        when(reader.readLine()).thenReturn("test@example.com", "0");
+        when(userService.findByEmail("test@example.com")).thenReturn(Optional.of(user));
+
+        page.run();
+
+        verify(reader, times(3)).readLine();
+    }
+
+    @Test
+    @DisplayName("Ввод несуществующего емайл")
+    public void test_non_existent_user_email_handling() throws
+            IOException, InterruptedException {
+        UserService userService = mock(UserService.class);
+        HabitService habitService = mock(HabitService.class);
+        BufferedReader reader = mock(BufferedReader.class);
+        HabitsOfUserPage page = new HabitsOfUserPage(userService, habitService);
+        page.reader = reader;
+
+        when(reader.readLine()).thenReturn("nonexistent@example.com");
+        when(userService.findByEmail("nonexistent@example.com")).thenReturn(Optional.empty());
+
+        page.run();
+
+        verify(habitService, never()).findByUser(any());
+    }
+
+    @Test
+    @DisplayName("Ввод недопустимого ID")
+    public void test_invalid_habit_id_input_handling() throws
+            IOException, InterruptedException {
+        UserService userService = mock(UserService.class);
+        HabitService habitService = mock(HabitService.class);
+        BufferedReader reader = mock(BufferedReader.class);
+        HabitsOfUserPage page = new HabitsOfUserPage(userService, habitService);
+        page.reader = reader;
+
+        User user = new User(1, "test@example.com", "password",
+                "reset", "Test User", Role.CLIENT, false);
+
+        when(reader.readLine()).thenReturn("test@example.com", "0", "invalid");
         when(userService.findByEmail("test@example.com")).thenReturn(Optional.of(user));
 
         page.run();

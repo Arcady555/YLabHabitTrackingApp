@@ -111,4 +111,21 @@ public class UserPageTest {
 
         verify(mockService).findByEmail("unknown@example.com");
     }
+
+    @Test
+    @DisplayName("IOException при чтении ввода с консоли")
+    public void test_handle_io_exception_during_input_reading() {
+        UserService mockService = mock(UserService.class);
+        UserPage userPage = new UserPage(mockService);
+        BufferedReader mockReader = mock(BufferedReader.class);
+        userPage.reader = mockReader;
+
+        try {
+            when(mockReader.readLine()).thenThrow(new IOException("IO error"));
+            userPage.run();
+            fail("Expected IOException to be thrown");
+        } catch (IOException e) {
+            assertEquals("IO error", e.getMessage());
+        }
+    }
 }

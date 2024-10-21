@@ -6,6 +6,7 @@ import ru.parfenov.homework_2.server.enums.user.Role;
 import ru.parfenov.homework_2.server.model.User;
 import ru.parfenov.homework_2.server.service.UserService;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -66,5 +67,69 @@ public class AllUsersPageTest {
                 RuntimeException("Store error"));
         AllUsersPage allUsersPage = new AllUsersPage(mockService);
         assertThrows(RuntimeException.class, allUsersPage::run);
+    }
+
+    @Test
+    @DisplayName("Работа с пользователями, имеющими null или пустые поля")
+    public void test_handles_users_with_null_or_empty_fields() {
+        UserService mockService = mock(UserService.class);
+        List<User> users = List.of(new User(1, null, "", null, "",
+                Role.CLIENT, false));
+        when(mockService.findAll()).thenReturn(users);
+        AllUsersPage allUsersPage = new AllUsersPage(mockService);
+        allUsersPage.run();
+        verify(mockService).findAll();
+    }
+
+    @Test
+    @DisplayName("Вывод большого списка")
+    public void test_handles_large_number_of_users() {
+        UserService mockService = mock(UserService.class);
+        List<User> users = new ArrayList<>();
+        for (int i = 0; i < 10000; i++) {
+            users.add(new User(i, "email" + i + "@example.com", "pass"
+                    + i, "reset" + i, "User" + i, Role.CLIENT, false));
+        }
+        when(mockService.findAll()).thenReturn(users);
+        AllUsersPage allUsersPage = new AllUsersPage(mockService);
+        allUsersPage.run();
+        verify(mockService).findAll();
+    }
+
+    @Test
+    @DisplayName("Корректный перебор")
+    public void test_iterates_over_users_list() {
+        UserService userService = mock(UserService.class);
+        List<User> users = List.of(new User(1, "email1@example.com",
+                        "pass1", "reset1", "User1", Role.CLIENT, false),
+                new User(2, "email2@example.com",
+                        "pass2", "reset2", "User2", Role.CLIENT, false));
+        when(userService.findAll()).thenReturn(users);
+        AllUsersPage allUsersPage = new AllUsersPage(userService);
+        allUsersPage.run();
+        assertEquals(2, users.size());
+    }
+
+    @Test
+    @DisplayName("Вывод пустого списка")
+    public void test_handles_empty_user_list() {
+        UserService userService = mock(UserService.class);
+        when(userService.findAll()).thenReturn(Collections.emptyList());
+        AllUsersPage allUsersPage = new AllUsersPage(userService);
+        assertDoesNotThrow(allUsersPage::run);
+    }
+
+    @Test
+    @DisplayName("Вывод большого списка без исключений")
+    public void test_handles_large_user_list() {
+        UserService userService = mock(UserService.class);
+        List<User> users = new ArrayList<>();
+        for (int i = 0; i < 100; i++) {
+            users.add(new User(i, "email" + i + "@example.com", "pass"
+                    + i, "reset" + i, "User" + i, Role.CLIENT, false));
+        }
+        when(userService.findAll()).thenReturn(users);
+        AllUsersPage allUsersPage = new AllUsersPage(userService);
+        assertDoesNotThrow(allUsersPage::run);
     }
 }

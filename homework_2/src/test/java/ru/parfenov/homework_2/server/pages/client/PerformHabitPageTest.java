@@ -3,6 +3,7 @@ package ru.parfenov.homework_2.server.pages.client;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import ru.parfenov.homework_2.server.enums.user.Role;
 import ru.parfenov.homework_2.server.model.Habit;
 import ru.parfenov.homework_2.server.model.User;
 import ru.parfenov.homework_2.server.service.HabitService;
@@ -86,5 +87,21 @@ public class PerformHabitPageTest {
         performHabitPage.reader = new BufferedReader(new StringReader("1\n"));
         performHabitPage.run();
         verify(habitService).findById(1L);
+    }
+
+    @Test
+    @DisplayName("Привычка не принадлежит юзеру")
+    public void test_habit_id_not_associated_with_any_habit() throws
+            IOException, InterruptedException {
+        User user = new User(1, "test@example.com", "password",
+                "reset", "Test User", Role.CLIENT, false);
+        HabitService habitService = mock(HabitService.class);
+        when(habitService.findById(999L)).thenReturn(Optional.empty());
+        PerformHabitPage page = new PerformHabitPage(user, habitService);
+        BufferedReader reader = mock(BufferedReader.class);
+        when(reader.readLine()).thenReturn("999");
+        page.reader = reader;
+        page.run();
+        verify(habitService).findById(999L);
     }
 }
