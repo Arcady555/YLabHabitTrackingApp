@@ -41,7 +41,7 @@ class HabitRepositoryJdbcImplTest {
         habitRepository = new HabitRepositoryJdbcImpl(connection, userRepository);
         Period frequency = Period.of(0, 0, 10);
         Habit habit = new Habit(
-                0L, user, true, true, 1, "run", "run everyday", LocalDate.now(), LocalDate.now().plusDays(1L),
+                1L, user, true, true, 1, "run", "run everyday", LocalDate.now(), LocalDate.now().plusDays(1L),
                 LocalDate.now().plusDays(1L), LocalDate.now().plus(frequency), null, frequency, 0);
         habitRepository.create(habit);
     }
@@ -54,18 +54,17 @@ class HabitRepositoryJdbcImplTest {
     @Test
     @DisplayName("Проверка findByUser()")
     void whenCreateAndFindByUserThanOk() {
-        Assertions.assertEquals(habitRepository.findByUser(user).get(0).getId(), 0);
+        Assertions.assertEquals(habitRepository.findByUser(user).get(0).getId(), 1);
         Assertions.assertEquals(habitRepository.findByUser(user).get(0).getUser(), user);
         Assertions.assertTrue(habitRepository.findByUser(user).get(0).isUseful());
         Assertions.assertTrue(habitRepository.findByUser(user).get(0).isActive());
         Assertions.assertEquals(habitRepository.findByUser(user).get(0).getStreaksAmount(), 1);
         Assertions.assertEquals(habitRepository.findByUser(user).get(0).getName(), "run");
         Assertions.assertEquals(habitRepository.findByUser(user).get(0).getDescription(), "run everyday");
-        Assertions.assertEquals(habitRepository.findByUser(user).get(0).getId(), 0);
         Assertions.assertEquals(habitRepository.findByUser(user).get(0).getDateOfCreate(), LocalDate.now());
         Assertions.assertEquals(habitRepository.findByUser(user).get(0).getPlannedFirstPerform(), LocalDate.now().plusDays(1L));
-        Assertions.assertEquals(habitRepository.findByUser(user).get(0).getPlannedPrevPerform(), LocalDate.now().plusDays(1L));
-        Assertions.assertEquals(habitRepository.findByUser(user).get(0).getPlannedNextPerform(), LocalDate.now().plusDays(11L));
+        Assertions.assertNull(habitRepository.findByUser(user).get(0).getPlannedPrevPerform());
+        Assertions.assertEquals(habitRepository.findByUser(user).get(0).getPlannedNextPerform(), LocalDate.now().plusDays(10L));
         Assertions.assertNull(habitRepository.findByUser(user).get(0).getLastRealPerform());
         Assertions.assertEquals(habitRepository.findByUser(user).get(0).getFrequency(), Period.of(0, 0, 10));
         Assertions.assertEquals(habitRepository.findByUser(user).get(0).getPerformsAmount(), 0);
@@ -74,20 +73,19 @@ class HabitRepositoryJdbcImplTest {
     @Test
     @DisplayName("Проверка findById()")
     void whenCreateAndFindByIdThanOk() {
-        Assertions.assertEquals(habitRepository.findById(0).getId(), 0);
-        Assertions.assertEquals(habitRepository.findById(0).getUser(), user);
-        Assertions.assertTrue(habitRepository.findById(0).isUseful());
-        Assertions.assertTrue(habitRepository.findById(0).isActive());
-        Assertions.assertEquals(habitRepository.findById(0).getStreaksAmount(), 1);
-        Assertions.assertEquals(habitRepository.findById(0).getName(), "run");
-        Assertions.assertEquals(habitRepository.findById(0).getDescription(), "run everyday");
-        Assertions.assertEquals(habitRepository.findById(0).getId(), 0);
-        Assertions.assertEquals(habitRepository.findById(0).getDateOfCreate(), LocalDate.now());
-        Assertions.assertEquals(habitRepository.findById(0).getPlannedFirstPerform(), LocalDate.now().plusDays(1L));
-        Assertions.assertEquals(habitRepository.findById(0).getPlannedPrevPerform(), LocalDate.now().plusDays(1L));
-        Assertions.assertEquals(habitRepository.findById(0).getPlannedNextPerform(), LocalDate.now().plusDays(11L));
-        Assertions.assertNull(habitRepository.findById(0).getLastRealPerform());
-        Assertions.assertEquals(habitRepository.findById(0).getFrequency(), Period.of(0, 0, 10));
-        Assertions.assertEquals(habitRepository.findById(0).getPerformsAmount(), 0);
+        Assertions.assertEquals(habitRepository.findById(1).getId(), 1);
+        Assertions.assertEquals(habitRepository.findById(1).getUser().getId(), user.getId());
+        Assertions.assertTrue(habitRepository.findById(1).isUseful());
+        Assertions.assertTrue(habitRepository.findById(1).isActive());
+        Assertions.assertEquals(habitRepository.findById(1).getStreaksAmount(), 1);
+        Assertions.assertEquals(habitRepository.findById(1).getName(), "run");
+        Assertions.assertEquals(habitRepository.findById(1).getDescription(), "run everyday");
+        Assertions.assertEquals(habitRepository.findById(1).getDateOfCreate(), LocalDate.now());
+        Assertions.assertEquals(habitRepository.findById(1).getPlannedFirstPerform(), LocalDate.now().plusDays(1L));
+        Assertions.assertNull(habitRepository.findById(1).getPlannedPrevPerform());
+        Assertions.assertEquals(habitRepository.findById(1).getPlannedNextPerform(), LocalDate.now().plusDays(10L));
+        Assertions.assertNull(habitRepository.findById(1).getLastRealPerform());
+        Assertions.assertEquals(habitRepository.findById(1).getFrequency(), Period.of(0, 0, 10));
+        Assertions.assertEquals(habitRepository.findById(1).getPerformsAmount(), 0);
     }
 }

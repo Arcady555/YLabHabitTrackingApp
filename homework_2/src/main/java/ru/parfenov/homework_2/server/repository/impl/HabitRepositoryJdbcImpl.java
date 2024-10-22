@@ -43,9 +43,9 @@ public class HabitRepositoryJdbcImpl implements HabitRepository {
             statement.setString(6, habit.getDescription());
             statement.setDate(7, Date.valueOf(habit.getDateOfCreate()));
             statement.setDate(8, Date.valueOf(habit.getPlannedFirstPerform()));
-            statement.setDate(9, Date.valueOf(habit.getPlannedPrevPerform()));
+            statement.setDate(9, null);
             statement.setDate(10, Date.valueOf(habit.getPlannedNextPerform()));
-            statement.setDate(11, Date.valueOf(habit.getLastRealPerform()));
+            statement.setDate(11, null);
             statement.setInt(12, (habit.getFrequency().getDays()));
             statement.setInt(13, habit.getPerformsAmount());
             statement.execute();
@@ -218,9 +218,9 @@ public class HabitRepositoryJdbcImpl implements HabitRepository {
                 resultSet.getString("description"),
                 resultSet.getDate("date_of_create").toLocalDate(),
                 resultSet.getDate("planned_first_perform").toLocalDate(),
-                resultSet.getDate("planned_prev_perform").toLocalDate(),
+                resultSet.getDate("planned_prev_perform") != null ? resultSet.getDate("planned_prev_perform").toLocalDate() : null,
                 resultSet.getDate("planned_next_perform").toLocalDate(),
-                resultSet.getDate("last_real_perform").toLocalDate(),
+                resultSet.getDate("last_real_perform") != null ? resultSet.getDate("last_real_perform").toLocalDate() : null,
                 Period.of(0, daysAmount / 30, daysAmount % 30),
                 resultSet.getInt("performs_amount")
         );
@@ -261,7 +261,7 @@ public class HabitRepositoryJdbcImpl implements HabitRepository {
                                       String newName,
                                       String newDescription,
                                       String dateOfCreate,
-                                      String newFrequency) throws SQLException, IOException {
+                                      String newFrequency) throws SQLException {
         int result = 0;
         if (userId != 0) {
             result++;

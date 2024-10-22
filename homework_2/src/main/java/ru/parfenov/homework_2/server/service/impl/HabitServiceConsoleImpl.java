@@ -31,7 +31,7 @@ public class HabitServiceConsoleImpl implements HabitService {
             Period frequency
     ) {
         Habit habit = new Habit(
-                0L,
+                0,
                 user,
                 usefulness,
                 true,
