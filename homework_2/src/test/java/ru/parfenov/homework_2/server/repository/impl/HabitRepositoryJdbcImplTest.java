@@ -1,42 +1,44 @@
 package ru.parfenov.homework_2.server.repository.impl;
 
 import org.junit.jupiter.api.*;
+import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.parfenov.homework_2.server.enums.user.Role;
 import ru.parfenov.homework_2.server.model.Habit;
 import ru.parfenov.homework_2.server.model.User;
 import ru.parfenov.homework_2.server.repository.HabitRepository;
 import ru.parfenov.homework_2.server.repository.UserRepository;
+import ru.parfenov.homework_2.server.utility.LiquibaseUpdate;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.Period;
 
+@Testcontainers
 class HabitRepositoryJdbcImplTest {
     @Container
-    public static InitContainer initContainer;
+    private static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:13");
+    private static Connection connection;
+
+    private static UserRepository userRepository;
     private static HabitRepository habitRepository;
     private static User user;
 
-    static {
-        try {
-            initContainer = new InitContainer();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     @BeforeAll
-    static void beforeAll() {
-        initContainer.getPostgreSQLContainer().start();
-    }
-
-    @BeforeAll
-    public static void initConnection() {
-        UserRepository userRepository = new UserRepositoryJdbcImpl(initContainer.getConnection());
-        user = new User(0, "Arcady@mail.ru", "password", "resetPassword", "Arcady", Role.CLIENT, false);
+    public static void initConnection() throws Exception {
+        connection = DriverManager.getConnection(
+                postgreSQLContainer.getJdbcUrl(),
+                postgreSQLContainer.getUsername(),
+                postgreSQLContainer.getPassword());
+        LiquibaseUpdate liquibaseUpdate = new LiquibaseUpdate(connection);
+        liquibaseUpdate.run();
+        userRepository = new UserRepositoryJdbcImpl(connection);
+        user = new User(0, "Arcady@mail.ru","password", "resetPassword", "Arcady",  Role.CLIENT, false);
         userRepository.create(user);
-        habitRepository = new HabitRepositoryJdbcImpl(initContainer.getConnection(), userRepository);
+        habitRepository = new HabitRepositoryJdbcImpl(connection, userRepository);
         Period frequency = Period.of(0, 0, 10);
         Habit habit = new Habit(
                 0L, user, true, true, 1, "run", "run everyday", LocalDate.now(), LocalDate.now().plusDays(1L),
@@ -46,12 +48,7 @@ class HabitRepositoryJdbcImplTest {
 
     @AfterAll
     public static void closeConnection() throws SQLException {
-        initContainer.getConnection().close();
-    }
-
-    @AfterAll
-    static void afterAll() {
-        initContainer.getPostgreSQLContainer().stop();
+        connection.close();
     }
 
     @Test

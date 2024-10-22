@@ -1,46 +1,42 @@
 package ru.parfenov.homework_2.server.repository.impl;
 
 import org.junit.jupiter.api.*;
+import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.parfenov.homework_2.server.enums.user.Role;
 import ru.parfenov.homework_2.server.model.User;
+import ru.parfenov.homework_2.server.repository.UserRepository;
+import ru.parfenov.homework_2.server.utility.LiquibaseUpdate;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 
+@Testcontainers
 class UserRepositoryJdbcImplTest {
     @Container
-    public static InitContainer initContainer;
+    private static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:13");
+    private static Connection connection;
 
-    static {
-        try {
-            initContainer = new InitContainer();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static UserRepositoryJdbcImpl userRepository;
-
-    @BeforeAll
-    static void beforeAll() {
-        initContainer.getPostgreSQLContainer().start();
-    }
-
-    @AfterAll
-    static void afterAll() {
-        initContainer.getPostgreSQLContainer().stop();
-    }
+    private static UserRepository userRepository;
 
     @BeforeAll
     public static void initConnection() throws Exception {
-        userRepository = new UserRepositoryJdbcImpl(initContainer.getConnection());
+        connection = DriverManager.getConnection(
+                postgreSQLContainer.getJdbcUrl(),
+                postgreSQLContainer.getUsername(),
+                postgreSQLContainer.getPassword());
+        LiquibaseUpdate liquibaseUpdate = new LiquibaseUpdate(connection);
+        liquibaseUpdate.run();
+        userRepository = new UserRepositoryJdbcImpl(connection);
         User user = new User(0, "Arcady@mail.ru","password", "resetPassword", "Arcady",  Role.CLIENT, false);
         userRepository.create(user);
     }
 
     @AfterAll
     public static void closeConnection() throws SQLException {
-        initContainer.getConnection().close();
+        connection.close();
     }
 
     @Test
