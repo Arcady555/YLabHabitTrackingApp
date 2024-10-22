@@ -23,6 +23,7 @@ class UserRepositoryJdbcImplTest {
 
     @BeforeAll
     public static void initConnection() throws Exception {
+        postgreSQLContainer.start();
         connection = DriverManager.getConnection(
                 postgreSQLContainer.getJdbcUrl(),
                 postgreSQLContainer.getUsername(),
@@ -42,24 +43,24 @@ class UserRepositoryJdbcImplTest {
     @Test
     @DisplayName("Проверка findAll()")
     void whenCreateAndGetAllThanOk() {
-        Assertions.assertEquals(userRepository.findAll().get(0).getId(), 1);
-        Assertions.assertEquals(userRepository.findAll().get(0).getEmail(), "Arcady@mail.ru");
-        Assertions.assertEquals(userRepository.findAll().get(0).getPassword(), "password");
-        Assertions.assertEquals(userRepository.findAll().get(0).getResetPassword(), "resetPassword");
-        Assertions.assertEquals(userRepository.findAll().get(0).getName(), "Arcady");
-        Assertions.assertEquals(userRepository.findAll().get(0).getRole(), Role.CLIENT);
-        Assertions.assertFalse(userRepository.findAll().get(0).isBlocked());
+        Assertions.assertEquals(userRepository.findAll().get(1).getId(), 2);
+        Assertions.assertEquals(userRepository.findAll().get(1).getEmail(), "Arcady@mail.ru");
+        Assertions.assertEquals(userRepository.findAll().get(1).getPassword(), "password");
+        Assertions.assertEquals(userRepository.findAll().get(1).getResetPassword(), "resetPassword");
+        Assertions.assertEquals(userRepository.findAll().get(1).getName(), "Arcady");
+        Assertions.assertEquals(userRepository.findAll().get(1).getRole(), Role.CLIENT);
+        Assertions.assertFalse(userRepository.findAll().get(1).isBlocked());
     }
 
     @Test
     @DisplayName("Проверка findById()")
     void whenCreateAndFindByIdThanOk() {
-        Assertions.assertEquals(userRepository.findById(1).getId(), 1);
-        Assertions.assertEquals(userRepository.findById(1).getEmail(), "Arcady@mail.ru");
-        Assertions.assertEquals(userRepository.findById(1).getPassword(), "password");
-        Assertions.assertEquals(userRepository.findById(1).getResetPassword(), "resetPassword");
-        Assertions.assertEquals(userRepository.findById(1).getName(), "Arcady");
-        Assertions.assertEquals(userRepository.findById(1).getRole(), Role.CLIENT);
-        Assertions.assertFalse(userRepository.findById(1).isBlocked());
+        Assertions.assertEquals(userRepository.findById(2).getId(), 2);
+        Assertions.assertEquals(userRepository.findById(2).getEmail(), "Arcady@mail.ru");
+        Assertions.assertEquals(userRepository.findById(2).getPassword(), "password");
+        Assertions.assertEquals(userRepository.findById(2).getResetPassword(), "resetPassword");
+        Assertions.assertEquals(userRepository.findById(2).getName(), "Arcady");
+        Assertions.assertEquals(userRepository.findById(2).getRole(), Role.CLIENT);
+        Assertions.assertFalse(userRepository.findById(2).isBlocked());
     }
 }
