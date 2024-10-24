@@ -7,7 +7,7 @@ import lombok.Data;
  * И оставлены только поля, нужные для ввода при sign-in
  */
 @Data
-public class UserIdPassDTO {
+public class UserSignInDTO {
     private int id;
     private String password;
 }
