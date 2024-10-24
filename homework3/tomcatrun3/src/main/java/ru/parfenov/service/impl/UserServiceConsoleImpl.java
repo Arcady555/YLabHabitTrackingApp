@@ -17,10 +17,9 @@ public class UserServiceConsoleImpl implements UserService {
     private final UserRepository repository;
 
     @Override
-    public User createByReg(String email, String password, String name) {
+    public Optional<User> createByReg(String email, String password, String name) {
         String resetPassword = Utility.generateForResetPassword();
-        User user = new User(0, email, password, resetPassword, name, Role.CLIENT, false);
-        return repository.create(user);
+        return Optional.ofNullable(repository.create(new User(0, email, password, resetPassword, name, Role.CLIENT, false)));
     }
 
     @Override

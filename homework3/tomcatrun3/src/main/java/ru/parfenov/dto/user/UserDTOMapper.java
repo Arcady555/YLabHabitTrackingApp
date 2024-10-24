@@ -1,13 +1,13 @@
 package ru.parfenov.dto.user;
 
 import org.mapstruct.Mapper;
-import ru.parfenov.homework_3.model.User;
+import ru.parfenov.model.User;
 
 @Mapper
 public interface UserDTOMapper {
-    UserNamePasContDTO toUserDtoFoReg(User source);
+    UserSignUpDTO toUserDtoFoReg(User source);
 
-    User toUser(UserNamePasContDTO destination);
+    User toUser(UserSignUpDTO destination);
 
     UserAllParamDTO toUserAllParamDTO(User source);
 
@@ -17,7 +17,7 @@ public interface UserDTOMapper {
 
     User toUser(UserIdNameRoleDTO destination);
 
-    UserIdPassDTO toUserIdPassDTO(User source);
+    UserSignInDTO toUserIdPassDTO(User source);
 
-    User toUser(UserIdPassDTO destination);
+    User toUser(UserSignInDTO destination);
 }

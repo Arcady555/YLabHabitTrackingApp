@@ -19,7 +19,7 @@ public interface UserService {
      * @param name его имя
      * @return Модель - юзер.
      */
-    User createByReg(String email, String password, String name);
+    Optional<User> createByReg(String email, String password, String name);
 
     /**
      * Поиск юзера по его емайл

@@ -2,10 +2,10 @@ package ru.parfenov.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.parfenov.server.model.Habit;
-import ru.parfenov.server.model.User;
-import ru.parfenov.server.repository.HabitRepository;
-import ru.parfenov.server.service.HabitService;
+import ru.parfenov.model.Habit;
+import ru.parfenov.model.User;
+import ru.parfenov.repository.HabitRepository;
+import ru.parfenov.service.HabitService;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -13,7 +13,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
-import static ru.parfenov.server.utility.Utility.setPlannedNextPerform;
+import static ru.parfenov.utility.Utility.setPlannedNextPerform;
 
 @Slf4j
 @RequiredArgsConstructor

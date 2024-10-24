@@ -6,12 +6,11 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import ru.parfenov.homework_3.dto.UserDTOMapper;
-import ru.parfenov.homework_3.dto.UserDTOMapperImpl;
-import ru.parfenov.homework_3.dto.UserIdPassDTO;
-import ru.parfenov.homework_3.model.User;
-import ru.parfenov.homework_3.service.UserService;
-import ru.parfenov.homework_3.utility.Utility;
+import ru.parfenov.dto.user.UserDTOMapper;
+import ru.parfenov.dto.user.UserSignInDTO;
+import ru.parfenov.model.User;
+import ru.parfenov.service.UserService;
+import ru.parfenov.utility.ServiceLoading;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -19,13 +18,14 @@ import java.util.Optional;
 /**
  * Страница входа в систему через id b пароль
  */
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////генерация авторизации ?????????
 @Slf4j
 @WebServlet(name = "SignInServlet", urlPatterns = "/sign-in")
 public class SignInServlet extends HttpServlet implements MethodsForServlets {
     private final UserService userService;
 
     public SignInServlet() throws Exception {
-        userService = Utility.loadUserservice();
+        userService = ServiceLoading.loadUserservice();
     }
 
     public SignInServlet(UserService userService) {
@@ -45,16 +45,16 @@ public class SignInServlet extends HttpServlet implements MethodsForServlets {
         UserDTOMapper mapper = new UserDTOMapperImpl();
         String userJson = getStringJson(request);
         ObjectMapper objectMapper = new ObjectMapper();
-        UserIdPassDTO userDTO = objectMapper.readValue(userJson, UserIdPassDTO.class);
+        UserSignInDTO userDTO = objectMapper.readValue(userJson, UserSignInDTO.class);
         Optional<User> userOptional =
-                userService.findByIdAndPassword(userDTO.getId(), userDTO.getPassword());
+                userService.findByEmailAndPassword(userDTO.getEmail(), userDTO.getPassword());
         String userJsonString;
         int responseStatus;
         if (userOptional.isPresent()) {
             userJsonString = objectMapper.writeValueAsString(mapper.toUserIdNameRoleDTO(userOptional.get()));
             responseStatus = 200;
-            var session = request.getSession();
-            session.setAttribute("user", userOptional.get());
+         ////////////////////////////////////////////////////////////   var session = request.getSession();
+       //////////////////////////////////////////////////////////////////////     session.setAttribute("user", userOptional.get());
         } else {
             userJsonString = "user is not found!";
             responseStatus = 404;
