@@ -3,18 +3,13 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>ru.parfenov</groupId>
+        <artifactId>YLabHabitTrackingApp</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
 
-    <groupId>ru.parfenov</groupId>
-    <artifactId>YLabHabitTrackingApp</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <packaging>pom</packaging>
-    <modules>
-        <module>homework_1</module>
-        <module>homework2</module>
-        <module>homework3</module>
-        <module>homework3/separaterun3</module>
-        <module>homework3/tomcatrun3</module>
-    </modules>
+    <artifactId>homework3</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
