@@ -55,7 +55,7 @@ public interface HabitRepository {
      * @param newFrequency частота
      * @return habit Модель - привычка, с обновлёнными данными
      */
-    Habit updateByUser(long habitId, String newUsefulness, String newActive, String newName, String newDescription, String newFrequency);
+    Habit updateByUser(long habitId, String newUsefulness, String newActive, String newName, String newDescription, int newFrequency);
 
     Habit updateViaPerform(Habit habit);
 

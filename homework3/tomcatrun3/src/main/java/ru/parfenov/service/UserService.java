@@ -1,6 +1,6 @@
 package ru.parfenov.service;
 
-import ru.parfenov.enums.user.Role;
+import ru.parfenov.dto.user.UserUpdateDTO;
 import ru.parfenov.model.User;
 
 import java.util.List;
@@ -33,7 +33,7 @@ public interface UserService {
      * @param userId ID юзера
      * @return юзер, обёрнутый в Optional
      */
-    Optional<User> findById(int userId);
+    Optional<User> findById(String userId);
 
     /**
      * Поиск юзера по его емайл
@@ -51,21 +51,27 @@ public interface UserService {
 
     /**
      * Удаление юзера
-     * @param user модель -user
+     * @param userId ID юзера
      * @return получилось удалить или нет
      */
-    boolean delete(User user);
+    boolean delete(String userId);
 
     /**
-     * Обновление данных по юзеру
-     * @param userId ID  юзера
-     * @param newPassword новый пароль, может быть пустая строка, если не запросили его изменение
-     * @param newName новое имя, может быть пустая строка, если не запросили его изменение
-     * @param newUserRole новая роль, может быть null, если не запросили её изменение
-     * @param blocked блокировка, да или нет
-     * @return модель -user.  С новыми данными
+     * Изменение данных по юзеру
+     * @param userDTO модель User, обёрнутая в DTO
+     * @param resetPass строка кода для сброса пароля. Обычно заглушается. Нужна только в одном случае - ResetPasswordServlet
+     * @return юзер с новыми данными, если получится
      */
-    User update(int userId, String newPassword, String newResetPassword, String newName, Role newUserRole, String blocked);
+    Optional<User> update(UserUpdateDTO userDTO, String resetPass);
+
+    /**
+     * Обновление пароля юзера
+     * @param userId ID юзера
+     * @param newPassword пароль для замены
+     * @param resetPassword код для сброса старого пароля
+     * @return юзер с новыми данными, если получится
+     */
+    Optional<User> updatePass(int userId, String newPassword, String resetPassword);
 
     /**
      * Метод предполагает поиск по параметрам (всем или некоторые можно не указать)

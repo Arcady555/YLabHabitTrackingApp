@@ -162,7 +162,7 @@ public class UserRepositoryJdbcImpl implements UserRepository {
             return findAll();
         }
         List<User> users = new ArrayList<>();
-        Role role = getUserRoleFromString(roleStr);
+        Role role = Utility.getUserRoleFromString(roleStr);
         try (PreparedStatement statement = connection.prepareStatement(
                 JdbcRequests.findUsersByParameters(role, name, block))
         ) {
@@ -186,13 +186,9 @@ public class UserRepositoryJdbcImpl implements UserRepository {
                 resultSet.getString("password"),
                 resultSet.getString("reset_password"),
                 resultSet.getString("name"),
-                getUserRoleFromString(resultSet.getString("user_role")),
+                Utility.getUserRoleFromString(resultSet.getString("user_role")),
                 resultSet.getBoolean("blocked")
         );
-    }
-
-    private Role getUserRoleFromString(String str) {
-        return ("ADMIN".equals(str)) ? Role.ADMIN : Role.CLIENT;
     }
 
     private int generateStatementSets(PreparedStatement statement,

@@ -5,16 +5,17 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
-import ru.parfenov.homework_3.dto.UserAllParamDTO;
-import ru.parfenov.homework_3.enums.UserRole;
-import ru.parfenov.homework_3.model.User;
-import ru.parfenov.homework_3.service.UserService;
-import ru.parfenov.homework_3.servlets.MethodsForServlets;
-import ru.parfenov.homework_3.utility.Utility;
+import ru.parfenov.dto.user.UserUpdateDTO;
+import ru.parfenov.enums.user.Role;
+import ru.parfenov.model.User;
+import ru.parfenov.service.UserService;
+import ru.parfenov.servlets.MethodsForServlets;
+import ru.parfenov.utility.ServiceLoading;
+import ru.parfenov.utility.Utility;
 
 import java.io.IOException;
+import java.util.Optional;
 
 /**
  * Страница обновления информации о юзере
@@ -25,7 +26,7 @@ public class UpdateUserServlet extends HttpServlet implements MethodsForServlets
     private final UserService userService;
 
     public UpdateUserServlet() throws Exception {
-        userService = Utility.loadUserservice();
+        userService = ServiceLoading.loadUserService();
     }
 
     public UpdateUserServlet(UserService userService) {
@@ -34,8 +35,7 @@ public class UpdateUserServlet extends HttpServlet implements MethodsForServlets
 
     /**
      * Метод обработает HTTP запрос Post.
-     * Есть проверки:
-     * что юзер открыл сессию,
+     * Есть проверки юзера:
      * что зарегистрирован,
      * что обладает правами админа
      *
@@ -45,23 +45,15 @@ public class UpdateUserServlet extends HttpServlet implements MethodsForServlets
      */
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        HttpSession session = request.getSession();
-        var user = (User) session.getAttribute("user");
-        int responseStatus = user == null ? 401 : 403;
+        Optional<User> userOptional = Utility.checkUserByEmailNPass(request, userService);
+        int responseStatus = userOptional.isEmpty() ? 401 : 403;
         String jsonString = "no rights or registration!";
-        if (user != null && user.getRole() == UserRole.ADMIN) {
+        if (userOptional.isPresent() && Role.ADMIN.equals(userOptional.get().getRole())) {
             String userJson = getStringJson(request);
             ObjectMapper objectMapper = new ObjectMapper();
-            UserAllParamDTO userDTO = objectMapper.readValue(userJson, UserAllParamDTO.class);
-            boolean updateUser = userService.update(
-                    userDTO.getId(),
-                    userDTO.getRole(),
-                    userDTO.getName(),
-                    userDTO.getPassword(),
-                    userDTO.getContactInfo(),
-                    userDTO.getBuysAmount()
-            );
-            jsonString = updateUser ? "user is updated" : "user is not updated!";
+            UserUpdateDTO userDTO = objectMapper.readValue(userJson, UserUpdateDTO.class);
+            Optional<User> updateUser = userService.update(userDTO, "");
+            jsonString = updateUser.isPresent() ? updateUser.get().toString() : "user is not updated!";
             responseStatus = "user is not updated!".equals(jsonString) ? 404 : 200;
         }
         response.setStatus(responseStatus);

@@ -143,7 +143,7 @@ public class HabitRepositoryJdbcImpl implements HabitRepository {
      * @return привычка с обновлёнными полями
      */
     @Override
-    public Habit updateByUser(long habitId, String newUsefulness, String newActive, String newName, String newDescription, String newFrequency) {
+    public Habit updateByUser(long habitId, String newUsefulness, String newActive, String newName, String newDescription, int newFrequency) {
         try (PreparedStatement statement = connection
                 .prepareStatement(JdbcRequests.updateHabitByUser(newUsefulness, newActive, newName, newDescription, newFrequency))) {
             int i = generateStatementSets(statement, 0, newUsefulness, newActive, newName, newDescription, "", newFrequency);
@@ -182,12 +182,12 @@ public class HabitRepositoryJdbcImpl implements HabitRepository {
      * @param name название
      * @param description описание
      * @param dateOfCreate дата создания
-     * @param frequency частота выполнения
+     * @param frequencyStr частота выполнения
      * @return список привычек юзера по заданным параметрам
      */
     @Override
     public List<Habit> findByParameters(
-            User user, String usefulness, String active, String name, String description, String dateOfCreate, String frequency
+            User user, String usefulness, String active, String name, String description, String dateOfCreate, String frequencyStr
     ) {
         if (
                 usefulness.isEmpty() &&
@@ -195,11 +195,12 @@ public class HabitRepositoryJdbcImpl implements HabitRepository {
                         name.isEmpty() &&
                         description.isEmpty()
                         && dateOfCreate.isEmpty()
-                        && frequency.isEmpty()
+                        && frequencyStr.isEmpty()
         ) {
             return findByUser(user);
         }
         List<Habit> habits = new ArrayList<>();
+        int frequency = Utility.getIntFromString(frequencyStr);
         try (
                 PreparedStatement statement =
                         connection
@@ -247,7 +248,7 @@ public class HabitRepositoryJdbcImpl implements HabitRepository {
                                       String newName,
                                       String newDescription,
                                       String dateOfCreate,
-                                      String newFrequency) throws SQLException {
+                                      int newFrequency) throws SQLException {
         int result = 0;
         if (userId != 0) {
             result++;
@@ -273,9 +274,9 @@ public class HabitRepositoryJdbcImpl implements HabitRepository {
             result++;
             statement.setString(result, dateOfCreate);
         }
-        if (!newFrequency.isEmpty()) {
+        if (newFrequency != 0) {
             result++;
-            statement.setInt(result, Integer.parseInt(newFrequency));
+            statement.setInt(result, newFrequency);
         }
         return result;
     }

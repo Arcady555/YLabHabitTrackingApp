@@ -3,6 +3,10 @@ package ru.parfenov.utility;
 import ru.parfenov.enums.user.Role;
 
 public class JdbcRequests {
+
+    private JdbcRequests() {
+    }
+
     public static String createUser = "INSERT INTO ht_schema.users(" +
             "email," +
             " password," +
@@ -50,11 +54,11 @@ public class JdbcRequests {
         return "SELECT * FROM cs_schema.users WHERE " + getRequestForFindUsersByParam(role, name, block);
     }
 
-    public static String updateHabitByUser(String newUsefulness, String newActive, String newName, String newDescription, String newFrequency) {
+    public static String updateHabitByUser(String newUsefulness, String newActive, String newName, String newDescription, int newFrequency) {
         return "UPDATE ht_schema.habits SET " + getRequestForUpdateByUser(newUsefulness, newActive, newName, newDescription, newFrequency) + " WHERE id = ?";
     }
 
-    public static String findHabitsByParameters(String usefulness, String active, String name, String description, String dateOfCreate, String frequency) {
+    public static String findHabitsByParameters(String usefulness, String active, String name, String description, String dateOfCreate, int frequency) {
         return "SELECT * FROM cs_schema.users WHERE " + getRequestForFindByParam(usefulness, active, name, description, dateOfCreate, frequency);
     }
 
@@ -83,20 +87,20 @@ public class JdbcRequests {
         return stringBuilder.toString();
     }
 
-    private static String getRequestForUpdateByUser(String newUsefulness, String newActive, String newName, String newDescription, String newFrequency) {
+    private static String getRequestForUpdateByUser(String newUsefulness, String newActive, String newName, String newDescription, int newFrequency) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder
                 .append(!newUsefulness.isEmpty() ? "usefulness = ? ," : "")
                 .append(newActive.isEmpty() ? " active = ? , " : "")
                 .append(!newName.isEmpty() ? " name = ? ," : "")
                 .append(!newDescription.isEmpty() ? " description = ? ," : "")
-                .append(!newFrequency.isEmpty() ? " frequency = ? " : "");
+                .append(newFrequency != 0 ? " frequency = ? " : "");
         if (stringBuilder.toString().endsWith(",")) stringBuilder.setLength(stringBuilder.length() - 1);
 
         return stringBuilder.toString();
     }
 
-    private static String getRequestForFindByParam(String usefulness, String active, String name, String description, String dateOfCreate, String frequency) {
+    private static String getRequestForFindByParam(String usefulness, String active, String name, String description, String dateOfCreate, int frequency) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder
                 .append("user_id = ?")
@@ -105,7 +109,7 @@ public class JdbcRequests {
                 .append(!name.isEmpty() ? " name = ? and" : "")
                 .append(!description.isEmpty() ? " description = ?" : "")
                 .append(!dateOfCreate.isEmpty() ? " date_of_create = ? and" : "")
-                .append(!frequency.isEmpty() ? " frequency = ?" : "");
+                .append(frequency != 0 ? " frequency = ?" : "");
         if (stringBuilder.toString().endsWith("and")) stringBuilder.setLength(stringBuilder.length() - 3);
 
         return stringBuilder.toString();

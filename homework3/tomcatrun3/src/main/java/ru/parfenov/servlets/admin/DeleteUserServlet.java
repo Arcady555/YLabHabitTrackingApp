@@ -1,6 +1,5 @@
 package ru.parfenov.servlets.admin;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import ru.parfenov.enums.user.Role;
 import ru.parfenov.model.User;
+import ru.parfenov.service.HabitService;
 import ru.parfenov.service.UserService;
 import ru.parfenov.servlets.MethodsForServlets;
 import ru.parfenov.utility.ServiceLoading;
@@ -20,16 +20,19 @@ import java.util.Optional;
  * Страница вывода юзера по введённому id
  */
 @Slf4j
-@WebServlet(name = "ViewUserServlet", urlPatterns = "/user")
-public class ViewUserServlet extends HttpServlet implements MethodsForServlets {
+@WebServlet(name = "DeleteUserServlet", urlPatterns = "/delete-user")
+public class DeleteUserServlet extends HttpServlet implements MethodsForServlets {
     private final UserService userService;
+    private final HabitService habitService;
 
-    public ViewUserServlet() throws Exception {
+    public DeleteUserServlet() throws Exception {
         userService = ServiceLoading.loadUserService();
+        habitService = ServiceLoading.loadHabitService();
     }
 
-    public ViewUserServlet(UserService userService) {
+    public DeleteUserServlet(UserService userService, HabitService habitService) {
         this.userService = userService;
+        this.habitService = habitService;
     }
 
     /**
@@ -43,16 +46,16 @@ public class ViewUserServlet extends HttpServlet implements MethodsForServlets {
      * @throws IOException исключение при вводе-выводе
      */
     @Override
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Optional<User> userOptional = Utility.checkUserByEmailNPass(request, userService);
         int responseStatus = userOptional.isEmpty() ? 401 : 403;
         String clientJsonString = "no rights or registration!";
-        if (userOptional.isPresent() && Role.ADMIN.equals(userOptional.get().getRole())) {
-            ObjectMapper objectMapper = new ObjectMapper();
+        if (userOptional.isPresent() &&
+                Role.ADMIN.equals(userOptional.get().getRole()) &&
+                habitService.deleteWithUser(userOptional.get())) {
             String clientIdStr = request.getParameter("id");
-            Optional<User> userResult = userService.findById(clientIdStr);
-            clientJsonString = userResult.isPresent() ? objectMapper.writeValueAsString(userResult.get().toString()) : "user not found!";
-            responseStatus = "user not found!".equals(clientJsonString) ? 404 : 200;
+            clientJsonString = userService.delete(clientIdStr) ? "user is deleted!" : "user not deleted!";
+            responseStatus = "user not deleted!".equals(clientJsonString) ? 404 : 200;
         }
         response.setStatus(responseStatus);
         finish(response, clientJsonString);

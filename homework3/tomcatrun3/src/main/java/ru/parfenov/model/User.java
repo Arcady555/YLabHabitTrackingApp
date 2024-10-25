@@ -53,7 +53,7 @@ public class User {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
-                ", role=" + role +
+                ", role=" + role.toString() +
                 ", blocked=" + blocked +
                 '}';
     }

@@ -1,7 +1,12 @@
 package ru.parfenov.utility;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.postgresql.shaded.com.ongres.scram.common.bouncycastle.base64.Base64;
+import ru.parfenov.enums.user.Role;
 import ru.parfenov.model.Habit;
+import ru.parfenov.model.User;
+import ru.parfenov.service.UserService;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -10,11 +15,16 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
 @Slf4j
 public class Utility {
+
+    private Utility() {
+    }
+
     public static String adminEmail = "admin@YLabHabitApp.com";
     public static String adminPassword = "123";
     /**
@@ -27,9 +37,6 @@ public class Utility {
      */
     public static String mailPassword = "password";
 
-    private Utility() {
-    }
-
     public static boolean validationEmail(String email) {
         String regexPattern = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
                 + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
@@ -38,25 +45,38 @@ public class Utility {
                 .matches();
     }
 
+    public static Role getUserRoleFromString(String str) {
+        return ("ADMIN".equals(str)) ? Role.ADMIN : Role.CLIENT;
+    }
+
+    public static int getIntFromString(String str) {
+        int result = 0;
+        try {
+            result = Integer.parseInt(str);
+        } catch (NumberFormatException e) {
+            log.error("Not number for parse from String!", e);
+        }
+        return result;
+    }
+
+    public static long getLongFromString(String str) {
+        long result = 0L;
+        try {
+            result = Long.parseLong(str);
+        } catch (NumberFormatException e) {
+            log.error("Not number for parse from String!", e);
+        }
+        return result;
+    }
+
     public static Period getPeriodFromString(String str) throws IOException {
-        int daysAmount;
-        Period frequency = null;
+        int daysAmount = 0;
         try {
             daysAmount = Integer.parseInt(str);
         } catch (NumberFormatException e) {
             log.error("Please enter the NUMBER!!", e);
-            return frequency;
         }
-        if (daysAmount < 1 || daysAmount > 90) {
-            System.out.println("Please enter correct!");
-            return frequency;
-        }
-        if (daysAmount % 30 == 0) {
-            frequency = Period.ofMonths(daysAmount / 30);
-        } else {
-            frequency = Period.of(0, daysAmount / 30, daysAmount % 30);
-        }
-        return frequency;
+        return daysAmount != 0 ? Period.ofDays(daysAmount) : null;
     }
 
     /**
@@ -88,5 +108,18 @@ public class Utility {
         Class.forName(driver);
         connection = DriverManager.getConnection(url, username, password);
         return connection;
+    }
+
+    public static Optional<User> checkUserByEmailNPass(HttpServletRequest req, UserService userService) {
+        Optional<User> result = Optional.empty();
+        String authHead = req.getHeader("Authorization");
+        if (authHead != null) {
+            byte[] e = Base64.decode(authHead.substring(6));
+            String emailNPass = new String(e);
+            String email = emailNPass.substring(0, emailNPass.indexOf(":"));
+            String password = emailNPass.substring(emailNPass.indexOf(":") + 1);
+            result = userService.findByEmailAndPassword(email, password);
+        }
+        return result;
     }
 }

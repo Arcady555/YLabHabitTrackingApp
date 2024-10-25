@@ -6,8 +6,11 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import ru.parfenov.dto.habit.HabitGeneralDTO;
 import ru.parfenov.enums.user.Role;
+import ru.parfenov.model.Habit;
 import ru.parfenov.model.User;
+import ru.parfenov.service.HabitService;
 import ru.parfenov.service.UserService;
 import ru.parfenov.servlets.MethodsForServlets;
 import ru.parfenov.utility.ServiceLoading;
@@ -18,26 +21,28 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Страница позволяет провести поиск юзеров
- * по нужным параметрам
+ * Страница вывода списков всех юзеров
  */
 @Slf4j
-@WebServlet(name = "UsersWithParametersServlet", urlPatterns = "/users-by-parameters")
-public class UsersWithParametersServlet extends HttpServlet implements MethodsForServlets {
+@WebServlet(name = "HabitsOfUserServlet", urlPatterns = "/habits-of-user")
+public class HabitsOfUserServlet extends HttpServlet implements MethodsForServlets {
     private final UserService userService;
+    private final HabitService habitService;
 
-    public UsersWithParametersServlet() throws Exception {
+    public HabitsOfUserServlet() throws Exception {
         userService = ServiceLoading.loadUserService();
+        habitService = ServiceLoading.loadHabitService();
     }
 
-    public UsersWithParametersServlet(UserService userService) {
+    public HabitsOfUserServlet(UserService userService, HabitService habitService) {
         this.userService = userService;
+        this.habitService = habitService;
     }
 
     /**
-     * Метод обработает HTTP запрос Get.
+     * Метод обработает HTTP запрос Get
      * Есть проверки юзера:
-     * что зарегистрирован,
+     * что зарегистрирован
      * что обладает правами админа
      *
      * @param request  запрос клиента
@@ -48,17 +53,18 @@ public class UsersWithParametersServlet extends HttpServlet implements MethodsFo
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Optional<User> userOptional = Utility.checkUserByEmailNPass(request, userService);
         int responseStatus = userOptional.isEmpty() ? 401 : 403;
-        String clientListJsonString = "no rights or registration!";
+        String habitListJsonString = "no rights or registration!";
         if (userOptional.isPresent() && Role.ADMIN.equals(userOptional.get().getRole())) {
             ObjectMapper objectMapper = new ObjectMapper();
-            String role = request.getParameter("role");
-            String name = request.getParameter("name");
-            String block = request.getParameter("block");
-            List<User> clientList = userService.findByParameters(role, name, block);
-            clientListJsonString = !clientList.isEmpty() ? objectMapper.writeValueAsString(clientList) : "no users with these parameters!";
-            responseStatus = "no users with these parameters!".equals(clientListJsonString) ? 404 : 200;
+            String email = request.getParameter("email");
+            Optional<User> optionalClient = userService.findByEmail(email);
+            if (optionalClient.isPresent()) {
+                List<HabitGeneralDTO> habitList = habitService.findByUser(optionalClient.get());
+                habitListJsonString = !habitList.isEmpty() ? objectMapper.writeValueAsString(habitList) : "no habits!";
+                responseStatus = "no habits!".equals(habitListJsonString) ? 404 : 200;
+            }
         }
         response.setStatus(responseStatus);
-        finish(response, clientListJsonString);
+        finish(response, habitListJsonString);
     }
 }

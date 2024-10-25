@@ -85,12 +85,12 @@ public class Habit {
                 ", streaksAmount=" + streaksAmount +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", dateOfCreate=" + dateOfCreate +
-                ", plannedFirstPerform=" + plannedFirstPerform +
-                ", plannedPrevPerform=" + plannedPrevPerform +
-                ", plannedNextPerform=" + plannedNextPerform +
-                ", lastRealPerform=" + lastRealPerform +
-                ", frequency=" + frequency +
+                ", dateOfCreate=" + dateOfCreate.toString() +
+                ", plannedFirstPerform=" + plannedFirstPerform.toString() +
+                ", plannedPrevPerform=" + plannedPrevPerform.toString() +
+                ", plannedNextPerform=" + plannedNextPerform.toString() +
+                ", lastRealPerform=" + lastRealPerform.toString() +
+                ", frequency=" + frequency.toString() +
                 ", performsAmount=" + performsAmount +
                 '}';
     }

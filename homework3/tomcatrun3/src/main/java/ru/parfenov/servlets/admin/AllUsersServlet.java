@@ -5,16 +5,17 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
-import ru.parfenov.homework_3.enums.UserRole;
-import ru.parfenov.homework_3.model.User;
-import ru.parfenov.homework_3.service.UserService;
-import ru.parfenov.homework_3.servlets.MethodsForServlets;
-import ru.parfenov.homework_3.utility.Utility;
+import ru.parfenov.enums.user.Role;
+import ru.parfenov.model.User;
+import ru.parfenov.service.UserService;
+import ru.parfenov.servlets.MethodsForServlets;
+import ru.parfenov.utility.ServiceLoading;
+import ru.parfenov.utility.Utility;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Страница вывода списков всех юзеров
@@ -25,7 +26,7 @@ public class AllUsersServlet extends HttpServlet implements MethodsForServlets {
     private final UserService userService;
 
     public AllUsersServlet() throws Exception {
-        userService = Utility.loadUserservice();
+        userService = ServiceLoading.loadUserService();
     }
 
     public AllUsersServlet(UserService userService) {
@@ -34,8 +35,7 @@ public class AllUsersServlet extends HttpServlet implements MethodsForServlets {
 
     /**
      * Метод обработает HTTP запрос Get
-     * Есть проверки:
-     * что юзер открыл сессию,
+     * Есть проверки юзера:
      * что зарегистрирован
      * что обладает правами админа
      *
@@ -45,11 +45,10 @@ public class AllUsersServlet extends HttpServlet implements MethodsForServlets {
      */
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        HttpSession session = request.getSession();
-        var user = (User) session.getAttribute("user");
-        int responseStatus = user == null ? 401 : 403;
+        Optional<User> userOptional = Utility.checkUserByEmailNPass(request, userService);
+        int responseStatus = userOptional.isEmpty() ? 401 : 403;
         String userListJsonString = "no rights or registration!";
-        if (user != null && user.getRole() == UserRole.ADMIN) {
+        if (userOptional.isPresent() && Role.ADMIN.equals(userOptional.get().getRole())) {
             ObjectMapper objectMapper = new ObjectMapper();
             List<User> userList = userService.findAll();
             userListJsonString = !userList.isEmpty() ? objectMapper.writeValueAsString(userList) : "no users!";

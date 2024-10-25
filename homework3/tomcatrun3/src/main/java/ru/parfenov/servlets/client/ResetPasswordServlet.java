@@ -1,4 +1,4 @@
-package ru.parfenov.servlets.admin;
+package ru.parfenov.servlets.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.annotation.WebServlet;
@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import ru.parfenov.dto.user.UserUpdatePassDTO;
 import ru.parfenov.enums.user.Role;
 import ru.parfenov.model.User;
 import ru.parfenov.service.UserService;
@@ -14,28 +15,26 @@ import ru.parfenov.utility.ServiceLoading;
 import ru.parfenov.utility.Utility;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 
 /**
- * Страница позволяет провести поиск юзеров
- * по нужным параметрам
+ * Обработка запроса на сброс пароля
  */
 @Slf4j
-@WebServlet(name = "UsersWithParametersServlet", urlPatterns = "/users-by-parameters")
-public class UsersWithParametersServlet extends HttpServlet implements MethodsForServlets {
+@WebServlet(name = "ResetPasswordServlet", urlPatterns = "/user-reset-password")
+public class ResetPasswordServlet extends HttpServlet implements MethodsForServlets {
     private final UserService userService;
 
-    public UsersWithParametersServlet() throws Exception {
+    public ResetPasswordServlet() throws Exception {
         userService = ServiceLoading.loadUserService();
     }
 
-    public UsersWithParametersServlet(UserService userService) {
+    public ResetPasswordServlet(UserService userService) {
         this.userService = userService;
     }
 
     /**
-     * Метод обработает HTTP запрос Get.
+     * Метод обработает HTTP запрос Post.
      * Есть проверки юзера:
      * что зарегистрирован,
      * что обладает правами админа
@@ -45,20 +44,19 @@ public class UsersWithParametersServlet extends HttpServlet implements MethodsFo
      * @throws IOException исключение при вводе-выводе
      */
     @Override
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Optional<User> userOptional = Utility.checkUserByEmailNPass(request, userService);
         int responseStatus = userOptional.isEmpty() ? 401 : 403;
-        String clientListJsonString = "no rights or registration!";
+        String jsonString = "no rights or registration!";
         if (userOptional.isPresent() && Role.ADMIN.equals(userOptional.get().getRole())) {
+            String userJson = getStringJson(request);
             ObjectMapper objectMapper = new ObjectMapper();
-            String role = request.getParameter("role");
-            String name = request.getParameter("name");
-            String block = request.getParameter("block");
-            List<User> clientList = userService.findByParameters(role, name, block);
-            clientListJsonString = !clientList.isEmpty() ? objectMapper.writeValueAsString(clientList) : "no users with these parameters!";
-            responseStatus = "no users with these parameters!".equals(clientListJsonString) ? 404 : 200;
+            UserUpdatePassDTO userDTO = objectMapper.readValue(userJson, UserUpdatePassDTO.class);
+            Optional<User> updateUser = userService.updatePass(userOptional.get().getId(), userDTO.getPassword(), userDTO.getResetPassword());
+            jsonString = updateUser.isPresent() ? updateUser.get().toString() : "password is not updated!";
+            responseStatus = "password is not updated!".equals(jsonString) ? 404 : 200;
         }
         response.setStatus(responseStatus);
-        finish(response, clientListJsonString);
+        finish(response, jsonString);
     }
 }

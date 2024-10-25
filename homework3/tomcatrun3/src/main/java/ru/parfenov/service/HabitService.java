@@ -1,10 +1,12 @@
 package ru.parfenov.service;
 
+import ru.parfenov.dto.habit.HabitCreateDTO;
+import ru.parfenov.dto.habit.HabitGeneralDTO;
+import ru.parfenov.dto.habit.HabitStatisticDTO;
+import ru.parfenov.dto.habit.HabitUpdateDTO;
 import ru.parfenov.model.Habit;
 import ru.parfenov.model.User;
 
-import java.time.LocalDate;
-import java.time.Period;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,23 +19,10 @@ public interface HabitService {
     /**
      * Создание привычки
      * @param user Модель -user
-     * @param usefulness полезность привычки
-     * @param name название привычки
-     * @param description описание привычки
-     * @param dateOfCreate дата создания привычки
-     * @param firstPerform запланированное первое выполнение привычки
-     * @param frequency частота выполнения привычки
+     * @param habitDTO Модель habit, обёрнутая в DTO
      * @return привычку, с данными, полученными при сохранении
      */
-    Optional<Habit> create(
-            User user,
-            boolean usefulness,
-            String name,
-            String description,
-            LocalDate dateOfCreate,
-            LocalDate firstPerform,
-            Period frequency
-    );
+    Optional<HabitGeneralDTO> create(User user, HabitCreateDTO habitDTO);
 
     /**
      * Удаление привычки
@@ -46,7 +35,7 @@ public interface HabitService {
      * Удаление всех привычек, которые принадлежали юзеру.(Применяется при удалении юзера)
      * @param user Модель -user
      */
-    void deleteWithUser(User user);
+    boolean deleteWithUser(User user);
 
     /**
      * Найти привычку по её ID
@@ -60,7 +49,7 @@ public interface HabitService {
      * @param user Модель -user
      * @return список привычек
      */
-    List<Habit> findByUser(User user);
+    List<HabitGeneralDTO> findByUser(User user);
 
     /**
      * Поиск привычек юзера подпадающих под заданные параметры
@@ -73,7 +62,7 @@ public interface HabitService {
      * @param frequency частота выполнения
      * @return список привычек
      */
-    List<Habit> findByParameters(
+    List<HabitGeneralDTO> findByParameters(
             User user,
             String usefulness,
             String active,
@@ -85,52 +74,34 @@ public interface HabitService {
 
     /**
      * Выполнить привычку
-     * @param habit Модель -привычка
+     * @param habitId ID привычки в строке
      * @return да или нет
      */
-    boolean perform(Habit habit);
+    Optional<Habit> perform(String habitId);
 
     /**
      * Редактировать-поменять данные привычки
-     * Некоторые параметры могут быть пустой строкой, если их не надо менять
      *
-     * @param habitId id привычки, которую надо обновить
-     * @param newUsefulness полезность
-     * @param newActive активность
-     * @param newName название
-     * @param newDescription описание
-     * @param newFrequency частота
-     * @return habit Модель - привычка, с обновлёнными данными
+     * @param user юзер, чьи привычки
+     * @param habitDTO DTO привычки под обновление
+     * @return привычка с новыми данными, если получится
      */
-    Habit updateByUser(
-            long habitId,
-            String newUsefulness,
-            String newActive,
-            String newName,
-            String newDescription,
-            String newFrequency
-    );
-
-    /**
-     * Напоминание о выполнении привычки
-     * @param habitId ID привычки
-     * @return строку
-     */
-    String remind(long habitId);
+    Optional<HabitGeneralDTO> updateByUser(User user, HabitUpdateDTO habitDTO);
 
     /**
      * Напоминание о выполнении привычек сегодня
      * @param user Модель - user
      * @return список привычек
      */
-    List<Habit> todayPerforms(User user);
+    List<HabitGeneralDTO> todayPerforms(User user);
 
     /**
-     * Заполнение статистики по конкретной привычке
-     * @param habitId  ID привычки
-     * @param dateFrom дата от
-     * @param dateTo дата до
-     * @return строка
+     * Вывод для юзера статистики по каждой его привычке
+     *
+     * @param user Модель - user
+     * @param dateFrom дата начала нужного периода
+     * @param dateTo дата конца нужного периода
+     * @return список привычек со статистикой к каждой
      */
-    String statistic(long habitId, LocalDate dateFrom, LocalDate dateTo);
+    List<HabitStatisticDTO> statisticForUser(User user, String dateFrom, String dateTo);
 }

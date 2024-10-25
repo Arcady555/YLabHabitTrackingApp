@@ -13,13 +13,12 @@ import javax.mail.MessagingException;
 @Slf4j
 @RequiredArgsConstructor
 public class ResetPasswordViaEmail {
-    private final String email;
     private final User user;
 
     public void run() throws MessagingException {
         String subject = "Reset Your password";
         String text = textOfMessage(user);
-        SendViaEmail sendViaEmail = new SendViaEmail(email, subject, text);
+        SendViaEmail sendViaEmail = new SendViaEmail(user.getEmail(), subject, text);
         sendViaEmail.run();
     }
 

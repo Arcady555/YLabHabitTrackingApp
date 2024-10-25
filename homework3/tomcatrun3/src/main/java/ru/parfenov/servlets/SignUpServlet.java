@@ -23,10 +23,10 @@ public class SignUpServlet extends HttpServlet implements MethodsForServlets {
     private final UserService userService;
 
     public SignUpServlet() throws Exception {
-        this.userService = ServiceLoading.loadUserservice();
+        this.userService = ServiceLoading.loadUserService();
     }
 
-    public SignUpServlet(UserService userService) throws Exception {
+    public SignUpServlet(UserService userService) {
         this.userService = userService;
     }
 
@@ -46,7 +46,7 @@ public class SignUpServlet extends HttpServlet implements MethodsForServlets {
         Optional<User> userOptional =
                 userService.createByReg(userDTO.getEmail(), userDTO.getPassword(), userDTO.getName());
         String userJsonString = userOptional.isPresent() ?
-                objectMapper.writeValueAsString(userOptional.get()) :
+                objectMapper.writeValueAsString(userOptional.get().toString()) :
                 "user is not created!";
         response.setStatus("user is not created!".equals(userJsonString) ? 404 : 200);
         finish(response, userJsonString);
