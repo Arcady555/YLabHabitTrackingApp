@@ -15,7 +15,7 @@ public interface HabitDTOMapper {
                 source.getDescription(),
                 source.getDateOfCreate().toString(),
                 source.getPlannedNextPerform().toString(),
-                source.getLastRealPerform().toString(),
+                source.getLastRealPerform() != null ? source.getLastRealPerform().toString() : null,
                 source.getFrequency().getDays(),
                 ""
         );
@@ -33,7 +33,7 @@ public interface HabitDTOMapper {
                 source.getDescription(),
                 source.getDateOfCreate().toString(),
                 source.getPlannedNextPerform().toString(),
-                source.getLastRealPerform().toString(),
+                source.getLastRealPerform() != null ? source.getLastRealPerform().toString() : null,
                 source.getFrequency().getDays(),
                 source.getPerformsAmount(),
                 ""

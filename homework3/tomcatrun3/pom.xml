@@ -34,6 +34,7 @@
         <testcontainers.version>1.19.4</testcontainers.version>
         <testcontainers.jupiter.version>1.19.4</testcontainers.jupiter.version>
         <testcontainers.postgresql.version>1.17.6</testcontainers.postgresql.version>
+        <logback-classic.version>1.2.11.1</logback-classic.version>
     </properties>
 
     <dependencies>
@@ -74,16 +75,16 @@
             <artifactId>javax.mail</artifactId>
             <version>${javax.mail.version}</version>
         </dependency>
-        <dependency>
+     <!--   <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>${log4j.version}</version>
-        </dependency>
-        <dependency>
+        </dependency> -->
+    <!--    <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
             <version>${slf4j.version}</version>
-        </dependency>
+        </dependency> -->
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjrt</artifactId>
@@ -119,6 +120,27 @@
             <version>${testcontainers.postgresql.version}</version>
             <scope>test</scope>
         </dependency>
+     <!--   <dependency>
+            <groupId>ch.qos.logback.db</groupId>
+            <artifactId>logback-classic-db</artifactId>
+            <version>${logback-classic.version}</version>
+        </dependency> -->
+
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.19.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.19.0</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+
+
     </dependencies>
 
     <build>
