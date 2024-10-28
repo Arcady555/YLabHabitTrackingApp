@@ -25,7 +25,7 @@ docker-compose up -d
 ```
 Вы запустили контейнер для Базы данных.В той же директории выполните команду:
 ```
-docker exec -it db_car_shop psql -U role_arcady postgres
+docker exec -it db_habit_tracker psql -U role_arcady postgres
 ```
 после чего:
 ```
@@ -36,9 +36,9 @@ exit
 В последующем, если вам придётся заново стартовать этот контейнер, выполните в командной строке следующие манипуляции:
 ![image](images/containerRestart.png)
 
-Перейдите в корень проекта(блок homework_2) через командную строку:
+Перейдите в корень проекта(блок homework2) через командную строку:
 ```
-cd /home/......../IdeaProjects/YLabHabitTrackingApp/homework_2
+cd /home/......../IdeaProjects/YLabHabitTrackingApp/homework2
 ``` 
 и выполните команды:
 ```

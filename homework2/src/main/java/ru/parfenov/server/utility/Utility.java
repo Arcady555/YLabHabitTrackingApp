@@ -79,7 +79,7 @@ public class Utility {
 
     public static Connection loadConnection() throws ClassNotFoundException, SQLException, IOException {
         Properties prop = new Properties();
-        prop.load(new FileInputStream("homework_2/src/main/resources/app.properties"));
+        prop.load(new FileInputStream("homework2/src/main/resources/app.properties"));
         Connection connection;
         String url = prop.getProperty("url");
         String username = prop.getProperty("username");

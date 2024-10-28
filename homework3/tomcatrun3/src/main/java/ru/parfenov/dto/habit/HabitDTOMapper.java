@@ -39,4 +39,15 @@ public interface HabitDTOMapper {
                 ""
         );
     }
+
+    @Named("toHabitCreateDTO")
+    static HabitCreateDTO toHabitCreateDTO(Habit source) {
+        return new HabitCreateDTO(
+                source.isUseful() ? "true" : "false",
+                source.getName(),
+                source.getDescription(),
+                source.getPlannedFirstPerform().toString(),
+                source.getFrequency().getDays()
+        );
+    }
 }
