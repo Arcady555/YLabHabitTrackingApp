@@ -40,7 +40,7 @@ public class JdbcRequests {
             " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     public static String findHabitById = "SELECT * FROM ht_schema.habits WHERE id = ?";
     public static String findByUser = "SELECT * FROM ht_schema.habits WHERE user_id = ?";
-    public static String findByUserForToday = "SELECT * FROM ht_schema.habits WHERE user_id = ? AND active = true AND planned_next_perform = today";
+    public static String findByUserForToday = "SELECT * FROM ht_schema.habits WHERE user_id = ? AND active = true AND planned_next_perform = current_date";
     public static String deleteHabit = "DELETE FROM ht_schema.habits WHERE id = ?";
     public static String deleteHabitsWithUser = "DELETE FROM ht_schema.habits WHERE user_id = ?";
     public static String updateHabitViaPerform = "UPDATE ht_schema.habits SET streaks_amount = ? ," +

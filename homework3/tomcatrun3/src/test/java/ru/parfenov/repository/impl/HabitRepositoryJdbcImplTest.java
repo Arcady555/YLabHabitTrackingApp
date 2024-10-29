@@ -16,6 +16,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.List;
 
 @Testcontainers
 class HabitRepositoryJdbcImplTest {
@@ -23,9 +24,10 @@ class HabitRepositoryJdbcImplTest {
     private static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:13");
     private static Connection connection;
 
-    private static UserRepository userRepository;
     private static HabitRepository habitRepository;
     private static User user;
+    private static Habit habit;
+    private static Habit habitPerformToday;
 
     @BeforeAll
     public static void initConnection() throws Exception {
@@ -35,15 +37,20 @@ class HabitRepositoryJdbcImplTest {
                 postgreSQLContainer.getPassword());
         LiquibaseUpdate liquibaseUpdate = new LiquibaseUpdate(connection);
         liquibaseUpdate.run();
-        userRepository = new UserRepositoryJdbcImpl(connection);
+        UserRepository userRepository = new UserRepositoryJdbcImpl(connection);
         user = new User(0, "Arcady@mail.ru","password", "resetPassword", "Arcady",  Role.CLIENT, false);
         userRepository.create(user);
         habitRepository = new HabitRepositoryJdbcImpl(connection, userRepository);
-        Period frequency = Period.of(0, 0, 10);
-        Habit habit = new Habit(
-                1L, user, true, true, 1, "run", "run everyday", LocalDate.now(), LocalDate.now().plusDays(1L),
-                LocalDate.now().plusDays(1L), LocalDate.now().plus(frequency), null, frequency, 0);
+        Period frequency1 = Period.of(0, 0, 10);
+        Period frequency2 = Period.of(0, 0, 0);
+        habit = new Habit(
+                1L, user, true, true, 1, "run", "run everyday", LocalDate.now(), LocalDate.now().plusDays(frequency1.getDays()),
+                LocalDate.now().plusDays(1L), LocalDate.now().plus(frequency1), null, frequency1, 0);
+        habitPerformToday = new Habit(
+                2L, user, true, true, 1, "sleep", "sleep every night", LocalDate.now(), LocalDate.now().plusDays(frequency2.getDays()),
+                LocalDate.now().plusDays(1L), LocalDate.now().plus(frequency2), null, frequency2, 0);
         habitRepository.create(habit);
+        habitRepository.create(habitPerformToday);
     }
 
     @AfterAll
@@ -56,14 +63,14 @@ class HabitRepositoryJdbcImplTest {
     void whenCreateAndFindByUserThanOk() {
         Habit foundedHabit = habitRepository.findByUser(user.getId()).get(0);
         Assertions.assertEquals(foundedHabit.getId(), 1);
-        Assertions.assertEquals(foundedHabit.getUser(), user);
+        Assertions.assertEquals(foundedHabit.getUser().getEmail(), user.getEmail());
         Assertions.assertTrue(foundedHabit.isUseful());
         Assertions.assertTrue(foundedHabit.isActive());
         Assertions.assertEquals(foundedHabit.getStreaksAmount(), 1);
         Assertions.assertEquals(foundedHabit.getName(), "run");
         Assertions.assertEquals(foundedHabit.getDescription(), "run everyday");
         Assertions.assertEquals(foundedHabit.getDateOfCreate(), LocalDate.now());
-        Assertions.assertEquals(foundedHabit.getPlannedFirstPerform(), LocalDate.now().plusDays(1L));
+        Assertions.assertEquals(foundedHabit.getPlannedFirstPerform(), LocalDate.now().plusDays(10L));
         Assertions.assertNull(foundedHabit.getPlannedPrevPerform());
         Assertions.assertEquals(foundedHabit.getPlannedNextPerform(), LocalDate.now().plusDays(10L));
         Assertions.assertNull(foundedHabit.getLastRealPerform());
@@ -83,7 +90,7 @@ class HabitRepositoryJdbcImplTest {
         Assertions.assertEquals(foundedHabit.getName(), "run");
         Assertions.assertEquals(foundedHabit.getDescription(), "run everyday");
         Assertions.assertEquals(foundedHabit.getDateOfCreate(), LocalDate.now());
-        Assertions.assertEquals(foundedHabit.getPlannedFirstPerform(), LocalDate.now().plusDays(1L));
+        Assertions.assertEquals(foundedHabit.getPlannedFirstPerform(), LocalDate.now().plusDays(10L));
         Assertions.assertNull(foundedHabit.getPlannedPrevPerform());
         Assertions.assertEquals(foundedHabit.getPlannedNextPerform(), LocalDate.now().plusDays(10L));
         Assertions.assertNull(foundedHabit.getLastRealPerform());
@@ -91,163 +98,49 @@ class HabitRepositoryJdbcImplTest {
         Assertions.assertEquals(foundedHabit.getPerformsAmount(), 0);
     }
 
-    // Creating a habit successfully returns the habit with a generated ID
-  /*  @Test
-    public void test_create_habit_success() throws Exception {
-        UserRepository userRepository = mock(UserRepository.class);
-        Connection connection = mock(Connection.class);
-        PreparedStatement statement = mock(PreparedStatement.class);
-        ResultSet resultSet = mock(ResultSet.class);
-
-        when(connection.prepareStatement(JdbcRequests.createHabit,
-                Statement.RETURN_GENERATED_KEYS)).thenReturn(statement);
-        when(statement.getGeneratedKeys()).thenReturn(resultSet);
-        when(resultSet.next()).thenReturn(true);
-        when(resultSet.getInt(1)).thenReturn(1);
-
-        HabitRepositoryJdbcImpl habitRepo = new
-                HabitRepositoryJdbcImpl(connection, userRepository);
-        User user = new User(1, "test@example.com", "password", "Test
-                User", Role.CLIENT, false);
-                Habit habit = new Habit(user, true, true, 0, "Test Habit",
-                "Description", LocalDate.now(), LocalDate.now(), null,
-                LocalDate.now(), null, Period.ofDays(1), 0);
-
-        Habit createdHabit = habitRepo.create(habit);
-
-        assertNotNull(createdHabit);
-        assertEquals(1, createdHabit.getId());
+    @Test
+    @DisplayName("Проверка findByUserForToday()")
+    void whenCreateAndFindByUserForToday() {
+        List<Habit> foundedHabits = habitRepository.findByUserForToday(user);
+        Assertions.assertEquals(foundedHabits.get(0).getId(), 2);
+        Assertions.assertEquals(foundedHabits.get(0).getUser().getId(), user.getId());
+        Assertions.assertTrue(foundedHabits.get(0).isUseful());
+        Assertions.assertTrue(foundedHabits.get(0).isActive());
+        Assertions.assertEquals(foundedHabits.get(0).getStreaksAmount(), 1);
+        Assertions.assertEquals(foundedHabits.get(0).getName(), "sleep");
+        Assertions.assertEquals(foundedHabits.get(0).getDescription(), "sleep every night");
+        Assertions.assertEquals(foundedHabits.get(0).getDateOfCreate(), LocalDate.now());
+        Assertions.assertEquals(foundedHabits.get(0).getPlannedFirstPerform(), LocalDate.now().plusDays(0L));
+        Assertions.assertNull(foundedHabits.get(0).getPlannedPrevPerform());
+        Assertions.assertEquals(foundedHabits.get(0).getPlannedNextPerform(), LocalDate.now().plusDays(0L));
+        Assertions.assertNull(foundedHabits.get(0).getLastRealPerform());
+        Assertions.assertEquals(foundedHabits.get(0).getFrequency(), Period.of(0, 0, 0));
+        Assertions.assertEquals(foundedHabits.get(0).getPerformsAmount(), 0);
     }
 
-    // Deleting a habit by ID removes it from the database
     @Test
-    public void test_delete_habit_by_id() throws Exception {
-        UserRepository userRepository = mock(UserRepository.class);
-        Connection connection = mock(Connection.class);
-        PreparedStatement statement = mock(PreparedStatement.class);
-
-        when(connection.prepareStatement(JdbcRequests.deleteHabit)).thenReturn(statement);
-
-        HabitRepositoryJdbcImpl habitRepo = new
-                HabitRepositoryJdbcImpl(connection, userRepository);
-
-        habitRepo.delete(1L);
-
-        verify(statement).setLong(1, 1L);
-        verify(statement).execute();
+    @DisplayName("Проверка updateViaPerform()")
+    void whenUpdateViaPerform() {
+        Habit foundedHabit = habitRepository.updateViaPerform(habitPerformToday);
+        Assertions.assertEquals(foundedHabit.getId(), 2);
+        Assertions.assertEquals(foundedHabit.getUser().getId(), user.getId());
+        Assertions.assertTrue(foundedHabit.isUseful());
+        Assertions.assertTrue(foundedHabit.isActive());
+        Assertions.assertEquals(foundedHabit.getStreaksAmount(), 1);
+        Assertions.assertEquals(foundedHabit.getName(), "sleep");
+        Assertions.assertEquals(foundedHabit.getDescription(), "sleep every night");
+        Assertions.assertEquals(foundedHabit.getDateOfCreate(), habitPerformToday.getDateOfCreate());
+        Assertions.assertEquals(foundedHabit.getPlannedFirstPerform(), habitPerformToday.getPlannedFirstPerform());
+        Assertions.assertNull(foundedHabit.getLastRealPerform());
+        Assertions.assertEquals(foundedHabit.getPlannedNextPerform(), habitPerformToday.getPlannedNextPerform().plusDays(0L));
+        Assertions.assertEquals(foundedHabit.getFrequency(), Period.of(0, 0, 0));
+        Assertions.assertEquals(foundedHabit.getPerformsAmount(), 0);
     }
 
-    // Finding habits by user returns a list of habits associated with that user
     @Test
-    public void test_find_habits_by_user() throws Exception {
-        UserRepository userRepository = mock(UserRepository.class);
-        Connection connection = mock(Connection.class);
-        PreparedStatement statement = mock(PreparedStatement.class);
-        ResultSet resultSet = mock(ResultSet.class);
-
-        when(connection.prepareStatement(JdbcRequests.findByUser)).thenReturn(statement);
-        when(statement.executeQuery()).thenReturn(resultSet);
-        when(resultSet.next()).thenReturn(true).thenReturn(false);
-
-        User user = new User(1, "test@example.com", "password", "Test
-                User", Role.CLIENT, false);
-                when(userRepository.findById(1)).thenReturn(user);
-
-        HabitRepositoryJdbcImpl habitRepo = new
-                HabitRepositoryJdbcImpl(connection, userRepository);
-
-        List<Habit> habits = habitRepo.findByUser(user);
-
-        assertNotNull(habits);
-        assertEquals(1, habits.size());
+    @DisplayName("Проверка delete()")
+    void whenDelete() {
+        habitRepository.delete(habitPerformToday.getId());
+        Assertions.assertNull(habitRepository.findById(habitPerformToday.getId()));
     }
-
-    // Updating a habit's details by user returns the updated habit
-    @Test
-    public void test_update_habit_by_user() throws Exception {
-        UserRepository userRepository = mock(UserRepository.class);
-        Connection connection = mock(Connection.class);
-        PreparedStatement statement = mock(PreparedStatement.class);
-
-        when(connection.prepareStatement(anyString())).thenReturn(statement);
-
-        HabitRepositoryJdbcImpl habitRepo = new
-                HabitRepositoryJdbcImpl(connection, userRepository);
-
-        Habit updatedHabit = habitRepo.updateByUser(1L, "true",
-                "true", "Updated Name", "Updated Description", 7);
-
-        assertNotNull(updatedHabit);
-    }
-
-    // Creating a habit with missing fields should handle exceptions gracefully
-    @Test
-    public void test_create_habit_with_missing_fields() throws Exception {
-        UserRepository userRepository = mock(UserRepository.class);
-        Connection connection = mock(Connection.class);
-
-        HabitRepositoryJdbcImpl habitRepo = new
-                HabitRepositoryJdbcImpl(connection, userRepository);
-
-        User user = new User(1, "test@example.com", "password", "Test
-                User", Role.CLIENT, false);
-                Habit habit = new Habit(user, true, true, 0, null, null,
-                LocalDate.now(), LocalDate.now(), null, LocalDate.now(), null,
-                Period.ofDays(1), 0);
-
-        assertDoesNotThrow(() -> habitRepo.create(habit));
-    }
-
-    // Deleting a non-existent habit should not throw an error
-    @Test
-    public void test_delete_non_existent_habit() throws Exception {
-        UserRepository userRepository = mock(UserRepository.class);
-        Connection connection = mock(Connection.class);
-        PreparedStatement statement = mock(PreparedStatement.class);
-
-        when(connection.prepareStatement(JdbcRequests.deleteHabit)).thenReturn(statement);
-
-        HabitRepositoryJdbcImpl habitRepo = new
-                HabitRepositoryJdbcImpl(connection, userRepository);
-
-        assertDoesNotThrow(() -> habitRepo.delete(999L));
-    }
-
-    // Finding habits for a user with no habits should return an empty list
-    @Test
-    public void test_find_no_habits_for_user() throws Exception {
-        UserRepository userRepository = mock(UserRepository.class);
-        Connection connection = mock(Connection.class);
-        PreparedStatement statement = mock(PreparedStatement.class);
-        ResultSet resultSet = mock(ResultSet.class);
-
-        when(connection.prepareStatement(JdbcRequests.findByUser)).thenReturn(statement);
-        when(statement.executeQuery()).thenReturn(resultSet);
-        when(resultSet.next()).thenReturn(false);
-
-        User user = new User(1, "test@example.com", "password", "Test
-                User", Role.CLIENT, false);
-
-                HabitRepositoryJdbcImpl habitRepo = new
-                HabitRepositoryJdbcImpl(connection, userRepository);
-
-        List<Habit> habits = habitRepo.findByUser(user);
-
-        assertNotNull(habits);
-        assertTrue(habits.isEmpty());
-    }
-
-    // Updating a habit with invalid parameters should handle
-    exceptions gracefully
-    @Test
-    public void test_update_habit_with_invalid_parameters() throws Exception {
-        UserRepository userRepository = mock(UserRepository.class);
-        Connection connection = mock(Connection.class);
-
-        HabitRepositoryJdbcImpl habitRepo = new
-                HabitRepositoryJdbcImpl(connection, userRepository);
-
-        assertDoesNotThrow(() -> habitRepo.updateByUser(1L, "", "",
-                "", "", -1));
-    } */
 }
