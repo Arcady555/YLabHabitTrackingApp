@@ -61,7 +61,10 @@ public class HabitsOfUserServlet extends HttpServlet implements MethodsForServle
             if (optionalClient.isPresent()) {
                 List<HabitGeneralDTO> habitList = habitService.findByUser(optionalClient.get());
                 habitListJsonString = !habitList.isEmpty() ? objectMapper.writeValueAsString(habitList) : "no habits!";
-                responseStatus = "no habits!".equals(habitListJsonString) ? 404 : 200;
+                responseStatus = 200;
+            } else {
+                habitListJsonString = "no user with the email!";
+                responseStatus = 404;
             }
         }
         response.setStatus(responseStatus);

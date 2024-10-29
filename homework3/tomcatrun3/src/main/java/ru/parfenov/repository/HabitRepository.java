@@ -24,10 +24,10 @@ public interface HabitRepository {
 
     /**
      * Поиск списка привычек по их создателю-юзеру
-     * @param user Модель -user
+     * @param userId ID юзера
      * @return список привычек
      */
-    List<Habit> findByUser(User user);
+    List<Habit> findByUser(int userId);
 
     /**
      * Выборка из БД привычек по юзеру и по сегодняшней дате

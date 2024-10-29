@@ -141,4 +141,136 @@ public class UserServiceConsoleImplTest {
 
         assertFalse(foundUser.isPresent());
     }
+
+    // Creating a user with valid email, password, and name returns a User object
+    @Test
+    public void test_create_user_with_valid_data() {
+        UserRepository mockRepository = mock(UserRepository.class);
+        UserServiceServletImpl service = new
+                UserServiceServletImpl(mockRepository);
+        String email = "valid@example.com";
+        String password = "password123";
+        String name = "John Doe";
+        User expectedUser = new User(0, email, password, "1234", name,
+                Role.CLIENT, false);
+        when(mockRepository.create(any(User.class))).thenReturn(expectedUser);
+
+        Optional<User> result = service.createByReg(email, password, name);
+
+        assertTrue(result.isPresent());
+        assertEquals(expectedUser, result.get());
+    }
+
+    // Finding a user by a valid email returns the corresponding User object
+    @Test
+    public void test_find_user_by_valid_email() {
+        UserRepository mockRepository = mock(UserRepository.class);
+        UserServiceServletImpl service = new
+                UserServiceServletImpl(mockRepository);
+        String email = "valid@example.com";
+        User expectedUser = new User(1, email, "password123", "1234",
+                "John Doe", Role.CLIENT, false);
+        when(mockRepository.findByEmail(email)).thenReturn(expectedUser);
+
+        Optional<User> result = service.findByEmail(email);
+
+        assertTrue(result.isPresent());
+        assertEquals(expectedUser, result.get());
+    }
+
+    // Finding a user by a valid ID returns the corresponding User object
+    @Test
+    public void test_find_user_by_valid_id() {
+        UserRepository mockRepository = mock(UserRepository.class);
+        UserServiceServletImpl service = new
+                UserServiceServletImpl(mockRepository);
+        int userId = 1;
+        String userIdStr = String.valueOf(userId);
+        User expectedUser = new User(userId, "valid@example.com",
+                "password123", "1234", "John Doe", Role.CLIENT, false);
+        when(mockRepository.findById(userId)).thenReturn(expectedUser);
+
+        Optional<User> result = service.findById(userIdStr);
+
+        assertTrue(result.isPresent());
+        assertEquals(expectedUser, result.get());
+    }
+
+    // Finding a user by valid email and password returns the corresponding User object
+    @Test
+    public void test_find_user_by_email_and_password() {
+        UserRepository mockRepository = mock(UserRepository.class);
+        UserServiceServletImpl service = new
+                UserServiceServletImpl(mockRepository);
+        String email = "valid@example.com";
+        String password = "password123";
+        User expectedUser = new User(1, email, password, "1234", "John Doe", Role.CLIENT, false);
+                when(mockRepository.findByEmailAndPassword(email,
+                        password)).thenReturn(expectedUser);
+
+        Optional<User> result = service.findByEmailAndPassword(email, password);
+
+        assertTrue(result.isPresent());
+        assertEquals(expectedUser, result.get());
+    }
+
+    // Creating a user with an invalid email returns an empty Optional
+    @Test
+    public void test_create_user_with_invalid_email() {
+        UserRepository mockRepository = mock(UserRepository.class);
+        UserServiceServletImpl service = new
+                UserServiceServletImpl(mockRepository);
+        String email = "invalid-email";
+        String password = "password123";
+        String name = "John Doe";
+
+        Optional<User> result = service.createByReg(email, password, name);
+
+        assertFalse(result.isPresent());
+    }
+
+    // Finding a user by a non-existent email returns an empty Optional
+    @Test
+    public void test_find_user_by_non_existent_email() {
+        UserRepository mockRepository = mock(UserRepository.class);
+        UserServiceServletImpl service = new
+                UserServiceServletImpl(mockRepository);
+        String email = "nonexistent@example.com";
+        when(mockRepository.findByEmail(email)).thenReturn(null);
+
+        Optional<User> result = service.findByEmail(email);
+
+        assertFalse(result.isPresent());
+    }
+
+    // Finding a user by a non-existent ID returns an empty Optional
+    @Test
+    public void test_find_user_by_non_existent_id() {
+        UserRepository mockRepository = mock(UserRepository.class);
+        UserServiceServletImpl service = new
+                UserServiceServletImpl(mockRepository);
+        int userId = 999;
+        String userIdStr = String.valueOf(userId);
+        when(mockRepository.findById(userId)).thenReturn(null);
+
+        Optional<User> result = service.findById(userIdStr);
+
+        assertFalse(result.isPresent());
+    }
+
+    // Finding a user by incorrect email and password returns an empty Optional
+    @Test
+    public void test_find_user_by_incorrect_email_and_password() {
+        UserRepository mockRepository = mock(UserRepository.class);
+        UserServiceServletImpl service = new
+                UserServiceServletImpl(mockRepository);
+        String email = "wrong@example.com";
+        String password = "wrongpassword";
+        when(mockRepository.findByEmailAndPassword(email,
+                password)).thenReturn(null);
+
+        Optional<User> result = service.findByEmailAndPassword(email, password);
+
+        assertFalse(result.isPresent());
+    }
 }

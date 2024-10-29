@@ -2,9 +2,11 @@ package ru.parfenov.dto.habit;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.parfenov.model.User;
 
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 public class HabitGeneralDTO {
     private long id;

@@ -50,12 +50,14 @@ public class DeleteUserServlet extends HttpServlet implements MethodsForServlets
         Optional<User> userOptional = Utility.checkUserByEmailNPass(request, userService);
         int responseStatus = userOptional.isEmpty() ? 401 : 403;
         String clientJsonString = "no rights or registration!";
-        if (userOptional.isPresent() &&
-                Role.ADMIN.equals(userOptional.get().getRole()) &&
-                habitService.deleteWithUser(userOptional.get())) {
+        if (userOptional.isPresent() && Role.ADMIN.equals(userOptional.get().getRole())) {
             String clientIdStr = request.getParameter("id");
-            clientJsonString = userService.delete(clientIdStr) ? "user is deleted!" : "user not deleted!";
-            responseStatus = "user not deleted!".equals(clientJsonString) ? 404 : 200;
+            if (habitService.deleteWithUser(clientIdStr)) {
+                clientJsonString = userService.delete(clientIdStr) ? "user is deleted!" : "user not deleted!";
+                responseStatus = "user not deleted!".equals(clientJsonString) ? 404 : 200;
+            } else {
+                responseStatus = 404;
+            }
         }
         response.setStatus(responseStatus);
         finish(response, clientJsonString);

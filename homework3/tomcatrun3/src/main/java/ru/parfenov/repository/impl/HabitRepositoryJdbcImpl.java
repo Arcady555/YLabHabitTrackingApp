@@ -80,10 +80,11 @@ public class HabitRepositoryJdbcImpl implements HabitRepository {
     }
 
     @Override
-    public List<Habit> findByUser(User user) {
+    public List<Habit> findByUser(int userId) {
         List<Habit> habits = new ArrayList<>();
+        User user = userRepository.findById(userId);
         try (PreparedStatement statement = connection.prepareStatement(JdbcRequests.findByUser)) {
-            statement.setInt(1, user.getId());
+            statement.setInt(1, userId);
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
                     Habit habit = returnHabit(resultSet, user);
@@ -197,7 +198,7 @@ public class HabitRepositoryJdbcImpl implements HabitRepository {
                         && dateOfCreate.isEmpty()
                         && frequencyStr.isEmpty()
         ) {
-            return findByUser(user);
+            return findByUser(user.getId());
         }
         List<Habit> habits = new ArrayList<>();
         int frequency = Utility.getIntFromString(frequencyStr);

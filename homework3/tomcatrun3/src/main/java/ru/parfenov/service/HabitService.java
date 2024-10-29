@@ -35,7 +35,7 @@ public interface HabitService {
      * Удаление всех привычек, которые принадлежали юзеру.(Применяется при удалении юзера)
      * @param user Модель -user
      */
-    boolean deleteWithUser(User user);
+    boolean deleteWithUser(String userId);
 
     /**
      * Найти привычку по её ID

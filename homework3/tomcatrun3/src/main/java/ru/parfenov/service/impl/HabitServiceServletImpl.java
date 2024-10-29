@@ -57,9 +57,11 @@ public class HabitServiceServletImpl implements HabitService {
     }
 
     @Override
-    public boolean deleteWithUser(User user) {
-        repository.deleteWithUser(user.getId());
-        return repository.findByUser(user).isEmpty();
+    public boolean deleteWithUser(String userId) {
+        int id = Utility.getIntFromString(userId);
+        if (id != 0) repository.deleteWithUser(id);
+
+        return repository.findByUser(id).isEmpty();
     }
 
     @Override
@@ -69,7 +71,7 @@ public class HabitServiceServletImpl implements HabitService {
 
     @Override
     public List<HabitGeneralDTO> findByUser(User user) {
-        return executeHabitList(repository.findByUser(user));
+        return executeHabitList(repository.findByUser(user.getId()));
     }
 
     @Override
@@ -148,7 +150,7 @@ public class HabitServiceServletImpl implements HabitService {
         List<HabitStatisticDTO> result = new ArrayList<>();
         LocalDate dateFrom = LocalDate.parse(dateFromStr);
         LocalDate dateTo = LocalDate.parse(dateToStr);
-        List<Habit> habits = repository.findByUser(user);
+        List<Habit> habits = repository.findByUser(user.getId());
         for (Habit habit : habits) {
             HabitStatisticDTO habitDTO = HabitDTOMapper.toHabitStatisticDTO(habit);
             habitDTO.setStatistic(statistic(habit.getId(), dateFrom, dateTo));
