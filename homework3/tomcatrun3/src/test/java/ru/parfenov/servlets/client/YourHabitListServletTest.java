@@ -1,4 +1,4 @@
-package ru.parfenov.servlets.admin;
+package ru.parfenov.servlets.client;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -6,47 +6,53 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.postgresql.shaded.com.ongres.scram.common.bouncycastle.base64.Base64;
+import ru.parfenov.dto.habit.HabitDTOMapper;
+import ru.parfenov.dto.habit.HabitGeneralDTO;
 import ru.parfenov.enums.user.Role;
+import ru.parfenov.model.Habit;
 import ru.parfenov.model.User;
+import ru.parfenov.service.HabitService;
 import ru.parfenov.service.UserService;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
-public class UsersWithParametersServletTest {
+public class YourHabitListServletTest {
     public static UserService userService;
     public static PrintWriter writer;
-    public static UsersWithParametersServlet servlet;
+    public static YourHabitListServlet servlet;
     public static User user;
+    private static HabitService habitService;
 
     @BeforeAll
     public static void init() {
         userService = mock(UserService.class);
+        habitService = mock(HabitService.class);
         writer = new PrintWriter(new StringWriter());
-        servlet = new UsersWithParametersServlet(userService);
-        user = new User(1, "admin@mail.ru", "password", "111", "Name", Role.ADMIN, false);
+        servlet = new YourHabitListServlet(userService, habitService);
+        user = new User(2, "name1@mail.ru", "password1", "1111", "Name1", Role.CLIENT, false);
     }
 
     @Test
-    @DisplayName("ADMIN успешно вывел список юзеров")
-    public void admin_view_habits_of_user() throws Exception {
+    @DisplayName("юзер успешно получил лист и json")
+    public void today_perform() throws Exception {
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);
-        User userClient = new User(2, "name1@mail.ru", "password1", "1111", "Name1", Role.CLIENT, false);
+        Period frequency = Period.of(0, 0, 10);
+        Habit habit = new Habit(
+                1L, user, true, true, 1, "run", "run everyday", LocalDate.now(), LocalDate.now().plusDays(frequency.getDays()),
+                LocalDate.now().plusDays(1L), LocalDate.now().plus(frequency), null, frequency, 0);
+        HabitGeneralDTO habitGeneralDTO = HabitDTOMapper.toHabitGeneralDTO(habit);
 
         authentication(user, request);
 
-        when(request.getParameter("role")).thenReturn("CLIENT");
-        when(request.getParameter("name")).thenReturn("Name1");
-        when(request.getParameter("block")).thenReturn("false");
-
-        when(userService.findByParameters(anyString(), anyString(),
-                anyString())).thenReturn(List.of(userClient));
-
+        when(habitService.findByUser(user)).thenReturn(List.of(habitGeneralDTO));
         when(response.getWriter()).thenReturn(writer);
 
         servlet.doGet(request, response);
@@ -55,6 +61,7 @@ public class UsersWithParametersServletTest {
         verify(response).setCharacterEncoding("UTF-8");
         verify(response).setStatus(200);
     }
+
 
     private void authentication(User user, HttpServletRequest request) {
         when(request.getHeader("Authorization")).thenReturn("Basic QWxhZGRpbjpPcGVuU2VzYW1l");
