@@ -50,4 +50,16 @@ public interface HabitDTOMapper {
                 source.getFrequency().getDays()
         );
     }
+
+    @Named("toHabitUpdateDTO")
+    static HabitUpdateDTO toHabitUpdateDTO(Habit source) {
+        return new HabitUpdateDTO(
+                source.getId(),
+                source.isUseful() ? "true" : "false",
+                source.isActive() ? "true" : "false",
+                source.getName(),
+                source.getDescription(),
+                source.getFrequency().getDays()
+        );
+    }
 }
