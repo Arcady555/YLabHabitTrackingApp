@@ -75,8 +75,8 @@ public class HabitServiceServletImpl implements HabitService {
     }
 
     @Override
-    public Optional<Habit> perform(User user, String habitIdStr) {
-        Optional<Habit> result = Optional.empty();
+    public Optional<HabitGeneralDTO> perform(User user, String habitIdStr) {
+        Optional<HabitGeneralDTO> result = Optional.empty();
         long habitId = Utility.getLongFromString(habitIdStr);
         Optional<Habit> habitOptional = habitId != 0L ? findById(habitId) : Optional.empty();
         if (habitOptional.isPresent() && validationPerform(user, habitOptional.get())) {
@@ -111,7 +111,7 @@ public class HabitServiceServletImpl implements HabitService {
             Habit newHabit = repository.updateViaPerform(habit);
             result = habit.getStreaksAmount() == newHabit.getStreaksAmount() &&
                     habit.getPlannedNextPerform().isEqual(newHabit.getPlannedNextPerform()) ?
-                    Optional.of(newHabit) :
+                    Optional.of(HabitDTOMapper.toHabitGeneralDTO(newHabit)) :
                     Optional.empty();
         }
         return result;

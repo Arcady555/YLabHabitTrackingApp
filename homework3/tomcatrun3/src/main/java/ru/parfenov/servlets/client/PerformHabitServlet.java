@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import ru.parfenov.dto.habit.HabitGeneralDTO;
 import ru.parfenov.model.Habit;
 import ru.parfenov.model.User;
 import ru.parfenov.service.HabitService;
@@ -55,7 +56,7 @@ public class PerformHabitServlet extends HttpServlet implements MethodsForServle
         } else {
             ObjectMapper objectMapper = new ObjectMapper();
             String habitId = request.getParameter("habitId");
-            Optional<Habit> habit = habitService.perform(userOptional.get(), habitId);
+            Optional<HabitGeneralDTO> habit = habitService.perform(userOptional.get(), habitId);
             habitJsonString = habit.isPresent() ? objectMapper.writeValueAsString(habit.get().toString()) : "habit is not performed!";
             responseStatus = habit.isPresent() ? 200 : 404;
         }

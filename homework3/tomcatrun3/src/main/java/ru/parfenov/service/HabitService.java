@@ -78,7 +78,7 @@ public interface HabitService {
      * @param habitId ID привычки в строке
      * @return да или нет
      */
-    Optional<Habit> perform(User user, String habitId);
+    Optional<HabitGeneralDTO> perform(User user, String habitId);
 
     /**
      * Редактировать-поменять данные привычки
