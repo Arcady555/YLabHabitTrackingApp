@@ -75,11 +75,11 @@ public class HabitServiceServletImpl implements HabitService {
     }
 
     @Override
-    public Optional<Habit> perform(String habitIdStr) {
+    public Optional<Habit> perform(User user, String habitIdStr) {
         Optional<Habit> result = Optional.empty();
         long habitId = Utility.getLongFromString(habitIdStr);
         Optional<Habit> habitOptional = habitId != 0L ? findById(habitId) : Optional.empty();
-        if (habitOptional.isPresent() && validationPerform(habitOptional.get())) {
+        if (habitOptional.isPresent() && validationPerform(user, habitOptional.get())) {
             Habit habit = habitOptional.get();
             LocalDate date = LocalDate.now();
 
@@ -179,12 +179,14 @@ public class HabitServiceServletImpl implements HabitService {
      * @param habit Модель ПРИВЫЧКА
      * @return true или false
      */
-    private boolean validationPerform(Habit habit) {
+    private boolean validationPerform(User user, Habit habit) {
+        boolean check1 = user.equals(habit.getUser());
         LocalDate date =
                 habit.getPlannedPrevPerform() == null ?
                         habit.getPlannedFirstPerform() :
                         habit.getPlannedPrevPerform();
-        return LocalDate.now().isAfter(date) || LocalDate.now().isEqual(date);
+        boolean check2 = LocalDate.now().isAfter(date) || LocalDate.now().isEqual(date);
+        return check1 && check2;
     }
 
     private boolean checkUpdate(Habit habit, String newUsefulness, String newActive, String newName, String newDescription, int newFrequency) {

@@ -33,7 +33,7 @@ public interface HabitService {
 
     /**
      * Удаление всех привычек, которые принадлежали юзеру.(Применяется при удалении юзера)
-     * @param user Модель -user
+     * @param userId ID юзера
      */
     boolean deleteWithUser(String userId);
 
@@ -74,10 +74,11 @@ public interface HabitService {
 
     /**
      * Выполнить привычку
+     * @param user сущность юзер
      * @param habitId ID привычки в строке
      * @return да или нет
      */
-    Optional<Habit> perform(String habitId);
+    Optional<Habit> perform(User user, String habitId);
 
     /**
      * Редактировать-поменять данные привычки
