@@ -27,16 +27,4 @@ public class LiquibaseUpdate {
 
         liquibase.update(new Contexts(), new LabelExpression());
     }
-
- /*   private Connection loadConnection() throws ClassNotFoundException, SQLException, IOException {
-        Properties prop = new Properties();
-      //  prop.load(new FileInputStream("homework3/separaterun3/src/main/resources/app.properties"));
-        Connection connection;
-        String url = prop.getProperty("url");
-        String username = prop.getProperty("username");
-        String password = prop.getProperty("password");
-        String driver = prop.getProperty("driver-class-name");
-        Class.forName(driver);
-        connection = DriverManager.getConnection(url, username, password);
-        return connection; */
 }
