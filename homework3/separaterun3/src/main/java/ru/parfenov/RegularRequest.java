@@ -2,15 +2,12 @@ package ru.parfenov;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 
-import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.Base64;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -20,54 +17,42 @@ import java.util.TimerTask;
 @Slf4j
 @RequiredArgsConstructor
 public class RegularRequest {
-    private final CloseableHttpClient httpClient = HttpClients.createDefault();
 
     public void run() {
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             public void run() {
                 RegularRequest obj = new RegularRequest();
-
                 try {
-                    try {
-                        obj.sendGet();
-                    } catch (Exception e) {
+                    obj.sendGet();
+
+                } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
-                } finally {
-                    try {
-                        obj.close();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
             }
         }, 60 * 60 * 1000, 24 * 60 * 60 * 1000);
     }
 
-    private void close() throws IOException {
-        httpClient.close();
-    }
-
     private void sendGet() throws Exception {
-        HttpGet request = new HttpGet("http://localhost:8080/ht/remind-today-perform-via-email");
+        /**
+         * Сюда нужно вписать имя и пароль админа приложения
+         */
+        String username = "user";
+        String password = "pass";
+        String encodedCredentials = Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
 
-        request.addHeader("name", "admin@YLabHabitApp.com");
-        request.addHeader("password", "123");
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(new URI("https://localhost:8080/ht/remind-today-perform-via-email"))
+                .GET()
+                .header("Authorization", "Basic " + encodedCredentials)
+                .build();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        try (CloseableHttpResponse response = httpClient.execute(request)) {
+        String responseBody = response.body();
+        int responseStatusCode = response.statusCode();
 
-            System.out.println(response.getStatusLine().toString());
-
-            HttpEntity entity = response.getEntity();
-            Header headers = entity.getContentType();
-            System.out.println(headers);
-
-            if (entity != null) {
-                String result = EntityUtils.toString(entity);
-                System.out.println(result);
-            }
-
-        }
+        System.out.println("httpGetRequest: " + responseBody);
+        System.out.println("httpGetRequest status code: " + responseStatusCode);
     }
 }
