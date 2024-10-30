@@ -114,18 +114,6 @@ public class HabitServiceConsoleImplTest {
     }
 
     @Test
-    @DisplayName("Не успешное выполнение привычки")
-    public void test_perform_habit_invalid_id_string() {
-        HabitRepository repository = mock(HabitRepository.class);
-        HabitServiceServletImpl service = new
-                HabitServiceServletImpl(repository);
-
-        Optional<Habit> result = service.perform("invalid");
-
-        assertFalse(result.isPresent());
-    }
-
-    @Test
     @DisplayName("Не успешное обновление привычки")
     public void test_update_habit_mismatched_user() {
         User user1 = new User(1, "user1@example.com", "password",

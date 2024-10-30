@@ -49,7 +49,7 @@ public class PerformHabitServletTest {
         authentication(user, request);
 
         when(request.getParameter("habitId")).thenReturn("1");
-        when(habitService.perform("1")).thenReturn(Optional.of(performedHabit));
+        when(habitService.perform(user,"1")).thenReturn(Optional.of(performedHabit));
         when(response.getWriter()).thenReturn(writer);
 
         servlet.doGet(request, response);
