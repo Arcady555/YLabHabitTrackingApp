@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.postgresql.shaded.com.ongres.scram.common.bouncycastle.base64.Base64;
+import ru.parfenov.dto.habit.HabitDTOMapper;
 import ru.parfenov.enums.user.Role;
 import ru.parfenov.model.Habit;
 import ru.parfenov.model.User;
@@ -49,7 +50,7 @@ public class PerformHabitServletTest {
         authentication(user, request);
 
         when(request.getParameter("habitId")).thenReturn("1");
-        when(habitService.perform(user,"1")).thenReturn(Optional.of(performedHabit));
+        when(habitService.perform(user,"1")).thenReturn(Optional.of(HabitDTOMapper.toHabitGeneralDTO(performedHabit)));
         when(response.getWriter()).thenReturn(writer);
 
         servlet.doGet(request, response);
