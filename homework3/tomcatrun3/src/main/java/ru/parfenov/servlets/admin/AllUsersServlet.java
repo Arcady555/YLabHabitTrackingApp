@@ -52,7 +52,7 @@ public class AllUsersServlet extends HttpServlet implements MethodsForServlets {
             ObjectMapper objectMapper = new ObjectMapper();
             List<User> userList = userService.findAll();
             userListJsonString = !userList.isEmpty() ? objectMapper.writeValueAsString(userList) : "no users!";
-            responseStatus = "no users!".equals(userListJsonString) ? 404 : 200;
+            responseStatus = !userList.isEmpty() ? 404 : 200;
         }
         response.setStatus(responseStatus);
         finish(response, userListJsonString);

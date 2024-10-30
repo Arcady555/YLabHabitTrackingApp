@@ -59,7 +59,7 @@ public class CreateHabitServlet extends HttpServlet implements MethodsForServlet
             HabitCreateDTO habitDTO = objectMapper.readValue(habitJson, HabitCreateDTO.class);
             Optional<HabitGeneralDTO> habit = habitService.create(userOptional.get(), habitDTO);
             jsonString = habit.isPresent() ? habit.get().toString() : "habit is not created!";
-            responseStatus = "habit is not created!".equals(jsonString) ? 404 : 200;
+            responseStatus = habit.isPresent() ? 404 : 200;
         }
         response.setStatus(responseStatus);
         finish(response, jsonString);

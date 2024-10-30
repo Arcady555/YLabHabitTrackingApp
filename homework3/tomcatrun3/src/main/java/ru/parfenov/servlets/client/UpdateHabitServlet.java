@@ -60,7 +60,7 @@ public class UpdateHabitServlet extends HttpServlet implements MethodsForServlet
             HabitUpdateDTO habitDTO = objectMapper.readValue(habitJson, HabitUpdateDTO.class);
             Optional<HabitGeneralDTO> habit = habitService.updateByUser(userOptional.get(), habitDTO);
             jsonString = habit.isPresent() ? habit.get().toString() : "habit is not updated!";
-            responseStatus = "habit is not updated!".equals(jsonString) ? 404 : 200;
+            responseStatus = habit.isPresent() ? 200 : 404;
         }
         response.setStatus(responseStatus);
         finish(response, jsonString);

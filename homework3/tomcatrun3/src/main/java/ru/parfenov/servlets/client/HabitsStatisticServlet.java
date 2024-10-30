@@ -59,7 +59,7 @@ public class HabitsStatisticServlet extends HttpServlet implements MethodsForSer
             String dateTo = request.getParameter("dateTo");
             List<HabitStatisticDTO> habitList = habitService.statisticForUser(userOptional.get(), dateFrom, dateTo);
             habitListJsonString = !habitList.isEmpty() ? objectMapper.writeValueAsString(habitList) : "no habits, no statistic!";
-            responseStatus = "no habits, no statistic!".equals(habitListJsonString) ? 404 : 200;
+            responseStatus = habitList.isEmpty() ? 404 : 200;
         }
         response.setStatus(responseStatus);
         finish(response, habitListJsonString);

@@ -52,7 +52,7 @@ public class ViewUserServlet extends HttpServlet implements MethodsForServlets {
             String clientIdStr = request.getParameter("id");
             Optional<User> userResult = userService.findById(clientIdStr);
             clientJsonString = userResult.isPresent() ? objectMapper.writeValueAsString(userResult.get().toString()) : "user not found!";
-            responseStatus = "user not found!".equals(clientJsonString) ? 404 : 200;
+            responseStatus = userResult.isPresent() ? 200 : 404;
         }
         response.setStatus(responseStatus);
         finish(response, clientJsonString);

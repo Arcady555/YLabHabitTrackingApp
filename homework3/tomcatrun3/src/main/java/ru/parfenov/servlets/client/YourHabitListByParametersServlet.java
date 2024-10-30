@@ -64,7 +64,7 @@ public class YourHabitListByParametersServlet extends HttpServlet implements Met
             List<HabitGeneralDTO> habitList =
                     habitService.findByParameters(userOptional.get(), usefulness, active, name, description, dateOfCreate, frequency);
             habitListJsonString = !habitList.isEmpty() ? objectMapper.writeValueAsString(habitList) : "no habits!";
-            responseStatus = "no habits!".equals(habitListJsonString) ? 404 : 200;
+            responseStatus = habitList.isEmpty() ? 404 : 200;
         }
         response.setStatus(responseStatus);
         finish(response, habitListJsonString);

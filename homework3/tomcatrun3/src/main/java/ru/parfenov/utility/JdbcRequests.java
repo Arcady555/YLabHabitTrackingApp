@@ -80,7 +80,7 @@ public class JdbcRequests {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder
                 .append(role != null ? " user_role = ? and" : "")
-                .append(!name.isEmpty() ? " name = ? and" : "")
+                .append(!name.isEmpty() ? " name LIKE '%?% and" : "")
                 .append(!block.isEmpty() ? " blocked = ?" : "");
         if (stringBuilder.toString().endsWith("and")) stringBuilder.setLength(stringBuilder.length() - 3);
 
@@ -106,8 +106,8 @@ public class JdbcRequests {
                 .append("user_id = ?")
                 .append(!usefulness.isEmpty() ? " usefulness = ? and" : "")
                 .append(!active.isEmpty() ? " active = ?" : "")
-                .append(!name.isEmpty() ? " name = ? and" : "")
-                .append(!description.isEmpty() ? " description = ?" : "")
+                .append(!name.isEmpty() ? " name LIKE '%?% and" : "")
+                .append(!description.isEmpty() ? " description LIKE '%?%" : "")
                 .append(!dateOfCreate.isEmpty() ? " date_of_create = ? and" : "")
                 .append(frequency != 0 ? " frequency = ?" : "");
         if (stringBuilder.toString().endsWith("and")) stringBuilder.setLength(stringBuilder.length() - 3);

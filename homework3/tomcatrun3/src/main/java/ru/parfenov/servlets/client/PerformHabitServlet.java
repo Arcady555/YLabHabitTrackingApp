@@ -57,7 +57,7 @@ public class PerformHabitServlet extends HttpServlet implements MethodsForServle
             String habitId = request.getParameter("habitId");
             Optional<Habit> habit = habitService.perform(habitId);
             habitJsonString = habit.isPresent() ? objectMapper.writeValueAsString(habit.get().toString()) : "habit is not performed!";
-            responseStatus = "habit is not performed!".equals(habitJsonString) ? 404 : 200;
+            responseStatus = habit.isPresent() ? 200 : 404;
         }
         response.setStatus(responseStatus);
         finish(response, habitJsonString);

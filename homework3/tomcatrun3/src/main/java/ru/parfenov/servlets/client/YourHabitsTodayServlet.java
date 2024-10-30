@@ -59,7 +59,7 @@ public class YourHabitsTodayServlet extends HttpServlet implements MethodsForSer
             List<HabitGeneralDTO> habitList =
                     habitService.todayPerforms(userOptional.get());
             habitListJsonString = !habitList.isEmpty() ? objectMapper.writeValueAsString(habitList) : "no habits!";
-            responseStatus = "no habits!".equals(habitListJsonString) ? 404 : 200;
+            responseStatus = habitList.isEmpty() ? 404 : 200;
         }
         response.setStatus(responseStatus);
         finish(response, habitListJsonString);

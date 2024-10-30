@@ -56,7 +56,7 @@ public class UsersWithParametersServlet extends HttpServlet implements MethodsFo
             String block = request.getParameter("block");
             List<User> clientList = userService.findByParameters(role, name, block);
             clientListJsonString = !clientList.isEmpty() ? objectMapper.writeValueAsString(clientList) : "no users with these parameters!";
-            responseStatus = "no users with these parameters!".equals(clientListJsonString) ? 404 : 200;
+            responseStatus = clientList.isEmpty() ? 404 : 200;
         }
         response.setStatus(responseStatus);
         finish(response, clientListJsonString);

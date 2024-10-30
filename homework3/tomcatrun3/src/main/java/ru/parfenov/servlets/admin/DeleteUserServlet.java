@@ -53,8 +53,9 @@ public class DeleteUserServlet extends HttpServlet implements MethodsForServlets
         if (userOptional.isPresent() && Role.ADMIN.equals(userOptional.get().getRole())) {
             String clientIdStr = request.getParameter("id");
             if (habitService.deleteWithUser(clientIdStr)) {
-                clientJsonString = userService.delete(clientIdStr) ? "user is deleted!" : "user not deleted!";
-                responseStatus = "user not deleted!".equals(clientJsonString) ? 404 : 200;
+                boolean result = userService.delete(clientIdStr);
+                clientJsonString = result ? "user is deleted!" : "user not deleted!";
+                responseStatus = result ? 200 : 404;
             } else {
                 responseStatus = 404;
             }

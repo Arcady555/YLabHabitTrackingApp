@@ -54,7 +54,7 @@ public class ResetPasswordServlet extends HttpServlet implements MethodsForServl
             UserUpdatePassDTO userDTO = objectMapper.readValue(userJson, UserUpdatePassDTO.class);
             Optional<User> updateUser = userService.updatePass(userOptional.get().getId(), userDTO.getPassword(), userDTO.getResetPassword());
             jsonString = updateUser.isPresent() ? updateUser.get().toString() : "password is not updated!";
-            responseStatus = "password is not updated!".equals(jsonString) ? 404 : 200;
+            responseStatus = updateUser.isPresent() ? 200 : 404;
         }
         response.setStatus(responseStatus);
         finish(response, jsonString);

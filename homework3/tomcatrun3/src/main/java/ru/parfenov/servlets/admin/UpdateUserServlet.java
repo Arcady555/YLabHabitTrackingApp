@@ -54,7 +54,7 @@ public class UpdateUserServlet extends HttpServlet implements MethodsForServlets
             UserUpdateDTO userDTO = objectMapper.readValue(userJson, UserUpdateDTO.class);
             Optional<User> updateUser = userService.update(userDTO, "");
             jsonString = updateUser.isPresent() ? updateUser.get().toString() : "user is not updated!";
-            responseStatus = "user is not updated!".equals(jsonString) ? 404 : 200;
+            responseStatus = updateUser.isPresent() ? 200 : 404;
         }
         response.setStatus(responseStatus);
         finish(response, jsonString);
