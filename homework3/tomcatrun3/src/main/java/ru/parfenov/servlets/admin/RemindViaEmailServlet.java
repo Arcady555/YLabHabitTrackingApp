@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 @Slf4j
-@WebServlet(name = "RemindViaEmailServlet", urlPatterns = "/remind-today-perform-via-email")
+@WebServlet(name = "RemindViaEmailServlet", urlPatterns = "/remind-via-email")
 public class RemindViaEmailServlet extends HttpServlet implements MethodsForServlets {
     private final UserService userService;
     private final HabitService habitService;
