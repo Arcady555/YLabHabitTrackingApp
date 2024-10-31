@@ -46,7 +46,7 @@ public interface UserRepository {
      * @param blocked блокировка, может быть пустая строка, если не запросили его изменение
      * @return user модель -user, с данными, полученными при обновлении
      */
-    User update(int userId, String newPassword, String newResetPassword, String newName, Role newUserRole, String blocked);
+    User update(int userId, String newPassword, String newResetPassword, String newName, String newUserRole, String blocked);
 
     /**
      * Удаление юзера из хранилища

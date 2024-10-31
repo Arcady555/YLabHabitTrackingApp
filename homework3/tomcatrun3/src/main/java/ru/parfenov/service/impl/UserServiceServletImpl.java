@@ -66,7 +66,7 @@ public class UserServiceServletImpl implements UserService {
         String newName = userDTO.getName();
         String newUserRoleStr = userDTO.getRole();
         String blocked = userDTO.getBlocked();
-        Role newUserRole = Utility.getUserRoleFromString(userDTO.getRole());
+        String newUserRole = userDTO.getRole();
         User user = repository.update(userId, newPassword, resetPass, newName, newUserRole, blocked);
         return user != null && checkUpdate(user, newPassword, resetPass, newName, newUserRoleStr, blocked) ?
                 Optional.of(user) :

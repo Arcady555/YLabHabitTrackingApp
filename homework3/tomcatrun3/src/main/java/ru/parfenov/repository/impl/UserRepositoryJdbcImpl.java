@@ -1,7 +1,6 @@
 package ru.parfenov.repository.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import ru.parfenov.enums.user.Role;
 import ru.parfenov.model.User;
 import ru.parfenov.repository.UserRepository;
 import ru.parfenov.utility.JdbcRequests;
@@ -107,7 +106,7 @@ public class UserRepositoryJdbcImpl implements UserRepository {
      * @return юзер с обновлёнными данными
      */
     @Override
-    public User update(int userId, String newPassword, String newResetPassword, String newName, Role newUserRole, String blocked) {
+    public User update(int userId, String newPassword, String newResetPassword, String newName, String newUserRole, String blocked) {
         try (PreparedStatement statement = connection.prepareStatement(
                 JdbcRequests.updateUser(newPassword, newResetPassword, newName, newUserRole, blocked)
         )
@@ -151,18 +150,17 @@ public class UserRepositoryJdbcImpl implements UserRepository {
     /**
      * Любой запрос в БД - дорогое удовольствие. Пусть вес его уменьшится, если некоторые поля запроса будут пустыми
      *
-     * @param roleStr роль, может быть пустая строка, если не запросили поиск по такому параметру
+     * @param role роль, может быть пустая строка, если не запросили поиск по такому параметру
      * @param name    имя, может быть пустая строка, если не запросили поиск по такому параметру
      * @param block   блокировка, может быть пустая строка, если не запросили поиск по такому параметру
      * @return список юзеров по переданным параметрам
      */
     @Override
-    public List<User> findByParameters(String roleStr, String name, String block) {
-        if (roleStr.isEmpty() && name.isEmpty() && block.isEmpty()) {
+    public List<User> findByParameters(String role, String name, String block) {
+        if (role.isEmpty() && name.isEmpty() && block.isEmpty()) {
             return findAll();
         }
         List<User> users = new ArrayList<>();
-        Role role = Utility.getUserRoleFromString(roleStr);
         try (PreparedStatement statement = connection.prepareStatement(
                 JdbcRequests.findUsersByParameters(role, name, block))
         ) {
@@ -195,7 +193,7 @@ public class UserRepositoryJdbcImpl implements UserRepository {
                                       String newPassword,
                                       String newResetPassword,
                                       String newName,
-                                      Role newUserRole,
+                                      String newUserRole,
                                       String newBlocked) throws SQLException {
         int result = 0;
         if (!newPassword.isEmpty()) {
@@ -210,7 +208,7 @@ public class UserRepositoryJdbcImpl implements UserRepository {
             result++;
             statement.setString(result, newName);
         }
-        if (newUserRole != null) {
+        if (!newUserRole.isEmpty()) {
             result++;
             statement.setString(result, newUserRole.toString());
         }

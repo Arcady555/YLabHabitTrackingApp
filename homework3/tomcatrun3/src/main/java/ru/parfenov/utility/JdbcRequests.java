@@ -1,7 +1,5 @@
 package ru.parfenov.utility;
 
-import ru.parfenov.enums.user.Role;
-
 public class JdbcRequests {
 
     private JdbcRequests() {
@@ -47,11 +45,11 @@ public class JdbcRequests {
             " planned_prev_perform = ? , planned_next_perform = ? , last_real_perform = ? , performs_amount = ? WHERE id = ?";
     public static String findLogsOnPeriod = "SELECT * FROM ht_log_schema.logs WHERE log_time > ? AND log_time < ?";
 
-    public static String updateUser(String newPassword, String newResetPassword, String newName, Role newUserRole, String newBlocked) {
+    public static String updateUser(String newPassword, String newResetPassword, String newName, String newUserRole, String newBlocked) {
         return "UPDATE ht_schema.users SET " + getRequestForUserUpdate(newPassword, newResetPassword, newName, newUserRole, newBlocked) + " WHERE id = ?";
     }
 
-    public static String findUsersByParameters(Role role, String name, String block) {
+    public static String findUsersByParameters(String role, String name, String block) {
         return "SELECT * FROM cs_schema.users WHERE " + getRequestForFindUsersByParam(role, name, block);
     }
 
@@ -63,24 +61,24 @@ public class JdbcRequests {
         return "SELECT * FROM cs_schema.users WHERE " + getRequestForFindByParam(usefulness, active, name, description, dateOfCreate, frequency);
     }
 
-    private static String getRequestForUserUpdate(String newPassword, String newResetPassword, String newName, Role newUserRole, String newBlocked) {
+    private static String getRequestForUserUpdate(String newPassword, String newResetPassword, String newName, String newUserRole, String newBlocked) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(!newPassword.isEmpty() ? "password = ? ," : "")
                 .append(!newResetPassword.isEmpty() ? "reset_password = ? ," : "")
                 .append(!newName.isEmpty() ? " name = ? ," : "")
-                .append(newUserRole != null ? " user_role = ? ," : "")
-                .append(newBlocked.isEmpty() ? " blocked = ? " : "");
+                .append(!newUserRole.isEmpty() ? " user_role = ? ," : "")
+                .append(!newBlocked.isEmpty() ? " blocked = ? " : "");
         if (stringBuilder.toString().endsWith(",")) stringBuilder.setLength(stringBuilder.length() - 1);
 
         return stringBuilder.toString();
     }
 
-    private static String getRequestForFindUsersByParam(Role role,
+    private static String getRequestForFindUsersByParam(String role,
                                                         String name,
                                                         String block) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder
-                .append(role != null ? " user_role = ? and" : "")
+                .append(!role.isEmpty() ? " user_role = ? and" : "")
                 .append(!name.isEmpty() ? " name LIKE '%?% and" : "")
                 .append(!block.isEmpty() ? " blocked = ?" : "");
         if (stringBuilder.toString().endsWith("and")) stringBuilder.setLength(stringBuilder.length() - 3);
@@ -92,7 +90,7 @@ public class JdbcRequests {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder
                 .append(!newUsefulness.isEmpty() ? "usefulness = ? ," : "")
-                .append(newActive.isEmpty() ? " active = ? , " : "")
+                .append(newActive.isEmpty() ? " active = ? ," : "")
                 .append(!newName.isEmpty() ? " name = ? ," : "")
                 .append(!newDescription.isEmpty() ? " description = ? ," : "")
                 .append(newFrequency != 0 ? " frequency = ? " : "");
