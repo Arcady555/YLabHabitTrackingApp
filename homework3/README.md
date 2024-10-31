@@ -39,7 +39,7 @@ exit
 
 Перейдите в корень проекта(блок homework3.separatedrun3) через командную строку:
 ```
-cd /home/......../IdeaProjects/YLabHabitTrackingApp/homework3/separatedrun3
+cd /home/......../IdeaProjects/YLabHabitTrackingApp/homework3/separaterun3
 ``` 
 и выполните команды:
 ```
@@ -52,6 +52,10 @@ java Main
 
 ```
 cd /home/......../IdeaProjects/YLabHabitTrackingApp/homework3/tomcatrun3
+```
+и выполните команды:
+```
+mvn clean install
 ```
 
 Запустите TomCat. Например в консоли:

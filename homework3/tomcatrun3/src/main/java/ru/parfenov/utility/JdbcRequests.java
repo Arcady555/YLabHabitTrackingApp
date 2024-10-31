@@ -45,6 +45,7 @@ public class JdbcRequests {
     public static String deleteHabitsWithUser = "DELETE FROM ht_schema.habits WHERE user_id = ?";
     public static String updateHabitViaPerform = "UPDATE ht_schema.habits SET streaks_amount = ? ," +
             " planned_prev_perform = ? , planned_next_perform = ? , last_real_perform = ? , performs_amount = ? WHERE id = ?";
+    public static String findLogsOnPeriod = "";
 
     public static String updateUser(String newPassword, String newResetPassword, String newName, Role newUserRole, String newBlocked) {
         return "UPDATE ht_schema.users SET " + getRequestForUserUpdate(newPassword, newResetPassword, newName, newUserRole, newBlocked) + " WHERE id = ?";

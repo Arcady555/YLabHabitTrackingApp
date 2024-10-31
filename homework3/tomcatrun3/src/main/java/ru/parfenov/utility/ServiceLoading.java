@@ -1,12 +1,16 @@
 package ru.parfenov.utility;
 
 import ru.parfenov.repository.HabitRepository;
+import ru.parfenov.repository.LogRepository;
 import ru.parfenov.repository.UserRepository;
 import ru.parfenov.repository.impl.HabitRepositoryJdbcImpl;
+import ru.parfenov.repository.impl.LogRepositoryJdbcImpl;
 import ru.parfenov.repository.impl.UserRepositoryJdbcImpl;
 import ru.parfenov.service.HabitService;
+import ru.parfenov.service.LogService;
 import ru.parfenov.service.UserService;
 import ru.parfenov.service.impl.HabitServiceServletImpl;
+import ru.parfenov.service.impl.LogServiceServletImpl;
 import ru.parfenov.service.impl.UserServiceServletImpl;
 
 public class ServiceLoading {
@@ -31,5 +35,10 @@ public class ServiceLoading {
     public static HabitService loadHabitService() throws Exception {
         HabitRepository habitRepository = new HabitRepositoryJdbcImpl(repository);
         return new HabitServiceServletImpl(habitRepository);
+    }
+
+    public static LogService loadLogService() throws Exception {
+        LogRepository logRepository = new LogRepositoryJdbcImpl();
+        return new LogServiceServletImpl(logRepository);
     }
 }
