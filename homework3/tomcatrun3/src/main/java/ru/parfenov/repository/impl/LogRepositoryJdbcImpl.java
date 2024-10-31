@@ -7,10 +7,7 @@ import ru.parfenov.repository.LogRepository;
 import ru.parfenov.utility.JdbcRequests;
 import ru.parfenov.utility.Utility;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +23,8 @@ public class LogRepositoryJdbcImpl implements LogRepository {
     public List<LogRecord> findByDateTime(LocalDateTime dateTimeFrom, LocalDateTime dateTimeTo) {
         List<LogRecord> result = new ArrayList<>();
         try (PreparedStatement statement = connection.prepareStatement(JdbcRequests.findLogsOnPeriod)) {
+            statement.setTimestamp(1, Timestamp.valueOf(dateTimeFrom));
+            statement.setTimestamp(2, Timestamp.valueOf(dateTimeTo));
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
                     LogRecord logRecord = returnLogRecord(resultSet);
@@ -33,7 +32,7 @@ public class LogRepositoryJdbcImpl implements LogRepository {
                 }
             }
         } catch (Exception e) {
-            log.error("Exception in UserRepositoryJdbcImpl.findAll(). ", e);
+            log.error("Exception in LogRepositoryJdbcImpl.findAll(). ", e);
         }
         return result;
     }
