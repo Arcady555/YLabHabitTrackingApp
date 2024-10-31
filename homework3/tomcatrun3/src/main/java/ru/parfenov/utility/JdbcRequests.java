@@ -104,9 +104,9 @@ public class JdbcRequests {
         stringBuilder
                 .append("user_id = ?")
                 .append(!usefulness.isEmpty() ? " usefulness = ? and" : "")
-                .append(!active.isEmpty() ? " active = ?" : "")
+                .append(!active.isEmpty() ? " active = ? and" : "")
                 .append(!name.isEmpty() ? " name LIKE '%?% and" : "")
-                .append(!description.isEmpty() ? " description LIKE '%?%" : "")
+                .append(!description.isEmpty() ? " description LIKE '%?% and" : "")
                 .append(!dateOfCreate.isEmpty() ? " date_of_create = ? and" : "")
                 .append(frequency != 0 ? " frequency = ?" : "");
         if (stringBuilder.toString().endsWith("and")) stringBuilder.setLength(stringBuilder.length() - 3);
