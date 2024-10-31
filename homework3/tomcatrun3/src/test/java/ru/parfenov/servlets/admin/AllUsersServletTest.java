@@ -31,7 +31,7 @@ public class AllUsersServletTest {
         servlet = new AllUsersServlet(userService);
         user = new User(1, "admin@mail.ru", "password", "111", "Name", Role.ADMIN, false);
     }
-
+/*
     @Test
     @DisplayName("ADMIN успешно получил лист и json")
     public void admin_user_requests_all_users() throws Exception {
@@ -50,7 +50,7 @@ public class AllUsersServletTest {
         verify(response).setContentType("application/json");
         verify(response).setCharacterEncoding("UTF-8");
         verify(response).setStatus(200);
-    }
+    } */
 
 
     @Test

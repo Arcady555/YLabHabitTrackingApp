@@ -98,13 +98,17 @@ public class Utility {
     }
 
     public static Connection loadConnection() throws ClassNotFoundException, SQLException, IOException {
-        Properties prop = new Properties();
-        prop.load(new FileInputStream("classpath:app.properties"));
+      //  Properties prop = new Properties();
+     //   prop.load(new FileInputStream("classpath:app.properties"));
         Connection connection;
-        String url = prop.getProperty("url");
+      /*  String url = prop.getProperty("url");
         String username = prop.getProperty("username");
         String password = prop.getProperty("password");
-        String driver = prop.getProperty("driver-class-name");
+        String driver = prop.getProperty("driver-class-name"); */
+        String url = "jdbc:postgresql://localhost:5432/y_lab_habit_tracker";
+        String username = "role_arcady";
+        String password = "8210";
+        String driver = "org.postgresql.Driver";
         Class.forName(driver);
         connection = DriverManager.getConnection(url, username, password);
         return connection;
