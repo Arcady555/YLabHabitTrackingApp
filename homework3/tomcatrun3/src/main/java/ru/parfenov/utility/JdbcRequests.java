@@ -50,7 +50,7 @@ public class JdbcRequests {
     }
 
     public static String findUsersByParameters(String role, String name, String block) {
-        return "SELECT * FROM cs_schema.users WHERE " + getRequestForFindUsersByParam(role, name, block);
+        return "SELECT * FROM ht_schema.users WHERE " + getRequestForFindUsersByParam(role, name, block);
     }
 
     public static String updateHabitByUser(String newUsefulness, String newActive, String newName, String newDescription, int newFrequency) {
@@ -58,7 +58,7 @@ public class JdbcRequests {
     }
 
     public static String findHabitsByParameters(String usefulness, String active, String name, String description, String dateOfCreate, int frequency) {
-        return "SELECT * FROM cs_schema.users WHERE " + getRequestForFindByParam(usefulness, active, name, description, dateOfCreate, frequency);
+        return "SELECT * FROM ht_schema.users WHERE " + getRequestForFindByParam(usefulness, active, name, description, dateOfCreate, frequency);
     }
 
     private static String getRequestForUserUpdate(String newPassword, String newResetPassword, String newName, String newUserRole, String newBlocked) {
