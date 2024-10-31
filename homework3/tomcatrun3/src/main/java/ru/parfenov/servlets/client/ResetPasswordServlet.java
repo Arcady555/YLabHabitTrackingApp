@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import ru.parfenov.dto.habit.HabitGeneralDTO;
 import ru.parfenov.dto.user.UserUpdatePassDTO;
 import ru.parfenov.enums.user.Role;
 import ru.parfenov.model.User;
@@ -46,9 +47,12 @@ public class ResetPasswordServlet extends HttpServlet implements MethodsForServl
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Optional<User> userOptional = Utility.checkUserByEmailNPass(request, userService);
-        int responseStatus = userOptional.isEmpty() ? 401 : 403;
-        String jsonString = "no rights or registration!";
-        if (userOptional.isPresent() && Role.ADMIN.equals(userOptional.get().getRole())) {
+        int responseStatus;
+        String jsonString;
+        if (userOptional.isEmpty()) {
+            responseStatus = 401;
+            jsonString = "no registration!";
+        } else {
             String userJson = getStringJson(request);
             ObjectMapper objectMapper = new ObjectMapper();
             UserUpdatePassDTO userDTO = objectMapper.readValue(userJson, UserUpdatePassDTO.class);
