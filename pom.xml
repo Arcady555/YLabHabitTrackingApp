@@ -9,11 +9,8 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
-        <module>homework_1</module>
-        <module>homework2</module>
-        <module>homework3</module>
-        <module>homework3/separaterun3</module>
-        <module>homework3/tomcatrun3</module>
+        <module>separaterun</module>
+        <module>tomcatrun</module>
     </modules>
 
     <properties>
