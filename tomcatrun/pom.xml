@@ -8,7 +8,6 @@
         <groupId>ru.parfenov</groupId>
         <artifactId>YLabHabitTrackingApp</artifactId>
         <version>1.0-SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <packaging>war</packaging>
