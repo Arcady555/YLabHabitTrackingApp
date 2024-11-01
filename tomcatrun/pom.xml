@@ -11,7 +11,7 @@
     </parent>
 
     <packaging>war</packaging>
-    <artifactId>tomcatrun3</artifactId>
+    <artifactId>tomcatrun</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
