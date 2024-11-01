@@ -5,17 +5,12 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 /**
- * В отдельный блок выведены скрипты liquibase и регулярная рассылка по емайл.
- * Загрузку таблиц в БД можно было сделать через плагин в соседнем блоке.
- * Но тестконтейнеры там же требуют создания объекта liquibase. Тогда плагин будет усложнять задачу.
+ * В отдельный блок выведен регулярный запрос на рассылку по емайл.
  */
 
 public class Main {
     public static void main(String[] args) throws LiquibaseException {
-        ApplicationContext context = new AnnotationConfigApplicationContext("annotation");
-
-        LiquibaseUpdate liquibaseUpdate = context.getBean(LiquibaseUpdate.class);
-        liquibaseUpdate.run();
+        ApplicationContext context = new AnnotationConfigApplicationContext("ru.parfenov");
 
         RegularRequest request = context.getBean(RegularRequest.class);
         request.run();

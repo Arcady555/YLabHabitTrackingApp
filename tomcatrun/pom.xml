@@ -11,6 +11,30 @@
 
     <artifactId>tomcatrun</artifactId>
 
+    <profiles>
+        <profile>
+            <id>test</id>
+            <properties>
+                <liquibase.changeLogFile>src/main/resources/db/changelog.xml</liquibase.changeLogFile>
+                <liquibase.url>jdbc:h2:./testdb;MODE=PostgreSQL;CASE_INSENSITIVE_IDENTIFIERS=TRUE;</liquibase.url>
+                <liquibase.username></liquibase.username>
+                <liquibase.password></liquibase.password>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>production</id>
+            <properties>
+                <liquibase.changeLogFile>src/main/resources/db/changelog.xml</liquibase.changeLogFile>
+                <liquibase.url>jdbc:postgresql://localhost:5432/y_lab_habit_tracker</liquibase.url>
+                <liquibase.username>role_arcady</liquibase.username>
+                <liquibase.password>8210</liquibase.password>
+            </properties>
+        </profile>
+    </profiles>
+
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
@@ -336,6 +360,26 @@
                         <phase>test</phase>
                         <goals>
                             <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-maven-plugin</artifactId>
+                <version>4.15.0</version>
+                <configuration>
+                    <changeLogFile>${liquibase.changeLogFile}</changeLogFile>
+                    <url>${liquibase.url}</url>
+                    <username>${liquibase.username}</username>
+                    <password>${liquibase.password}</password>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>clearCheckSums</goal>
+                            <goal>update</goal>
                         </goals>
                     </execution>
                 </executions>

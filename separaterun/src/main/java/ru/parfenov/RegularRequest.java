@@ -1,6 +1,7 @@
 package ru.parfenov;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.URI;
@@ -17,6 +18,10 @@ import java.util.TimerTask;
 @Slf4j
 @Component
 public class RegularRequest {
+
+    @Autowired
+    public RegularRequest() {
+    }
 
     public void run() {
         Timer timer = new Timer();
