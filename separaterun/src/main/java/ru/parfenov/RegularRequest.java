@@ -16,13 +16,14 @@ import java.util.TimerTask;
  * Класс делает регулярный HTTP запрос.
  */
 @Slf4j
+
 @Component
 public class RegularRequest {
 
     @Autowired
     public RegularRequest() {
     }
-
+    
     public void run() {
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {

@@ -9,6 +9,7 @@
 4. [ДЗ №4](https://github.com/Arcady555/YLabHabitTrackingApp/pull/4)  (pull request)
 
 
+
 # Приложение для отслеживания привычек. Позволяет пользователям регистрироваться, создавать, управлять своими привычками, отслеживать их выполнение и анализировать прогресс
 
 ## Welcome!
@@ -45,17 +46,20 @@ exit
 ```
 
 В последующем, если вам придётся заново стартовать этот контейнер, выполните в командной строке следующие манипуляции:
+
 ![image](images/containerRestart.png)
 
 
 Перейдите в корень проекта(блок separatedrun) через командную строку:
 ```
-cd /home/......../IdeaProjects/YLabHabitTrackingApp/separaterun4
+cd /home/......../IdeaProjects/YLabHabitTrackingApp/separaterun
 ``` 
 и выполните команды:
 ```
 mvn clean install
+
 java -jar ht.jar
+
 ```
 Вы запустили liquibase, создали таблицы
 
@@ -80,6 +84,7 @@ sudo systemctl start tomcat
 ### Работа с приложением
 Отправляйте запросы, например через PostMan. (номер порта localhost зависит от настроек Вашего TomCat!)
 * Зарегистрируйтесь (http://localhost:8080/ht/sign-up):
+
   ![image](images/1.png)
 *
 Следующие запросы доступны только админу. Для этого надо авторизоваться, введя емайл и пароль(сейчас действует БАЗОВАЯ авторизация):
@@ -87,6 +92,13 @@ sudo systemctl start tomcat
 
 * Посмотреть список всех пользователей (http://localhost:8080/ht/all-users):
   ![image](images/3.png)
+
+Следующие запросы доступны только админу. Для этого надо авторизоваться, введя емайл и пароль(сейчас действует БАЗОВАЯ авторизация):
+![image](images/2.png)
+
+* Посмотреть список всех пользователей (http://localhost:8080/ht/all-users):
+  ![image](images/3.png)
+
 
 * Посмотреть карточку любого пользователя (http://localhost:8080/ht/user?id=) + ID:
 
@@ -99,8 +111,6 @@ sudo systemctl start tomcat
 * Посмотреть логи действий клиентов за какой-то период времени (http://localhost:8080/ht/users_logs?dateTimeFrom=2023-01-01T00:00&dateTimeTo=2023-08-01T00:00)
 
 Следующие запросы доступны простым клиентам. Авторизация так же обязательна:
-
-
 
 
 

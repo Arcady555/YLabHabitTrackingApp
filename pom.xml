@@ -10,7 +10,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>separaterun</module>
-        <module>tomcutrun</module>
+        <module>tomcatrun</module>
     </modules>
 
     <properties>
