@@ -2,9 +2,8 @@ package ru.parfenov.repository;
 
 import ru.parfenov.model.LogRecord;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface LogRepository {
-    List<LogRecord> findByDateTime(LocalDateTime dateTimeFrom, LocalDateTime dateTimeTo);
+    List<LogRecord> findByParam(String userId, String action, String dateTimeFrom, String dateTimeTo);
 }

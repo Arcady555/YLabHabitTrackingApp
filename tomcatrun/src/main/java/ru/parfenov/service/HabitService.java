@@ -18,7 +18,8 @@ public interface HabitService {
 
     /**
      * Создание привычки
-     * @param user Модель -user
+     *
+     * @param user     Модель -user
      * @param habitDTO Модель habit, обёрнутая в DTO
      * @return привычку, с данными, полученными при сохранении
      */
@@ -26,6 +27,7 @@ public interface HabitService {
 
     /**
      * Удаление привычки
+     *
      * @param habitId ID привычки
      * @return получилось удалить или нет
      */
@@ -33,12 +35,14 @@ public interface HabitService {
 
     /**
      * Удаление всех привычек, которые принадлежали юзеру.(Применяется при удалении юзера)
+     *
      * @param userId ID юзера
      */
     boolean deleteWithUser(String userId);
 
     /**
      * Найти привычку по её ID
+     *
      * @param id ID привычки
      * @return Модель - привычка
      */
@@ -46,6 +50,7 @@ public interface HabitService {
 
     /**
      * Вывод списка привычек по юзеру, который их создал
+     *
      * @param user Модель -user
      * @return список привычек
      */
@@ -53,13 +58,14 @@ public interface HabitService {
 
     /**
      * Поиск привычек юзера подпадающих под заданные параметры
-     * @param user Модель -user
-     * @param usefulness полезность
-     * @param active активность
-     * @param name название
-     * @param description описание
+     *
+     * @param user         Модель -user
+     * @param usefulness   полезность
+     * @param active       активность
+     * @param name         название
+     * @param description  описание
      * @param dateOfCreate дата создания
-     * @param frequency частота выполнения
+     * @param frequency    частота выполнения
      * @return список привычек
      */
     List<HabitGeneralDTO> findByParameters(
@@ -74,16 +80,17 @@ public interface HabitService {
 
     /**
      * Выполнить привычку
-     * @param user сущность юзер
+     *
+     * @param user    сущность юзер
      * @param habitId ID привычки в строке
      * @return да или нет
      */
-    Optional<HabitGeneralDTO> perform(User user, String habitId);
+    Optional<HabitGeneralDTO> perform(User user, long habitId);
 
     /**
      * Редактировать-поменять данные привычки
      *
-     * @param user юзер, чьи привычки
+     * @param user     юзер, чьи привычки
      * @param habitDTO DTO привычки под обновление
      * @return привычка с новыми данными, если получится
      */
@@ -91,6 +98,7 @@ public interface HabitService {
 
     /**
      * Напоминание о выполнении привычек сегодня
+     *
      * @param user Модель - user
      * @return список привычек
      */
@@ -99,9 +107,9 @@ public interface HabitService {
     /**
      * Вывод для юзера статистики по каждой его привычке
      *
-     * @param user Модель - user
+     * @param user     Модель - user
      * @param dateFrom дата начала нужного периода
-     * @param dateTo дата конца нужного периода
+     * @param dateTo   дата конца нужного периода
      * @return список привычек со статистикой к каждой
      */
     List<HabitStatisticDTO> statisticForUser(User user, String dateFrom, String dateTo);

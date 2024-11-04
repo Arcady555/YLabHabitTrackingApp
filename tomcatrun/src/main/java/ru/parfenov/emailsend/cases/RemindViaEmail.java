@@ -22,7 +22,7 @@ public class RemindViaEmail {
     private final HabitService habitService;
 
     public void run() throws MessagingException {
-        List<User> userList = userService.findAll();
+        List<User> userList = userService.findAllForMail();
         for (User user : userList) {
             List<HabitGeneralDTO> todayHabitList = habitService.todayPerforms(user);
             if (todayHabitList.isEmpty()) {

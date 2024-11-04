@@ -1,8 +1,10 @@
 package ru.parfenov.service.impl;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ru.parfenov.dto.habit.*;
+import ru.parfenov.dto.habit.mapper.HabitDTOMapper;
 import ru.parfenov.model.Habit;
 import ru.parfenov.model.User;
 import ru.parfenov.repository.HabitRepository;
@@ -19,9 +21,16 @@ import java.util.Optional;
 import static ru.parfenov.utility.Utility.setPlannedNextPerform;
 
 @Slf4j
-@RequiredArgsConstructor
+@Service
 public class HabitServiceServletImpl implements HabitService {
     private final HabitRepository repository;
+    private final HabitDTOMapper dtoMapper;
+
+    @Autowired
+    public HabitServiceServletImpl(HabitRepository repository, HabitDTOMapper dtoMapper) {
+        this.repository = repository;
+        this.dtoMapper = dtoMapper;
+    }
 
     @Override
     public Optional<HabitGeneralDTO> create(User user, HabitCreateDTO habitDTO) {
@@ -45,7 +54,7 @@ public class HabitServiceServletImpl implements HabitService {
         Optional<Habit> resultOptional = Optional.ofNullable(repository.create(habit));
 
         if (resultOptional.isPresent()) {
-            resultDto = Optional.of(HabitDTOMapper.toHabitGeneralDTO(resultOptional.get()));
+            resultDto = Optional.of(dtoMapper.toHabitGeneralDTO(resultOptional.get()));
         }
         return resultDto;
     }
@@ -75,9 +84,8 @@ public class HabitServiceServletImpl implements HabitService {
     }
 
     @Override
-    public Optional<HabitGeneralDTO> perform(User user, String habitIdStr) {
+    public Optional<HabitGeneralDTO> perform(User user, long habitId) {
         Optional<HabitGeneralDTO> result = Optional.empty();
-        long habitId = Utility.getLongFromString(habitIdStr);
         Optional<Habit> habitOptional = habitId != 0L ? findById(habitId) : Optional.empty();
         if (habitOptional.isPresent() && validationPerform(user, habitOptional.get())) {
             Habit habit = habitOptional.get();
@@ -111,7 +119,7 @@ public class HabitServiceServletImpl implements HabitService {
             Habit newHabit = repository.updateViaPerform(habit);
             result = habit.getStreaksAmount() == newHabit.getStreaksAmount() &&
                     habit.getPlannedNextPerform().isEqual(newHabit.getPlannedNextPerform()) ?
-                    Optional.of(HabitDTOMapper.toHabitGeneralDTO(newHabit)) :
+                    Optional.of(dtoMapper.toHabitGeneralDTO(newHabit)) :
                     Optional.empty();
         }
         return result;
@@ -136,7 +144,7 @@ public class HabitServiceServletImpl implements HabitService {
             );
         }
         return habit != null && checkUpdate(habit, usefulness, active, name, description, frequency) ?
-                Optional.of(HabitDTOMapper.toHabitGeneralDTO(habit)) :
+                Optional.of(dtoMapper.toHabitGeneralDTO(habit)) :
                 Optional.empty();
     }
 
@@ -152,7 +160,7 @@ public class HabitServiceServletImpl implements HabitService {
         LocalDate dateTo = LocalDate.parse(dateToStr);
         List<Habit> habits = repository.findByUser(user.getId());
         for (Habit habit : habits) {
-            HabitStatisticDTO habitDTO = HabitDTOMapper.toHabitStatisticDTO(habit);
+            HabitStatisticDTO habitDTO = dtoMapper.toHabitStatisticDTO(habit);
             habitDTO.setStatistic(statistic(habit.getId(), dateFrom, dateTo));
             result.add(habitDTO);
         }
@@ -173,7 +181,8 @@ public class HabitServiceServletImpl implements HabitService {
     }
 
     /**
-     * Выполнение привычки невозможно раньше намеченного срока
+     * Проверяется, что привычка принадлежит юзеру.
+     * И выполнение привычки невозможно раньше намеченного срока
      * Эта же валидация не даст выполнить привычку 2раза подряд (когда в методе perform() next станет prev)
      *
      * @param habit Модель ПРИВЫЧКА
@@ -206,7 +215,7 @@ public class HabitServiceServletImpl implements HabitService {
     private List<HabitGeneralDTO> executeHabitList(List<Habit> list) {
         List<HabitGeneralDTO> result = new ArrayList<>();
         for (Habit habit : list) {
-            HabitGeneralDTO habitDTO = HabitDTOMapper.toHabitGeneralDTO(habit);
+            HabitGeneralDTO habitDTO = dtoMapper.toHabitGeneralDTO(habit);
             habitDTO.setRemind(remind(habit.getId()));
             result.add(habitDTO);
         }

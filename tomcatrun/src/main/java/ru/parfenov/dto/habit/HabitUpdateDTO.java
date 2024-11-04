@@ -1,15 +1,14 @@
 package ru.parfenov.dto.habit;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  * DTO для удобной подачи в json обновлении привычки.
  */
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class HabitUpdateDTO {
     private long habitId;
     private String usefulness;

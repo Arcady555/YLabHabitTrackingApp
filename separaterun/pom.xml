@@ -22,7 +22,7 @@
 
         <lombok.version>1.18.22</lombok.version>
         <liquibase.version>4.23.1</liquibase.version>
-        <postgresql.version>42.6.0</postgresql.version
+        <postgresql.version>42.6.0</postgresql.version>
 
     </properties>
 

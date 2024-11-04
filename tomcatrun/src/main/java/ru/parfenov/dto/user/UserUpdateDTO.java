@@ -1,15 +1,14 @@
 package ru.parfenov.dto.user;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  * DTO для удобной подачи в json. Оставлены только поля, нужные для ввода при обновлении данных юзера
  */
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class UserUpdateDTO {
     private int id;
     private String password;
