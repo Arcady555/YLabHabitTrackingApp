@@ -1,5 +1,6 @@
 package ru.parfenov.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,27 +13,25 @@ import ru.parfenov.emailsend.cases.ResetPasswordViaEmail;
 import ru.parfenov.model.User;
 import ru.parfenov.service.HabitService;
 import ru.parfenov.service.UserService;
-import ru.parfenov.utility.Utility;
 
 import javax.mail.MessagingException;
-
 import javax.servlet.http.HttpServletRequest;
-
 import java.util.List;
 import java.util.Optional;
 
 @Slf4j
 @RestController
 @RequestMapping("/users")
+@RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
     private final HabitService habitService;
 
     @Autowired
-    public UserController(UserService userService, HabitService habitService) {
-        this.userService = userService;
-        this.habitService = habitService;
-    }
+    private RemindViaEmail remindViaEmail;
+
+    @Autowired
+    private ResetPasswordViaEmail resetPasswordViaEmail;
 
     /**
      * Страница вывода юзера по введённому id
@@ -60,15 +59,15 @@ public class UserController {
      */
     @GetMapping("/find-by_parameters")
     public ResponseEntity<List<User>> findByParam(
-            @RequestParam String role,
-            @RequestParam String name,
-            @RequestParam String block
+            @RequestParam(required = false) String role,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String block
     ) {
         List<User> userList = userService.findByParameters(role, name, block);
-        if (!userList.isEmpty()) {
-            return new ResponseEntity<>(userList, HttpStatus.OK);
-        } else {
+        if (userList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(userList, HttpStatus.OK);
         }
     }
 
@@ -126,8 +125,7 @@ public class UserController {
      * @return ответ сервера
      */
     @GetMapping("/remind-via-email")
-    public ResponseEntity<String> remindViaEmail() throws MessagingException {
-        RemindViaEmail remindViaEmail = new RemindViaEmail(userService, habitService);
+    public ResponseEntity<String> remindViaEmail() {
         try {
             remindViaEmail.run();
             return new ResponseEntity<>(HttpStatus.OK);
@@ -144,17 +142,11 @@ public class UserController {
      */
     @GetMapping("/request-password-reset")
     public ResponseEntity<User> resetPassword(HttpServletRequest request) {
-        Optional<User> userOptional = userService.findByEmail(Utility.getUserEmail(request));
-        if (userOptional.isPresent()) {
-            try {
-                ResetPasswordViaEmail resetPasswordViaEmail = new ResetPasswordViaEmail(userOptional.get());
-                resetPasswordViaEmail.run();
-                return new ResponseEntity<>(HttpStatus.OK);
-            } catch (MessagingException e) {
-                return new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);
-            }
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        try {
+            resetPasswordViaEmail.run();
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (MessagingException e) {
+            return new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);
         }
     }
 
@@ -169,14 +161,9 @@ public class UserController {
      */
     @PostMapping("/reset_password")
     public ResponseEntity<User> perform(HttpServletRequest request, @RequestBody UserUpdatePassDTO userDTO) {
-        Optional<User> userOptional = userService.findByEmail(Utility.getUserEmail(request));
-        if (userOptional.isPresent()) {
-            Optional<User> updateUser = userService.updatePass(userOptional.get().getId(), userDTO.getPassword(), userDTO.getResetPassword());
-            return updateUser
-                    .map(user -> new ResponseEntity<>(updateUser.get(), HttpStatus.OK))
-                    .orElseGet(() -> new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE));
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        Optional<User> updateUser = userService.updatePass(request, userDTO.getPassword(), userDTO.getResetPassword());
+        return updateUser
+                .map(user -> new ResponseEntity<>(updateUser.get(), HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE));
     }
 }

@@ -10,6 +10,7 @@ import ru.parfenov.repository.UserRepository;
 import ru.parfenov.service.UserService;
 import ru.parfenov.utility.Utility;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 
@@ -83,13 +84,16 @@ public class UserServiceServletImpl implements UserService {
     }
 
     @Override
-    public Optional<User> updatePass(int userId, String newPassword, String resetPassword) {
+    public Optional<User> updatePass(HttpServletRequest request, String newPassword, String resetPassword) {
         Optional<User> result = Optional.empty();
-        User user = repository.findById(userId);
-        if (user != null && resetPassword.equals(user.getResetPassword())) {
-            String newResetPassword = Utility.generateForResetPassword();
-            UserUpdateDTO userDTO = new UserUpdateDTO(userId, newPassword, "", "", "");
-            result = update(userDTO, newResetPassword);
+        Optional<User> userOptional = findByEmail(Utility.getUserEmail(request));
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            if (resetPassword.equals(user.getResetPassword())) {
+                String newResetPassword = Utility.generateForResetPassword();
+                UserUpdateDTO userDTO = new UserUpdateDTO(user.getId(), newPassword, "", "", "");
+                result = update(userDTO, newResetPassword);
+            }
         }
         return result;
     }

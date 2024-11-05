@@ -2,10 +2,11 @@ package ru.parfenov.emailsend.cases;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.parfenov.dto.habit.HabitGeneralDTO;
+import org.springframework.stereotype.Component;
 import ru.parfenov.emailsend.SendViaEmail;
+import ru.parfenov.model.Habit;
 import ru.parfenov.model.User;
-import ru.parfenov.service.HabitService;
+import ru.parfenov.repository.HabitRepository;
 import ru.parfenov.service.UserService;
 
 import javax.mail.MessagingException;
@@ -17,14 +18,15 @@ import java.util.List;
  */
 @Slf4j
 @RequiredArgsConstructor
+@Component
 public class RemindViaEmail {
     private final UserService userService;
-    private final HabitService habitService;
+    private final HabitRepository habitRepository;
 
     public void run() throws MessagingException {
         List<User> userList = userService.findAllForMail();
         for (User user : userList) {
-            List<HabitGeneralDTO> todayHabitList = habitService.todayPerforms(user);
+            List<Habit> todayHabitList = habitRepository.findByUserForToday(user);
             if (todayHabitList.isEmpty()) {
                 continue;
             } else {
@@ -34,7 +36,7 @@ public class RemindViaEmail {
                                 "These are your habits today :" +
                                 System.lineSeparator()
                 );
-                for (HabitGeneralDTO habit : todayHabitList) {
+                for (Habit habit : todayHabitList) {
                     builder.append(habit.getId()).append(" ").append(habit.getName());
                 }
                 SendViaEmail sendViaEmail = new SendViaEmail(

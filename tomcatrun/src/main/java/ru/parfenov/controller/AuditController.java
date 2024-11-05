@@ -1,7 +1,8 @@
 package ru.parfenov.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,13 +17,9 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/audit")
+@RequiredArgsConstructor
 public class AuditController {
     private final LogService logService;
-
-    @Autowired
-    public AuditController(LogService logService) {
-        this.logService = logService;
-    }
 
     /**
      * Данный метод, доступный только админу(через фильтр сервлетов), позволяет посмотреть те логи,
@@ -36,10 +33,10 @@ public class AuditController {
      */
     @GetMapping("/find-by-parameters")
     public ResponseEntity<List<LogRecord>> findUsersByParam(
-            @RequestParam String userId,
-            @RequestParam String action,
-            @RequestParam String dateTimeFrom,
-            @RequestParam String dateTimeTo
+            @RequestParam(required = false) String userId,
+            @RequestParam(required = false) String action,
+            @RequestParam(required = false) String dateTimeFrom,
+            @RequestParam(required = false) String dateTimeTo
     ) {
         List<LogRecord> logsRecords = logService.findByParameters(userId, action, dateTimeFrom, dateTimeTo);
         return !logsRecords.isEmpty() ?

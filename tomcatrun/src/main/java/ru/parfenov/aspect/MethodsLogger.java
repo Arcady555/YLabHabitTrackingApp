@@ -1,11 +1,10 @@
 package ru.parfenov.aspect;
 
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 
@@ -14,6 +13,7 @@ import org.springframework.util.StopWatch;
  */
 @Aspect
 @Component
+@Slf4j
 public class MethodsLogger {
 
     /**
@@ -25,7 +25,6 @@ public class MethodsLogger {
      */
     @Around("execution(public * ru.homework4..*(..))")
     public Object getPeriodOfMethod(ProceedingJoinPoint joinPoint) throws Throwable {
-        Logger logger = LoggerFactory.getLogger("console and file logger");
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         String className = methodSignature.getDeclaringType().getSimpleName();
         String methodName = methodSignature.getName();
@@ -33,7 +32,7 @@ public class MethodsLogger {
         stopWatch.start();
         Object result = joinPoint.proceed();
         stopWatch.stop();
-        logger.info("Execution time of {}.{} :: {} ms", className, methodName, stopWatch.getTotalTimeMillis());
+        log.info("Execution time of {}.{} :: {} ms", className, methodName, stopWatch.getTotalTimeMillis());
         return result;
     }
 }

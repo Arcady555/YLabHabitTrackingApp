@@ -3,6 +3,7 @@ package ru.parfenov.service;
 import ru.parfenov.dto.user.UserUpdateDTO;
 import ru.parfenov.model.User;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 
@@ -80,12 +81,12 @@ public interface UserService {
     /**
      * Обновление пароля юзера
      *
-     * @param userId        ID юзера
+     * @param request HTTP запрос
      * @param newPassword   пароль для замены
      * @param resetPassword код для сброса старого пароля
      * @return юзер с новыми данными, если получится
      */
-    Optional<User> updatePass(int userId, String newPassword, String resetPassword);
+    Optional<User> updatePass(HttpServletRequest request, String newPassword, String resetPassword);
 
     /**
      * Метод предполагает поиск по параметрам (всем или некоторые можно не указать)

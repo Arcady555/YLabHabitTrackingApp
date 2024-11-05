@@ -1,6 +1,9 @@
 package ru.parfenov.dto.user;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * DTO для удобной подачи в json. Оставлены только поля, нужные для ввода при обновлении данных юзера

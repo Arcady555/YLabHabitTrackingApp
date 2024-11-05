@@ -1,7 +1,7 @@
 package ru.parfenov.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,13 +15,9 @@ import java.util.Optional;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 public class AuthController {
     private final UserService userService;
-
-    @Autowired
-    public AuthController(UserService userService) {
-        this.userService = userService;
-    }
 
     /**
      * Страница регистрации.

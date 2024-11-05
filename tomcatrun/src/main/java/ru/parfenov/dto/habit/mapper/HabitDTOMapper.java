@@ -1,12 +1,14 @@
 package ru.parfenov.dto.habit.mapper;
 
 import org.mapstruct.Mapper;
-import org.springframework.stereotype.Component;
 import ru.parfenov.dto.habit.HabitCreateDTO;
 import ru.parfenov.dto.habit.HabitGeneralDTO;
 import ru.parfenov.dto.habit.HabitStatisticDTO;
 import ru.parfenov.dto.habit.HabitUpdateDTO;
 import ru.parfenov.model.Habit;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface HabitDTOMapper {
@@ -41,6 +43,15 @@ public interface HabitDTOMapper {
                 source.getPerformsAmount(),
                 ""
         );
+    }
+
+    default List<HabitGeneralDTO> toHabitGeneralDTOList(List<Habit> source) {
+        List<HabitGeneralDTO> result = new ArrayList<>();
+        for (Habit habit : source) {
+            HabitGeneralDTO habitDTO = toHabitGeneralDTO(habit);
+            result.add(habitDTO);
+        }
+        return result;
     }
 
     default HabitCreateDTO toHabitCreateDTO(Habit source) {

@@ -1,6 +1,5 @@
 package ru.parfenov;
 
-import liquibase.exception.LiquibaseException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -9,7 +8,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
  */
 
 public class Main {
-    public static void main(String[] args) throws LiquibaseException {
+    public static void main(String[] args) throws Exception {
         ApplicationContext context = new AnnotationConfigApplicationContext("ru.parfenov");
 
         RegularRequest request = context.getBean(RegularRequest.class);

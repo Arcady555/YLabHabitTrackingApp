@@ -14,13 +14,13 @@ import java.sql.SQLException;
 @PropertySource("classpath:app.properties")
 @EnableTransactionManagement
 public class JdbcConfig {
+    private @Value("${driver-class-name}") String driver;
+    private @Value("${url}") String url;
+    private @Value("${username}") String username;
+    private @Value("${password}") String password;
+
     @Bean
-    public Connection getConnection(
-            @Value("${driver-class-name}") String driver,
-            @Value("${url}") String url,
-            @Value("${username}") String username,
-            @Value("${password}") String password
-    ) throws SQLException, ClassNotFoundException {
+    public Connection getConnection()throws SQLException, ClassNotFoundException {
         Class.forName(driver);
         return DriverManager.getConnection(url, username, password);
     }

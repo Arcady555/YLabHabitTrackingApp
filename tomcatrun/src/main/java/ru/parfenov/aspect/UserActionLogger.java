@@ -33,6 +33,6 @@ public class UserActionLogger {
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         String action = methodSignature.getDeclaringType().getSimpleName() + "." +
                 methodSignature.getName();
-        logger.info(email + ", date time : " + dateTime + ", action : " + action);
+        logger.info("{}, date time : {}, action : {}", email, dateTime, action);
     }
 }
