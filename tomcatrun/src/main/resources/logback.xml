@@ -11,7 +11,7 @@
     <!-- FILE APPENDER -->
     <appender name="MyFileAppenderName" class="ch.qos.logback.core.FileAppender">
         <!-- FILE NAME -->
-        <file>homework_5/src/main/resources/logs/File.log</file>
+        <file>tomcatrun/src/main/resources/logs/File.log</file>
         <!-- ENCODER -->
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <Pattern>My File Appender: %d %p %c{30} %m %n</Pattern>
@@ -20,14 +20,14 @@
     <!-- ROLLING FILE APPENDER -->
     <appender name="MyRollingFileAppenderName" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!-- FILE NAME -->
-        <file>homework_5/src/main/resources/logs/RollingFile.log</file>
+        <file>tomcatrun/src/main/resources/logs/RollingFile.log</file>
         <!-- ENCODER -->
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <Pattern>My File Appender: %d %p %c{30} %m %n</Pattern>
         </encoder>
         <!-- ROLLOVER POLICY (daily and when the file reaches 1MB) -->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>homework_5/src/main/resources/logs/archived/RollingFile_%d{dd.MM.yyyy}_%i.log
+            <fileNamePattern>tomcatrun/src/main/resources/logs/archived/RollingFile_%d{dd.MM.yyyy}_%i.log
             </fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy
                     class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
