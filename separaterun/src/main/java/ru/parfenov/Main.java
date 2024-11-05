@@ -1,22 +1,17 @@
 package ru.parfenov;
 
-import liquibase.exception.LiquibaseException;
-
-import java.io.IOException;
-import java.sql.SQLException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 /**
- * В отдельный блок выведены скрипты liquibase и регулярная рассылка по емайл.
- * Загрузку таблиц в БД можно было сделать через плагин в соседнем блоке.
- * Но тестконтейнеры там же требуют создания объекта liquibase. Тогда плагин будет усложнять задачу.
+ * В отдельный блок выведен автоматический регулярный запрос на рассылку по емайл.
  */
 
 public class Main {
-    public static void main(String[] args) throws SQLException, IOException, LiquibaseException, ClassNotFoundException {
-        LiquibaseUpdate liquibaseUpdate = new LiquibaseUpdate();
-        liquibaseUpdate.run();
+    public static void main(String[] args) throws Exception {
+        ApplicationContext context = new AnnotationConfigApplicationContext("ru.parfenov");
 
-        RegularRequest request = new RegularRequest();
+        RegularRequest request = context.getBean(RegularRequest.class);
         request.run();
     }
 }

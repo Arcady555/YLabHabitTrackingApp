@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <property name="now" value="now()" dbms="postgresql"/>
+    <changeSet id="04" author="Arcady555">
+
+        <createSequence
+                startValue="1"
+                incrementBy="1"
+                sequenceName="log"/>
+
+        <sql>
+            CREATE SCHEMA IF NOT EXISTS ht_log_schema;
+        </sql>
+
+        <sql>
+            DROP TABLE IF EXISTS ht_log_schema.logs;
+        </sql>
+
+        <createTable tableName="user_logs" schemaName="ht_log_schema" remarks="записи из лога">
+            <column name="event_id" type="bigint" defaultValueComputed="nextval('log')" remarks="id"/>
+            <column name="date_time" type="timestamp" remarks="время создания записи"/>
+            <column name="user_id" type="int" remarks="юзер, о котором запись">
+                <constraints nullable="false" foreignKeyName="log_user_id_reference" references="ht_schema.users(id)"/>
+            </column>
+            <column name="action" type="varchar" remarks="действие юзера"/>
+        </createTable>
+
+    </changeSet>
+</databaseChangeLog>

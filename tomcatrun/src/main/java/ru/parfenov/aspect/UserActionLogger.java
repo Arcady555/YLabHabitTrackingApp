@@ -1,39 +1,38 @@
 package ru.parfenov.aspect;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import javax.servlet.http.HttpServletRequest;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
-import ru.parfenov.service.UserService;
-import ru.parfenov.utility.ServiceLoading;
+import org.aspectj.lang.reflect.MethodSignature;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import ru.parfenov.utility.Utility;
 
+import java.time.LocalDateTime;
+
 /**
- * Класс аспекта. В случае успешного выполнения метода в слое клиентских сервлетов
- * выводит запись лога в БД. С емайлом юзера и названием сервлета, который он использовал
+ * Класс записывает в лог действия юзеров (вызванные с их подачи методы классов блока CONTROLLER)
  */
 @Aspect
+@Component
 public class UserActionLogger {
-  private final UserService userService = ServiceLoading.loadUserService();
-
-  public UserActionLogger() throws Exception {
-  }
-
-  @Pointcut("execution(* ru.parfenov.servlets.client..*")
-  public void pickMethods() {
-  }
-
-  @After("execution(* *(..)) && args(request, response)")
-  public void logUserAction(JoinPoint joinPoint, HttpServletRequest request, HttpServletResponse response) throws Exception {
-    if (response.getStatus() == 200) {
-      String userEmail = Utility.checkUserByEmailNPass(request, userService).get().getEmail();
-      String action = joinPoint.getSourceLocation().getWithinType().getName();
-      Logger logger = LogManager.getLogger("db logger");
-      logger.info("user : {}, action : {}", userEmail, action);
+    /**
+     * Метод принимает информацию(время события, ID юзера и название его действия)
+     * и отправляет её в БД.
+     *
+     * @param joinPoint точка выполнения метода.
+     * @param request   запрос в прошиваемом контроллере
+     */
+    @AfterReturning(pointcut = "execution(public * ru.homework4.controller..*(..)) && args(request)", returning = "result")
+    public void logUserActions(JoinPoint joinPoint, HttpServletRequest request) {
+        Logger logger = LoggerFactory.getLogger("data base logger");
+        LocalDateTime dateTime = LocalDateTime.now();
+        String email = Utility.getUserEmail(request);
+        MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
+        String action = methodSignature.getDeclaringType().getSimpleName() + "." +
+                methodSignature.getName();
+        logger.info("{}, date time : {}, action : {}", email, dateTime, action);
     }
-  }
 }

@@ -1,12 +1,17 @@
 package ru.parfenov.dto.habit;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * DTO для удобной подачи в json. Enum заменили на String
  */
-@Data
+@NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class HabitStatisticDTO {
     private long id;
     private String useful;

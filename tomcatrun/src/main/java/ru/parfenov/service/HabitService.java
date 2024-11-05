@@ -7,6 +7,7 @@ import ru.parfenov.dto.habit.HabitUpdateDTO;
 import ru.parfenov.model.Habit;
 import ru.parfenov.model.User;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,14 +19,16 @@ public interface HabitService {
 
     /**
      * Создание привычки
-     * @param user Модель -user
+     *
+     * @param request HTTP запрос
      * @param habitDTO Модель habit, обёрнутая в DTO
      * @return привычку, с данными, полученными при сохранении
      */
-    Optional<HabitGeneralDTO> create(User user, HabitCreateDTO habitDTO);
+    Optional<HabitGeneralDTO> create(HttpServletRequest request, HabitCreateDTO habitDTO);
 
     /**
      * Удаление привычки
+     *
      * @param habitId ID привычки
      * @return получилось удалить или нет
      */
@@ -33,12 +36,14 @@ public interface HabitService {
 
     /**
      * Удаление всех привычек, которые принадлежали юзеру.(Применяется при удалении юзера)
+     *
      * @param userId ID юзера
      */
     boolean deleteWithUser(String userId);
 
     /**
      * Найти привычку по её ID
+     *
      * @param id ID привычки
      * @return Модель - привычка
      */
@@ -46,24 +51,26 @@ public interface HabitService {
 
     /**
      * Вывод списка привычек по юзеру, который их создал
-     * @param user Модель -user
+     *
+     * @param request HTTP запрос
      * @return список привычек
      */
-    List<HabitGeneralDTO> findByUser(User user);
+    List<HabitGeneralDTO> findByUser(HttpServletRequest request);
 
     /**
      * Поиск привычек юзера подпадающих под заданные параметры
-     * @param user Модель -user
-     * @param usefulness полезность
-     * @param active активность
-     * @param name название
-     * @param description описание
+     *
+     * @param request HTTP запрос
+     * @param usefulness   полезность
+     * @param active       активность
+     * @param name         название
+     * @param description  описание
      * @param dateOfCreate дата создания
-     * @param frequency частота выполнения
+     * @param frequency    частота выполнения
      * @return список привычек
      */
     List<HabitGeneralDTO> findByParameters(
-            User user,
+            HttpServletRequest request,
             String usefulness,
             String active,
             String name,
@@ -74,35 +81,37 @@ public interface HabitService {
 
     /**
      * Выполнить привычку
-     * @param user сущность юзер
+     *
+     * @param request HTTP запрос
      * @param habitId ID привычки в строке
      * @return да или нет
      */
-    Optional<HabitGeneralDTO> perform(User user, String habitId);
+    Optional<HabitGeneralDTO> perform(HttpServletRequest request, long habitId);
 
     /**
      * Редактировать-поменять данные привычки
      *
-     * @param user юзер, чьи привычки
+     * @param request HTTP запрос
      * @param habitDTO DTO привычки под обновление
      * @return привычка с новыми данными, если получится
      */
-    Optional<HabitGeneralDTO> updateByUser(User user, HabitUpdateDTO habitDTO);
+    Optional<HabitGeneralDTO> updateByUser(HttpServletRequest request, HabitUpdateDTO habitDTO);
 
     /**
      * Напоминание о выполнении привычек сегодня
-     * @param user Модель - user
+     *
+     * @param request HTTP запрос
      * @return список привычек
      */
-    List<HabitGeneralDTO> todayPerforms(User user);
+    List<HabitGeneralDTO> todayPerforms(HttpServletRequest request);
 
     /**
      * Вывод для юзера статистики по каждой его привычке
      *
-     * @param user Модель - user
+     * @param request HTTP запрос
      * @param dateFrom дата начала нужного периода
-     * @param dateTo дата конца нужного периода
+     * @param dateTo   дата конца нужного периода
      * @return список привычек со статистикой к каждой
      */
-    List<HabitStatisticDTO> statisticForUser(User user, String dateFrom, String dateTo);
+    List<HabitStatisticDTO> statisticForUser(HttpServletRequest request, String dateFrom, String dateTo);
 }

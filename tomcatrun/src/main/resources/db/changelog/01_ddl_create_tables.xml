@@ -9,8 +9,8 @@
 
         <preConditions onFail="WARN">
             <not>
-                <tableExists tableName="ht_schema.users" />
-                <tableExists tableName="ht_schema.habits" />
+                <tableExists tableName="ht_schema.users"/>
+                <tableExists tableName="ht_schema.habits"/>
             </not>
         </preConditions>
 

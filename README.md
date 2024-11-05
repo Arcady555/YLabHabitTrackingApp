@@ -5,7 +5,9 @@
 
 1. [ДЗ №1](https://github.com/Arcady555/YLabHabitTrackingApp/tree/master/homework_1)
 2. [ДЗ №2](https://github.com/Arcady555/YLabHabitTrackingApp/tree/master/homework2)
-3. [ДЗ №3](https://github.com/Arcady555/YLabHabitTrackingApp/pull/3)  (pull request)
+3. [ДЗ №3](https://github.com/Arcady555/YLabHabitTrackingApp/tree/master/homework3)
+4. [ДЗ №4](https://github.com/Arcady555/YLabHabitTrackingApp/pull/4)  (pull request)
+
 
 
 # Приложение для отслеживания привычек. Позволяет пользователям регистрироваться, создавать, управлять своими привычками, отслеживать их выполнение и анализировать прогресс
@@ -44,7 +46,8 @@ exit
 ```
 
 В последующем, если вам придётся заново стартовать этот контейнер, выполните в командной строке следующие манипуляции:
-![image](../images/containerRestart.png)
+
+![image](images/containerRestart.png)
 
 
 Перейдите в корень проекта(блок separatedrun) через командную строку:
@@ -54,7 +57,9 @@ cd /home/......../IdeaProjects/YLabHabitTrackingApp/separaterun
 и выполните команды:
 ```
 mvn clean install
-java Main
+
+java -jar ht.jar
+
 ```
 Вы запустили liquibase, создали таблицы
 
@@ -79,19 +84,27 @@ sudo systemctl start tomcat
 ### Работа с приложением
 Отправляйте запросы, например через PostMan. (номер порта localhost зависит от настроек Вашего TomCat!)
 * Зарегистрируйтесь (http://localhost:8080/ht/sign-up):
-  ![image](../images/1.png)
+
+  ![image](images/1.png)
 *
 Следующие запросы доступны только админу. Для этого надо авторизоваться, введя емайл и пароль(сейчас действует БАЗОВАЯ авторизация):
-![image](../images/2.png)
+![image](images/2.png)
 
 * Посмотреть список всех пользователей (http://localhost:8080/ht/all-users):
-  ![image](../images/3.png)
+  ![image](images/3.png)
+
+Следующие запросы доступны только админу. Для этого надо авторизоваться, введя емайл и пароль(сейчас действует БАЗОВАЯ авторизация):
+![image](images/2.png)
+
+* Посмотреть список всех пользователей (http://localhost:8080/ht/all-users):
+  ![image](images/3.png)
+
 
 * Посмотреть карточку любого пользователя (http://localhost:8080/ht/user?id=) + ID:
 
 * Найти группу пользователей по параметрам (http://localhost:8080/ht/users-by-parameters?role=X&name=X&block=X) где вместо X впишите интересующие Вас параметры. Или пробел
 * Обновить карточку с данными пользователя (http://localhost:8080/ht/update-user) :
-  ![image](../images/4.png)
+  ![image](images/4.png)
 
 * Удалить карточку пользователя из БД (http://localhost:8080/ht/delete-user?id=) + ID:
 * Посмотреть какие привычки есть у клиента (http://localhost:8080/ht/habits-of-user?email=) + email юзера
@@ -102,8 +115,4 @@ sudo systemctl start tomcat
 
 
 
-
-
 ## Have a good job!
-
-

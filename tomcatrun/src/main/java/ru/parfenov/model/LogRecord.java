@@ -13,15 +13,22 @@ import java.time.LocalDateTime;
 @Setter
 public class LogRecord {
     /**
+     * ID записи в логе
+     */
+    private long eventId;
+
+    /**
      * Дата и время создания записи лога
      */
-    private LocalDateTime logTime;
+    private LocalDateTime dateTime;
+
     /**
-     * Уровень логирования
+     * ID юзера, о котором запись
      */
-    private String level;
+    private int userId;
+
     /**
      * Сообщение лога
      */
-    private String message;
+    private String action;
 }

@@ -1,55 +1,38 @@
 package ru.parfenov.aspect;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.time.StopWatch;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
-
-import java.time.LocalTime;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StopWatch;
 
 /**
- * Класс позволяет замерить время выполнения каждого метода из блока SERVICE
+ * Класс позволяет замерить время выполнения каждого public метода в приложении(модуль tomcutrun)
  */
-
 @Aspect
+@Component
 @Slf4j
 public class MethodsLogger {
 
     /**
-     * Метод определил, какие методы будут собраны для среза
-     * (в данном случае - все из блока tomcatrun3)
-     */
-    @Pointcut("execution(public ru.parfenov..*")
-    public void pickMethods() {
-    }
-
-    /**
-     * @return текущее время на момент начала выполнения метода
-     */
-    @Before("execution(* *(..))")
-    public LocalTime freezeStart() {
-        return LocalTime.now();
-    }
-
-    /**
+     * Метод выводит в лог время выполнение вызываемого метода
+     * Лог выводится на консоль и сохраняется в файл.
+     *
      * @param joinPoint - точка выполнения метода.
-     * Из неё получим название метода, в данные для лога
+     *                  Из неё получим название метода, в данные для лога
      */
-    @After("execution(* *(..))")
-    public void getPeriodOfMethod(ProceedingJoinPoint joinPoint) throws Throwable {
-        Logger logger = LogManager.getLogger("console and file");
+    @Around("execution(public * ru.homework4..*(..))")
+    public Object getPeriodOfMethod(ProceedingJoinPoint joinPoint) throws Throwable {
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         String className = methodSignature.getDeclaringType().getSimpleName();
         String methodName = methodSignature.getName();
         final StopWatch stopWatch = new StopWatch();
         stopWatch.start();
+        Object result = joinPoint.proceed();
         stopWatch.stop();
-        logger.info("Execution time of {}.{} :: {} ms", className, methodName, stopWatch.getNanoTime());
+        log.info("Execution time of {}.{} :: {} ms", className, methodName, stopWatch.getTotalTimeMillis());
+        return result;
     }
 }

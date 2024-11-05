@@ -1,49 +1,47 @@
 package ru.parfenov;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Base64;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Класс делает регулярный HTTP запрос.
  */
 @Slf4j
-@RequiredArgsConstructor
+@PropertySource("classpath:app.properties")
+@Component
 public class RegularRequest {
+    /**
+     * Имя и пароль админа приложения
+     */
+    private @Value("${username}") String username;
+    private @Value("${password}") String password;
+    private @Value("${uri}") String uri;
 
-    public void run() {
-        Timer timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
-            public void run() {
-                RegularRequest obj = new RegularRequest();
-                try {
-                    obj.sendGet();
-
-                } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-            }
-        }, 60 * 60 * 1000, 24 * 60 * 60 * 1000);
+    @Autowired
+    public RegularRequest() {
     }
 
-    private void sendGet() throws Exception {
-        /**
-         * Сюда нужно вписать имя и пароль админа приложения
-         */
-        String username = "user";
-        String password = "pass";
+    @Scheduled(fixedRate = 24 * 60 * 60 * 1000)
+    public void run() throws Exception {
+       sendGet(username, password, uri);
+    }
+
+    private void sendGet(String username, String password, String uri) throws Exception {
         String encodedCredentials = Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
 
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(new URI("https://localhost:8080/ht/remind-today-perform-via-email"))
+                .uri(new URI(uri))
                 .GET()
                 .header("Authorization", "Basic " + encodedCredentials)
                 .build();
@@ -52,7 +50,7 @@ public class RegularRequest {
         String responseBody = response.body();
         int responseStatusCode = response.statusCode();
 
-        System.out.println("httpGetRequest: " + responseBody);
-        System.out.println("httpGetRequest status code: " + responseStatusCode);
+        log.info("httpGetRequest: {}", responseBody);
+        log.info("httpGetRequest status code: {}", responseStatusCode);
     }
 }

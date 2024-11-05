@@ -1,7 +1,8 @@
 package ru.parfenov.service.impl;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ru.parfenov.dto.user.UserUpdateDTO;
 import ru.parfenov.enums.user.Role;
 import ru.parfenov.model.User;
@@ -9,13 +10,19 @@ import ru.parfenov.repository.UserRepository;
 import ru.parfenov.service.UserService;
 import ru.parfenov.utility.Utility;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 
 @Slf4j
-@RequiredArgsConstructor
+@Service
 public class UserServiceServletImpl implements UserService {
     private final UserRepository repository;
+
+    @Autowired
+    public UserServiceServletImpl(UserRepository repository) {
+        this.repository = repository;
+    }
 
     @Override
     public Optional<User> createByReg(String email, String password, String name) {
@@ -33,8 +40,7 @@ public class UserServiceServletImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findById(String userIdStr) {
-        int userId = Utility.getIntFromString(userIdStr);
+    public Optional<User> findById(int userId) {
         return Optional.ofNullable(repository.findById(userId));
     }
 
@@ -49,12 +55,16 @@ public class UserServiceServletImpl implements UserService {
     }
 
     @Override
-    public boolean delete(String userIdStr) {
+    public List<User> findAllForMail() {
+        return repository.findAll();
+    }
+
+    @Override
+    public boolean delete(int userId) {
         boolean result = false;
-        int userId = Utility.getIntFromString(userIdStr);
         if (userId != 0) {
             repository.delete(userId);
-            result = findById(userIdStr).isEmpty();
+            result = findById(userId).isEmpty();
         }
         return result;
     }
@@ -66,7 +76,7 @@ public class UserServiceServletImpl implements UserService {
         String newName = userDTO.getName();
         String newUserRoleStr = userDTO.getRole();
         String blocked = userDTO.getBlocked();
-        String newUserRole = userDTO.getRole();
+        Role newUserRole = Utility.getUserRoleFromString(userDTO.getRole());
         User user = repository.update(userId, newPassword, resetPass, newName, newUserRole, blocked);
         return user != null && checkUpdate(user, newPassword, resetPass, newName, newUserRoleStr, blocked) ?
                 Optional.of(user) :
@@ -74,13 +84,16 @@ public class UserServiceServletImpl implements UserService {
     }
 
     @Override
-    public Optional<User> updatePass(int userId, String newPassword, String resetPassword) {
+    public Optional<User> updatePass(HttpServletRequest request, String newPassword, String resetPassword) {
         Optional<User> result = Optional.empty();
-        User user = repository.findById(userId);
-        if (user != null && resetPassword.equals(user.getResetPassword())) {
-            String newResetPassword = Utility.generateForResetPassword();
-            UserUpdateDTO userDTO = new UserUpdateDTO(userId, newPassword, "", "", "");
-            result = update(userDTO, newResetPassword);
+        Optional<User> userOptional = findByEmail(Utility.getUserEmail(request));
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            if (resetPassword.equals(user.getResetPassword())) {
+                String newResetPassword = Utility.generateForResetPassword();
+                UserUpdateDTO userDTO = new UserUpdateDTO(user.getId(), newPassword, "", "", "");
+                result = update(userDTO, newResetPassword);
+            }
         }
         return result;
     }

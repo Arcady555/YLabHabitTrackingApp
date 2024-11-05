@@ -2,51 +2,64 @@ package ru.parfenov.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ru.parfenov.dto.habit.*;
+import ru.parfenov.dto.habit.mapper.HabitDTOMapper;
 import ru.parfenov.model.Habit;
 import ru.parfenov.model.User;
 import ru.parfenov.repository.HabitRepository;
 import ru.parfenov.service.HabitService;
+import ru.parfenov.service.UserService;
 import ru.parfenov.utility.Utility;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import static ru.parfenov.utility.Utility.setPlannedNextPerform;
 
 @Slf4j
+@Service
 @RequiredArgsConstructor
 public class HabitServiceServletImpl implements HabitService {
     private final HabitRepository repository;
+    private final UserService userService;
+    private final HabitDTOMapper dtoMapper;
 
     @Override
-    public Optional<HabitGeneralDTO> create(User user, HabitCreateDTO habitDTO) {
+    public Optional<HabitGeneralDTO> create(HttpServletRequest request, HabitCreateDTO habitDTO) {
         Optional<HabitGeneralDTO> resultDto = Optional.empty();
-        Habit habit = new Habit(
-                0L,
-                user,
-                "true".equals(habitDTO.getUsefulness()),
-                true,
-                1,
-                habitDTO.getName(),
-                habitDTO.getDescription(),
-                LocalDate.now(),
-                LocalDate.parse(habitDTO.getFirstPerform()),
-                null,
-                LocalDate.parse(habitDTO.getFirstPerform()),
-                null,
-                Period.ofDays(habitDTO.getFrequency()),
-                0
-        );
-        Optional<Habit> resultOptional = Optional.ofNullable(repository.create(habit));
+        Optional<User> userOptional = userService.findByEmail(Utility.getUserEmail(request));
+        if (userOptional.isPresent()) {
+            Habit habit = new Habit(
+                    0L,
+                    userOptional.get(),
+                    "true".equals(habitDTO.getUsefulness()),
+                    true,
+                    1,
+                    habitDTO.getName(),
+                    habitDTO.getDescription(),
+                    LocalDate.now(),
+                    LocalDate.parse(habitDTO.getFirstPerform()),
+                    null,
+                    LocalDate.parse(habitDTO.getFirstPerform()),
+                    null,
+                    Period.ofDays(habitDTO.getFrequency()),
+                    0
+            );
+            Optional<Habit> resultOptional = Optional.ofNullable(repository.create(habit));
 
-        if (resultOptional.isPresent()) {
-            resultDto = Optional.of(HabitDTOMapper.toHabitGeneralDTO(resultOptional.get()));
+            if (resultOptional.isPresent()) {
+                resultDto = Optional.of(dtoMapper.toHabitGeneralDTO(resultOptional.get()));
+            }
         }
+
         return resultDto;
     }
 
@@ -70,98 +83,125 @@ public class HabitServiceServletImpl implements HabitService {
     }
 
     @Override
-    public List<HabitGeneralDTO> findByUser(User user) {
-        return executeHabitList(repository.findByUser(user.getId()));
+    public List<HabitGeneralDTO> findByUser(HttpServletRequest request) {
+        List<HabitGeneralDTO> result = Collections.emptyList();
+        Optional<User> userOptional = userService.findByEmail(Utility.getUserEmail(request));
+        if (userOptional.isPresent()) {
+            result = dtoMapper.toHabitGeneralDTOList(repository.findByUser(userOptional.get().getId()));
+            for (HabitGeneralDTO habit : result) {
+                habit.setRemind(remind(habit.getId()));
+            }
+        }
+        return result;
     }
 
     @Override
-    public Optional<HabitGeneralDTO> perform(User user, String habitIdStr) {
+    public Optional<HabitGeneralDTO> perform(HttpServletRequest request, long habitId) {
         Optional<HabitGeneralDTO> result = Optional.empty();
-        long habitId = Utility.getLongFromString(habitIdStr);
-        Optional<Habit> habitOptional = habitId != 0L ? findById(habitId) : Optional.empty();
-        if (habitOptional.isPresent() && validationPerform(user, habitOptional.get())) {
-            Habit habit = habitOptional.get();
-            LocalDate date = LocalDate.now();
+        Optional<User> userOptional = userService.findByEmail(Utility.getUserEmail(request));
+        if (userOptional.isPresent()) {
+            Optional<Habit> habitOptional = habitId != 0L ? findById(habitId) : Optional.empty();
+            if (habitOptional.isPresent() && validationPerform(userOptional.get(), habitOptional.get())) {
+                Habit habit = habitOptional.get();
+                LocalDate date = LocalDate.now();
 
-            int streaksAmount = habit.getStreaksAmount();
-            /**
-             * Если выполнение привычки состоялось после намеченной даты NEXT (опоздало),
-             * то количество непрерывных стриков +1
-             */
-            if (date.isAfter(habit.getPlannedNextPerform())) {
-                streaksAmount++;
-                habit.setStreaksAmount(streaksAmount);
+                int streaksAmount = habit.getStreaksAmount();
+                /**
+                 * Если выполнение привычки состоялось после намеченной даты NEXT (опоздало),
+                 * то количество непрерывных стриков +1
+                 */
+                if (date.isAfter(habit.getPlannedNextPerform())) {
+                    streaksAmount++;
+                    habit.setStreaksAmount(streaksAmount);
+                }
+                habit.setLastRealPerform(date);
+
+                habit.setPlannedPrevPerform(habit.getPlannedNextPerform());
+                /**
+                 * В случае, если допущена большая просрочка выполнения,
+                 * придётся накрутить несколько периодов, чтобы выставить корректный срок следующего выполнения
+                 * (после сегодняшней даты)
+                 */
+                setPlannedNextPerform(habit);
+
+                /**
+                 * После сегодняшнего выполнения количество выполнений привычки +1
+                 */
+                int performsAmount = habit.getPerformsAmount();
+                int newPerformsAmount = ++performsAmount;
+                habit.setPerformsAmount(newPerformsAmount);
+                Habit newHabit = repository.updateViaPerform(habit);
+                result = habit.getStreaksAmount() == newHabit.getStreaksAmount() &&
+                        habit.getPlannedNextPerform().isEqual(newHabit.getPlannedNextPerform()) ?
+                        Optional.of(dtoMapper.toHabitGeneralDTO(newHabit)) :
+                        Optional.empty();
             }
-            habit.setLastRealPerform(date);
+        }
+        return result;
+    }
 
-            habit.setPlannedPrevPerform(habit.getPlannedNextPerform());
-            /**
-             * В случае, если допущена большая просрочка выполнения,
-             * придётся накрутить несколько периодов, чтобы выставить корректный срок следующего выполнения
-             * (после сегодняшней даты)
-             */
-            setPlannedNextPerform(habit);
-
-            /**
-             * После сегодняшнего выполнения количество выполнений привычки +1
-             */
-            int performsAmount = habit.getPerformsAmount();
-            int newPerformsAmount = ++performsAmount;
-            habit.setPerformsAmount(newPerformsAmount);
-            Habit newHabit = repository.updateViaPerform(habit);
-            result = habit.getStreaksAmount() == newHabit.getStreaksAmount() &&
-                    habit.getPlannedNextPerform().isEqual(newHabit.getPlannedNextPerform()) ?
-                    Optional.of(HabitDTOMapper.toHabitGeneralDTO(newHabit)) :
+    @Override
+    public Optional<HabitGeneralDTO> updateByUser(HttpServletRequest request, HabitUpdateDTO habitDTO) {
+        Optional<HabitGeneralDTO> result = Optional.empty();
+        Optional<User> userOptional = userService.findByEmail(Utility.getUserEmail(request));
+        if (userOptional.isPresent()) {
+            long habitId = habitDTO.getHabitId();
+            String usefulness = habitDTO.getUsefulness();
+            String active = habitDTO.getActive();
+            String name = habitDTO.getName();
+            String description = habitDTO.getDescription();
+            int frequency = habitDTO.getFrequency();
+            Habit habit = repository.findById(habitId);
+            if (habit != null && habit.getUser().equals(userOptional.get())) {
+                habit = repository.updateByUser(
+                        habitId,
+                        usefulness,
+                        active,
+                        name,
+                        description,
+                        frequency
+                );
+            }
+            result = habit != null && checkUpdate(habit, usefulness, active, name, description, frequency) ?
+                    Optional.of(dtoMapper.toHabitGeneralDTO(habit)) :
                     Optional.empty();
         }
         return result;
     }
 
     @Override
-    public Optional<HabitGeneralDTO> updateByUser(User user, HabitUpdateDTO habitDTO) {
-        String usefulness = habitDTO.getUsefulness();
-        String active = habitDTO.getActive();
-        String name = habitDTO.getName();
-        String description = habitDTO.getDescription();
-        int frequency = habitDTO.getFrequency();
-        Habit habit = repository.findById(habitDTO.getHabitId());
-        if (habit != null && habit.getUser().equals(user)) {
-            habit = repository.updateByUser(
-                    habitDTO.getHabitId(),
-                    habitDTO.getUsefulness(),
-                    habitDTO.getActive(),
-                    habitDTO.getName(),
-                    habitDTO.getDescription(),
-                    habitDTO.getFrequency()
-            );
+    public List<HabitGeneralDTO> todayPerforms(HttpServletRequest request) {
+        List<HabitGeneralDTO> result = Collections.emptyList();
+        Optional<User> userOptional = userService.findByEmail(Utility.getUserEmail(request));
+        if (userOptional.isPresent()) {
+            result = dtoMapper.toHabitGeneralDTOList(repository.findByUserForToday(userOptional.get()));
+            for (HabitGeneralDTO habit : result) {
+                habit.setRemind(remind(habit.getId()));
+            }
         }
-        return habit != null && checkUpdate(habit, usefulness, active, name, description, frequency) ?
-                Optional.of(HabitDTOMapper.toHabitGeneralDTO(habit)) :
-                Optional.empty();
+        return result;
     }
 
     @Override
-    public List<HabitGeneralDTO> todayPerforms(User user) {
-        return executeHabitList(repository.findByUserForToday(user));
-    }
-
-    @Override
-    public List<HabitStatisticDTO> statisticForUser(User user, String dateFromStr, String dateToStr) {
+    public List<HabitStatisticDTO> statisticForUser(HttpServletRequest request, String dateFromStr, String dateToStr) {
         List<HabitStatisticDTO> result = new ArrayList<>();
-        LocalDate dateFrom = LocalDate.parse(dateFromStr);
-        LocalDate dateTo = LocalDate.parse(dateToStr);
-        List<Habit> habits = repository.findByUser(user.getId());
-        for (Habit habit : habits) {
-            HabitStatisticDTO habitDTO = HabitDTOMapper.toHabitStatisticDTO(habit);
-            habitDTO.setStatistic(statistic(habit.getId(), dateFrom, dateTo));
-            result.add(habitDTO);
+        Optional<User> userOptional = userService.findByEmail(Utility.getUserEmail(request));
+        if (userOptional.isPresent()) {
+            LocalDate dateFrom = LocalDate.parse(dateFromStr);
+            LocalDate dateTo = LocalDate.parse(dateToStr);
+            List<Habit> habits = repository.findByUser(userOptional.get().getId());
+            for (Habit habit : habits) {
+                HabitStatisticDTO habitDTO = dtoMapper.toHabitStatisticDTO(habit);
+                habitDTO.setStatistic(statistic(habit.getId(), dateFrom, dateTo));
+                result.add(habitDTO);
+            }
         }
         return result;
     }
 
     @Override
     public List<HabitGeneralDTO> findByParameters(
-            User user,
+            HttpServletRequest request,
             String usefulness,
             String active,
             String name,
@@ -169,11 +209,20 @@ public class HabitServiceServletImpl implements HabitService {
             String dateOfCreate,
             String frequency
     ) {
-        return executeHabitList(repository.findByParameters(user, usefulness, active, name, description, dateOfCreate, frequency));
+        List<HabitGeneralDTO> result = Collections.emptyList();
+        Optional<User> userOptional = userService.findByEmail(Utility.getUserEmail(request));
+        if (userOptional.isPresent()) {
+            result = dtoMapper.toHabitGeneralDTOList(repository.findByParameters(userOptional.get(), usefulness, active, name, description, dateOfCreate, frequency));
+            for (HabitGeneralDTO habit : result) {
+                habit.setRemind(remind(habit.getId()));
+            }
+        }
+        return result;
     }
 
     /**
-     * Выполнение привычки невозможно раньше намеченного срока
+     * Проверяется, что привычка принадлежит юзеру.
+     * И выполнение привычки невозможно раньше намеченного срока
      * Эта же валидация не даст выполнить привычку 2раза подряд (когда в методе perform() next станет prev)
      *
      * @param habit Модель ПРИВЫЧКА
@@ -206,7 +255,7 @@ public class HabitServiceServletImpl implements HabitService {
     private List<HabitGeneralDTO> executeHabitList(List<Habit> list) {
         List<HabitGeneralDTO> result = new ArrayList<>();
         for (Habit habit : list) {
-            HabitGeneralDTO habitDTO = HabitDTOMapper.toHabitGeneralDTO(habit);
+            HabitGeneralDTO habitDTO = dtoMapper.toHabitGeneralDTO(habit);
             habitDTO.setRemind(remind(habit.getId()));
             result.add(habitDTO);
         }
