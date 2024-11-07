@@ -10,7 +10,6 @@
     <packaging>pom</packaging>
     <modules>
         <module>habittracker</module>
-        <module>parfencastomstarter</module>
     </modules>
 
     <properties>
