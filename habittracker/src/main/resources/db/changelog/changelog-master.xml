@@ -6,4 +6,5 @@
     <include file="01_ddl_create_tables.xml" relativeToChangelogFile="true"/>
     <include file="02_dml_insert_admin_into_users.xml" relativeToChangelogFile="true"/>
     <include file="04_ddl_create_table_user_logs.xml" relativeToChangelogFile="true"/>
+    <include file="05_dml_update_table_user_logs.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

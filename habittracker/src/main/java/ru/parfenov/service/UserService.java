@@ -41,15 +41,6 @@ public interface UserService {
     Optional<User> findByEmail(String email);
 
     /**
-     * Поиск юзера по его емайл и паролю
-     *
-     * @param email    емайл юзера
-     * @param password пароль юзера
-     * @return юзер, обёрнутый в Optional
-     */
-    Optional<User> findByEmailAndPassword(String email, String password);
-
-    /**
      * Поиск всех юзеров, зарегистрированных в хранилище
      *
      * @return список юзеров

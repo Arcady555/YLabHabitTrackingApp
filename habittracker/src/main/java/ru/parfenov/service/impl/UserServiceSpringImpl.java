@@ -1,5 +1,6 @@
 package ru.parfenov.service.impl;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,7 +15,6 @@ import ru.parfenov.repository.UserRepository;
 import ru.parfenov.service.UserService;
 import ru.parfenov.utility.Utility;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,11 +55,6 @@ public class UserServiceSpringImpl implements UserService {
     @Override
     public Optional<User> findByEmail(String email) {
         return repository.findByEmail(email);
-    }
-
-    @Override
-    public Optional<User> findByEmailAndPassword(String email, String password) {
-        return repository.findByEmailAndPassword(email, password);
     }
 
     @Override

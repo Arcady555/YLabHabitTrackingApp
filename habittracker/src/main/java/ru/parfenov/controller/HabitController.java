@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.parfenov.anotation.EnableParfenovCustomAspect;
 import ru.parfenov.dto.habit.HabitCreateDTO;
 import ru.parfenov.dto.habit.HabitGeneralDTO;
 import ru.parfenov.dto.habit.HabitStatisticDTO;
@@ -29,6 +30,7 @@ public class HabitController {
      * @return ответ сервера
      */
     @PostMapping("/create")
+    @EnableParfenovCustomAspect
     public ResponseEntity<HabitGeneralDTO> create(@RequestBody HabitCreateDTO habitDTO) {
         Optional<HabitGeneralDTO> habitGeneralDTO = habitService.create(habitDTO);
         if (habitGeneralDTO.isEmpty()) {
@@ -48,6 +50,7 @@ public class HabitController {
      * @return ответ сервера
      */
     @GetMapping("/statistic")
+    @EnableParfenovCustomAspect
     public ResponseEntity<List<HabitStatisticDTO>> statistic(
             @RequestParam(required = false) String dateFrom,
             @RequestParam(required = false) String dateTo
@@ -67,6 +70,7 @@ public class HabitController {
      * @return ответ сервера
      */
     @PostMapping("/perform/{habitId}")
+    @EnableParfenovCustomAspect
     public ResponseEntity<HabitGeneralDTO> perform(@PathVariable long habitId) {
         Optional<HabitGeneralDTO> result = habitService.perform(habitId);
         return result.map(
@@ -82,6 +86,7 @@ public class HabitController {
      * @return ответ сервера
      */
     @PostMapping("/update")
+    @EnableParfenovCustomAspect
     public ResponseEntity<HabitGeneralDTO> update(@RequestBody HabitUpdateDTO habitDTO) {
         Optional<HabitGeneralDTO> result = habitService.updateByUser(habitDTO);
         return result.map(
@@ -92,8 +97,8 @@ public class HabitController {
 
     /**
      * Обработка запроса на вывод привычек юзера по заданным параметрам
+     * Параметры ниже могут не заданы, если не участвуют в отборе:
      *
-     *                     Параметры ниже могут быть заданы пустой строкой, если не участвуют в отборе:
      * @param usefulness   полезность
      * @param active       активность
      * @param name         название привычки
@@ -103,6 +108,7 @@ public class HabitController {
      * @return ответ сервера
      */
     @GetMapping("/your-list-by-param")
+    @EnableParfenovCustomAspect
     public ResponseEntity<List<HabitGeneralDTO>> findByParam(
             @RequestParam(required = false) String usefulness,
             @RequestParam(required = false) String active,
@@ -126,6 +132,7 @@ public class HabitController {
      * @return ответ сервера
      */
     @GetMapping("/your-all-list")
+    @EnableParfenovCustomAspect
     public ResponseEntity<List<HabitGeneralDTO>> findYourAll() {
         List<HabitGeneralDTO> result = habitService.findByUser();
         if (result.isEmpty()) {
@@ -141,6 +148,7 @@ public class HabitController {
      * @return ответ сервера
      */
     @GetMapping("/your-today-list")
+    @EnableParfenovCustomAspect
     public ResponseEntity<List<HabitGeneralDTO>> findTodayList() {
         List<HabitGeneralDTO> result = habitService.todayPerforms();
         if (result.isEmpty()) {

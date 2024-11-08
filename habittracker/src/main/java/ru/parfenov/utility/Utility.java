@@ -12,21 +12,14 @@ import java.util.regex.Pattern;
 @Slf4j
 public class Utility {
 
-    public static String adminEmail = "admin@YLabHabitApp.com";
-    public static String adminPassword = "123";
-    /**
-     * Сюда вписывается емайл, зарегистрированный на Mail.ru
-     */
-    public static String emailOfApp = "info@YLabHabitApp.com";
-    public static String hostOfApp = "smtp.mail.ru";
-    /**
-     * Сюда вписывается пароль, сгенерированный в личном кабинете на Mail.ru
-     */
-    public static String mailPassword = "password";
-
     private Utility() {
     }
 
+    /**
+     * Проверка корректного ввода емайла юзером при регистрации
+     * @param email строка емайл
+     * @return да или нет
+     */
     public static boolean validationEmail(String email) {
         String regexPattern = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
                 + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
@@ -56,10 +49,18 @@ public class Utility {
         habit.setPlannedNextPerform(date);
     }
 
+    /**
+     * Рандомная генерация кода для значения поля resetPassword в сущности User
+     * @return число
+     */
     public static String generateForResetPassword() {
         return Integer.toString((int) (Math.random() * 10000));
     }
 
+    /**
+     * Получение емайла юзера из его запроса
+     * @return строку в его емайлом
+     */
     public static String getUserEmail() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         System.out.println(authentication.getName());

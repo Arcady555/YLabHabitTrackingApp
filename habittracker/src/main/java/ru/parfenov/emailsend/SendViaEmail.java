@@ -3,6 +3,7 @@ package ru.parfenov.emailsend;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.parfenov.utility.Utility;
 
@@ -22,10 +23,11 @@ import java.util.Properties;
 @Component
 @Setter
 public class SendViaEmail {
+    private @Value("${emailInfoApp}") String emailOfApp;
+    private @Value("${emailInfoPass}") String password;
+    private @Value("${hostForSending}") String host;
 
     public void run(String email, String subject, String messageBody) throws MessagingException {
-        String from = Utility.emailOfApp;
-        String host = Utility.hostOfApp;
         String smtpPort = "465";
 
         Properties properties = new Properties();
@@ -39,14 +41,14 @@ public class SendViaEmail {
                 new Authenticator() {
                     @Override
                     protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(from, Utility.mailPassword);
+                        return new PasswordAuthentication(emailOfApp, password);
                     }
                 }
         );
         session.setDebug(true);
         try {
             MimeMessage message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(from));
+            message.setFrom(new InternetAddress(emailOfApp));
             message.addRecipient(MimeMessage.RecipientType.TO, new InternetAddress(email));
             message.setSubject(subject);
             message.setText(messageBody);
