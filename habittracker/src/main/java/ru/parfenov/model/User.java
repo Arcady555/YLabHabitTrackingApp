@@ -65,8 +65,6 @@ public class User {
         return "User{" +
                 "id=" + id +
                 ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", resetPassword='" + resetPassword + '\'' +
                 ", name='" + name + '\'' +
                 ", role=" + role +
                 ", blocked=" + blocked +

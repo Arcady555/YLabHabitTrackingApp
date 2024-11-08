@@ -64,8 +64,7 @@ public interface HabitRepository extends CrudRepository<Habit, Integer> {
             "(:name IS NULL OR h.name = :name) AND " +
             "(:description IS NULL OR h.description = :description) AND " +
             "(CAST(:dateOfCreate AS date) IS NULL OR h.dateOfCreate = :dateOfCreate) AND " +
-         //   "(CAST(:frequency AS int) = 0 OR h.frequency = :frequency)")
-            "(:frequency IS NULL OR h.frequency = :frequency)")
+            "(CAST(:frequency AS int) = 0 OR h.frequency = :frequency)")
     List<Habit> findByParameters(
             @Param("userId") int userId,
             @Param("usefulnessStr") String usefulnessStr,

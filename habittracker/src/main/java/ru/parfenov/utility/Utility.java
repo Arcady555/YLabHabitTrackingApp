@@ -1,11 +1,11 @@
 package ru.parfenov.utility;
 
 import lombok.extern.slf4j.Slf4j;
-import org.postgresql.shaded.com.ongres.scram.common.bouncycastle.base64.Base64;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import ru.parfenov.enums.user.Role;
 import ru.parfenov.model.Habit;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.util.regex.Pattern;
 
@@ -41,16 +41,6 @@ public class Utility {
                         null);
     }
 
-    public static int getIntFromString(String str) {
-        int result = 0;
-        try {
-            result = Integer.parseInt(str);
-        } catch (NumberFormatException e) {
-            log.error("Not number for parse from String!", e);
-        }
-        return result;
-    }
-
     /**
      * В случае, если допущена большая просрочка выполнения,
      * придётся накрутить несколько периодов, чтобы выставить корректный срок следующего выполнения
@@ -70,15 +60,9 @@ public class Utility {
         return Integer.toString((int) (Math.random() * 10000));
     }
 
-    public static String getUserEmail(HttpServletRequest req) {
-        String email = "";
-        String authHead = req.getHeader("Authorization");
-        if (authHead != null) {
-            byte[] e = Base64.decode(authHead.substring(6));
-            String idNPass = new String(e);
-            email = idNPass.substring(0, idNPass.indexOf(":"));
-        //    String password = idNPass.substring(idNPass.indexOf(":") + 1);
-        }
-        return email;
+    public static String getUserEmail() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println(authentication.getName());
+        return authentication.getName();
     }
 }

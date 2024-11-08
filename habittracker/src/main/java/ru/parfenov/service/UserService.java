@@ -1,5 +1,6 @@
 package ru.parfenov.service;
 
+import ru.parfenov.dto.user.UserGeneralDTO;
 import ru.parfenov.dto.user.UserUpdateDTO;
 import ru.parfenov.model.User;
 
@@ -21,7 +22,7 @@ public interface UserService {
      * @param name     его имя
      * @return Модель - юзер.
      */
-    Optional<User> createByReg(String email, String password, String name);
+    Optional<UserGeneralDTO> createByReg(String email, String password, String name);
 
     /**
      * Поиск юзера по его ID
@@ -29,7 +30,7 @@ public interface UserService {
      * @param userId ID юзера
      * @return юзер, обёрнутый в Optional
      */
-    Optional<User> findById(int userId);
+    Optional<UserGeneralDTO> findById(int userId);
 
     /**
      * Поиск юзера по его емайл
@@ -53,7 +54,7 @@ public interface UserService {
      *
      * @return список юзеров
      */
-    List<User> findAll();
+    List<UserGeneralDTO> findAll();
 
     /**
      * Поиск всех юзеров, зарегистрированных в хранилище. Для рассылки
@@ -76,7 +77,7 @@ public interface UserService {
      * @param resetPass строка кода для сброса пароля. Обычно заглушается. Нужна только в одном случае - ResetPasswordServlet
      * @return юзер с новыми данными, если получится
      */
-    Optional<User> update(UserUpdateDTO userDTO, String resetPass);
+    Optional<UserGeneralDTO> update(UserUpdateDTO userDTO, String resetPass);
 
     /**
      * Обновление пароля юзера
@@ -86,7 +87,7 @@ public interface UserService {
      * @param resetPassword код для сброса старого пароля
      * @return юзер с новыми данными, если получится
      */
-    Optional<User> updatePass(HttpServletRequest request, String newPassword, String resetPassword);
+    Optional<UserGeneralDTO> updatePass(HttpServletRequest request, String newPassword, String resetPassword);
 
     /**
      * Метод предполагает поиск по параметрам (всем или некоторые можно не указать)
@@ -96,5 +97,5 @@ public interface UserService {
      * @param block заблокирован ли он
      * @return список юзеров по данным параметрам
      */
-    List<User> findByParameters(String role, String name, String block);
+    List<UserGeneralDTO> findByParameters(String role, String name, String block);
 }

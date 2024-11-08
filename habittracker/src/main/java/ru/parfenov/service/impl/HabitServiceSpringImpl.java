@@ -13,7 +13,6 @@ import ru.parfenov.service.HabitService;
 import ru.parfenov.service.UserService;
 import ru.parfenov.utility.Utility;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.temporal.ChronoUnit;
@@ -33,9 +32,9 @@ public class HabitServiceSpringImpl implements HabitService {
     private final HabitDTOMapper dtoMapper;
 
     @Override
-    public Optional<HabitGeneralDTO> create(HttpServletRequest request, HabitCreateDTO habitDTO) {
+    public Optional<HabitGeneralDTO> create(HabitCreateDTO habitDTO) {
         Optional<HabitGeneralDTO> resultDto = Optional.empty();
-        Optional<User> userOptional = userService.findByEmail(Utility.getUserEmail(request));
+        Optional<User> userOptional = userService.findByEmail(Utility.getUserEmail());
         if (userOptional.isPresent()) {
             Habit habit = new Habit(
                     0L,
@@ -53,7 +52,9 @@ public class HabitServiceSpringImpl implements HabitService {
                     Period.ofDays(habitDTO.getFrequency()),
                     0
             );
+
             Habit result = repository.save(habit);
+            System.out.println("finish");
             if (findById(result.getId()).isPresent()) {
                 resultDto = Optional.of(dtoMapper.toHabitGeneralDTO(result));
             }
@@ -76,8 +77,6 @@ public class HabitServiceSpringImpl implements HabitService {
     @Transactional
     public boolean deleteWithUser(int userId) {
         repository.deleteWithUser(userId);
-       // Optional<User> user = userService.findById(userId);
-       // return user.isPresent() && repository.findByUser(user.get()).isEmpty();
         return true;
     }
 
@@ -87,9 +86,9 @@ public class HabitServiceSpringImpl implements HabitService {
     }
 
     @Override
-    public List<HabitGeneralDTO> findByUser(HttpServletRequest request) {
+    public List<HabitGeneralDTO> findByUser() {
         List<HabitGeneralDTO> result = Collections.emptyList();
-        Optional<User> userOptional = userService.findByEmail(Utility.getUserEmail(request));
+        Optional<User> userOptional = userService.findByEmail(Utility.getUserEmail());
         if (userOptional.isPresent()) {
             result = dtoMapper.toHabitGeneralDTOList(repository.findByUser(userOptional.get()));
             for (HabitGeneralDTO habit : result) {
@@ -100,9 +99,9 @@ public class HabitServiceSpringImpl implements HabitService {
     }
 
     @Override
-    public Optional<HabitGeneralDTO> perform(HttpServletRequest request, long habitId) {
+    public Optional<HabitGeneralDTO> perform(long habitId) {
         Optional<HabitGeneralDTO> result = Optional.empty();
-        Optional<User> userOptional = userService.findByEmail(Utility.getUserEmail(request));
+        Optional<User> userOptional = userService.findByEmail(Utility.getUserEmail());
         if (userOptional.isPresent()) {
             Optional<Habit> habitOptional = habitId != 0L ? findById(habitId) : Optional.empty();
             if (habitOptional.isPresent() && validationPerform(userOptional.get(), habitOptional.get())) {
@@ -145,10 +144,10 @@ public class HabitServiceSpringImpl implements HabitService {
     }
 
     @Override
-    public Optional<HabitGeneralDTO> updateByUser(HttpServletRequest request, HabitUpdateDTO habitDTO) {
+    public Optional<HabitGeneralDTO> updateByUser(HabitUpdateDTO habitDTO) {
         Optional<HabitGeneralDTO> result = Optional.empty();
         Habit newHabit = null;
-        Optional<User> userOptional = userService.findByEmail(Utility.getUserEmail(request));
+        Optional<User> userOptional = userService.findByEmail(Utility.getUserEmail());
         if (userOptional.isPresent()) {
             long habitId = habitDTO.getHabitId();
             String newUsefulness = habitDTO.getUsefulness();
@@ -180,9 +179,9 @@ public class HabitServiceSpringImpl implements HabitService {
     }
 
     @Override
-    public List<HabitGeneralDTO> todayPerforms(HttpServletRequest request) {
+    public List<HabitGeneralDTO> todayPerforms() {
         List<HabitGeneralDTO> result = Collections.emptyList();
-        Optional<User> userOptional = userService.findByEmail(Utility.getUserEmail(request));
+        Optional<User> userOptional = userService.findByEmail(Utility.getUserEmail());
         if (userOptional.isPresent()) {
             result = dtoMapper.toHabitGeneralDTOList(repository.findByUserForToday(userOptional.get().getId()));
             for (HabitGeneralDTO habit : result) {
@@ -193,9 +192,9 @@ public class HabitServiceSpringImpl implements HabitService {
     }
 
     @Override
-    public List<HabitStatisticDTO> statisticForUser(HttpServletRequest request, String dateFromStr, String dateToStr) {
+    public List<HabitStatisticDTO> statisticForUser(String dateFromStr, String dateToStr) {
         List<HabitStatisticDTO> result = new ArrayList<>();
-        Optional<User> userOptional = userService.findByEmail(Utility.getUserEmail(request));
+        Optional<User> userOptional = userService.findByEmail(Utility.getUserEmail());
         if (userOptional.isPresent()) {
             LocalDate dateFrom = LocalDate.parse(dateFromStr);
             LocalDate dateTo = LocalDate.parse(dateToStr);
@@ -211,7 +210,6 @@ public class HabitServiceSpringImpl implements HabitService {
 
     @Override
     public List<HabitGeneralDTO> findByParameters(
-            HttpServletRequest request,
             String usefulnessStr,
             String activeStr,
             String name,
@@ -220,7 +218,7 @@ public class HabitServiceSpringImpl implements HabitService {
             int frequencyInt
     ) {
         List<HabitGeneralDTO> result = Collections.emptyList();
-        Optional<User> userOptional = userService.findByEmail(Utility.getUserEmail(request));
+        Optional<User> userOptional = userService.findByEmail(Utility.getUserEmail());
         if (userOptional.isPresent()) {
             boolean usefulness = "true".equals(usefulnessStr);
             boolean active = "true".equals(activeStr);
@@ -298,7 +296,7 @@ public class HabitServiceSpringImpl implements HabitService {
 
     /**
      * Статистика выполнения привычки. Срок выставляется пользователем.
-     * Количество периодов за данный срок сравнивается с количеством выполнений(habit.getPerformsAmount())
+     * Количество периодов за данный срок сравнивается с количеством фактических выполнений(habit.getPerformsAmount())
      *
      * @param habitId  ID привычки
      * @param dateFrom Начальная дата выборки

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.parfenov.dto.user.UserGeneralDTO;
 import ru.parfenov.dto.user.UserUpdateDTO;
 import ru.parfenov.dto.user.UserUpdatePassDTO;
 import ru.parfenov.emailsend.cases.RemindViaEmail;
@@ -40,8 +41,8 @@ public class UserController {
      * @return ответ сервера
      */
     @GetMapping("/user/{userId}")
-    public ResponseEntity<User> viewUser(@PathVariable int userId) {
-        Optional<User> userOptional = userService.findById(userId);
+    public ResponseEntity<UserGeneralDTO> viewUser(@PathVariable int userId) {
+        Optional<UserGeneralDTO> userOptional = userService.findById(userId);
         return userOptional
                 .map(user -> new ResponseEntity<>(user, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -57,12 +58,12 @@ public class UserController {
      * @return ответ сервера
      */
     @GetMapping("/find-by_parameters")
-    public ResponseEntity<List<User>> findByParam(
+    public ResponseEntity<List<UserGeneralDTO>> findByParam(
             @RequestParam(required = false) String role,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String block
     ) {
-        List<User> userList = userService.findByParameters(role, name, block);
+        List<UserGeneralDTO> userList = userService.findByParameters(role, name, block);
         if (userList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
@@ -78,8 +79,8 @@ public class UserController {
      * @return ответ сервера
      */
     @PostMapping("/update")
-    public ResponseEntity<User> update(@RequestBody UserUpdateDTO userDTO) {
-        Optional<User> userOptional = userService.update(userDTO, "");
+    public ResponseEntity<UserGeneralDTO> update(@RequestBody UserUpdateDTO userDTO) {
+        Optional<UserGeneralDTO> userOptional = userService.update(userDTO, "");
         return userOptional
                 .map(user -> new ResponseEntity<>(userOptional.get(), HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -109,26 +110,14 @@ public class UserController {
      * @return ответ сервера
      */
     @GetMapping("/all")
-    public ResponseEntity<List<User>> findAll() {
-        List<User> userList = userService.findAll();
+    public ResponseEntity<List<UserGeneralDTO>> findAll() {
+        List<UserGeneralDTO> userList = userService.findAll();
         if (!userList.isEmpty()) {
             return new ResponseEntity<>(userList, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
-    /**
-     * Страница запуска рассылки напоминаний юзерам на их емайлы
-     * Данный метод, доступный только админу(через фильтр сервлетов),
-     *
-     * @return ответ сервера
-     */
-/*    @GetMapping("/remind-via-email")
-    public ResponseEntity<String> remindViaEmail() {
-        remindViaEmail.run();
-        return new ResponseEntity<>(HttpStatus.OK);
-    } */
 
     /**
      * Запрос, чтобы прислали на емайл код сброса пароля
@@ -152,8 +141,8 @@ public class UserController {
      * @return ответ сервера
      */
     @PostMapping("/reset_password")
-    public ResponseEntity<User> resetPass(HttpServletRequest request, @RequestBody UserUpdatePassDTO userDTO) {
-        Optional<User> updateUser = userService.updatePass(request, userDTO.getPassword(), userDTO.getResetPassword());
+    public ResponseEntity<UserGeneralDTO> resetPass(HttpServletRequest request, @RequestBody UserUpdatePassDTO userDTO) {
+        Optional<UserGeneralDTO> updateUser = userService.updatePass(request, userDTO.getPassword(), userDTO.getResetPassword());
         return updateUser
                 .map(user -> new ResponseEntity<>(updateUser.get(), HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE));

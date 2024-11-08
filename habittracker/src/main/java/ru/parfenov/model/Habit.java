@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ru.parfenov.converter.PeriodIntConverter;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -89,6 +90,7 @@ public class Habit {
      * Частота выполнений. Модно выставить от 1го дня до 90(Можно изменить в настройках)
      */
     @Column(name = "frequency")
+    @Convert(converter = PeriodIntConverter.class)
     private Period frequency;
 
     /**

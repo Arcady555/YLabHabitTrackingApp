@@ -2,9 +2,12 @@ package ru.parfenov.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.parfenov.dto.user.UserGeneralDTO;
 import ru.parfenov.dto.user.UserUpdateDTO;
+import ru.parfenov.dto.user.mapper.UserDTOMapper;
 import ru.parfenov.enums.user.Role;
 import ru.parfenov.model.User;
 import ru.parfenov.repository.UserRepository;
@@ -20,6 +23,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserServiceSpringImpl implements UserService {
     private final UserRepository repository;
+    private final PasswordEncoder passwordEncoder;
+    private final UserDTOMapper userDTOMapper;
 
     /**
      * (Если емайл юзера не уникален, уже зарегистрирован в приложении, то repository не сможет его
@@ -31,19 +36,20 @@ public class UserServiceSpringImpl implements UserService {
      * @return модель юзера в Optional
      */
     @Override
-    public Optional<User> createByReg(String email, String password, String name) {
-        Optional<User> result = Optional.empty();
+    public Optional<UserGeneralDTO> createByReg(String email, String password, String name) {
+        Optional<UserGeneralDTO> result = Optional.empty();
         if (Utility.validationEmail(email)) {
             String resetPassword = Utility.generateForResetPassword();
-            User user = repository.save(new User(0, email, password, resetPassword, name, Role.CLIENT, false));
-            if (findById(user.getId()).isPresent()) result = Optional.of(user);
+            User user = repository.save(new User(0, email, passwordEncoder.encode(password), resetPassword, name, Role.CLIENT, false));
+            if (findById(user.getId()).isPresent()) result = Optional.of(userDTOMapper.toUserGeneralDTO(user));
         }
         return result;
     }
 
     @Override
-    public Optional<User> findById(int userId) {
-        return repository.findById(userId);
+    public Optional<UserGeneralDTO> findById(int userId) {
+        Optional<User> userOptional = repository.findById(userId);
+        return userOptional.map(userGet -> userDTOMapper.toUserGeneralDTO(userOptional.get()));
     }
 
     @Override
@@ -57,8 +63,8 @@ public class UserServiceSpringImpl implements UserService {
     }
 
     @Override
-    public List<User> findAll() {
-        return repository.findAll();
+    public List<UserGeneralDTO> findAll() {
+        return userDTOMapper.toUserGeneralDTOList(repository.findAll());
     }
 
     @Override
@@ -70,7 +76,7 @@ public class UserServiceSpringImpl implements UserService {
     @Transactional
     public boolean delete(int userId) {
         boolean result = false;
-        Optional<User> user = findById(userId);
+        Optional<User> user = repository.findById(userId);
         if (user.isPresent()) {
             repository.delete(user.get());
             result = findById(userId).isEmpty();
@@ -79,7 +85,7 @@ public class UserServiceSpringImpl implements UserService {
     }
 
     @Override
-    public Optional<User> update(UserUpdateDTO userDTO, String resetPass) {
+    public Optional<UserGeneralDTO> update(UserUpdateDTO userDTO, String resetPass) {
         User user = null;
 
         int userId = userDTO.getId();
@@ -100,14 +106,14 @@ public class UserServiceSpringImpl implements UserService {
         }
 
         return user != null && checkUpdate(user, newPassword, resetPass, newName, newRoleStr, newBlock) ?
-                Optional.of(user) :
+                Optional.of(userDTOMapper.toUserGeneralDTO(user)) :
                 Optional.empty();
     }
 
     @Override
-    public Optional<User> updatePass(HttpServletRequest request, String newPassword, String resetPassword) {
-        Optional<User> result = Optional.empty();
-        Optional<User> userOptional = findByEmail(Utility.getUserEmail(request));
+    public Optional<UserGeneralDTO> updatePass(HttpServletRequest request, String newPassword, String resetPassword) {
+        Optional<UserGeneralDTO> result = Optional.empty();
+        Optional<User> userOptional = findByEmail(Utility.getUserEmail());
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             if (resetPassword.equals(user.getResetPassword())) {
@@ -120,9 +126,9 @@ public class UserServiceSpringImpl implements UserService {
     }
 
     @Override
-    public List<User> findByParameters(String role, String name, String blockStr) {
+    public List<UserGeneralDTO> findByParameters(String role, String name, String blockStr) {
         boolean block = "true".equals(blockStr);
-        return repository.findByParameters(role, name, blockStr, block);
+        return userDTOMapper.toUserGeneralDTOList(repository.findByParameters(role, name, blockStr, block));
     }
 
     private boolean checkUpdate(User user, String newPassword, String newResetPassword, String newName, String newUserRoleStr, String blocked) {

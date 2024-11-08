@@ -25,7 +25,7 @@ public class ResetPasswordViaEmail {
     private final SendViaEmail sendViaEmail;
 
     public void run() {
-        Optional<User> userOptional = userRepository.findByEmail(Utility.getUserEmail(request));
+        Optional<User> userOptional = userRepository.findByEmail(Utility.getUserEmail());
         if (userOptional.isPresent()) {
             try {
                 String subject = "Reset Your password";

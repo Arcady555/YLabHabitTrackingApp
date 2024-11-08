@@ -6,7 +6,6 @@ import ru.parfenov.dto.habit.HabitStatisticDTO;
 import ru.parfenov.dto.habit.HabitUpdateDTO;
 import ru.parfenov.model.Habit;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,11 +18,10 @@ public interface HabitService {
     /**
      * Создание привычки
      *
-     * @param request HTTP запрос
      * @param habitDTO Модель habit, обёрнутая в DTO
      * @return привычку, с данными, полученными при сохранении
      */
-    Optional<HabitGeneralDTO> create(HttpServletRequest request, HabitCreateDTO habitDTO);
+    Optional<HabitGeneralDTO> create(HabitCreateDTO habitDTO);
 
     /**
      * Удаление привычки
@@ -51,15 +49,13 @@ public interface HabitService {
     /**
      * Вывод списка привычек по юзеру, который их создал
      *
-     * @param request HTTP запрос
      * @return список привычек
      */
-    List<HabitGeneralDTO> findByUser(HttpServletRequest request);
+    List<HabitGeneralDTO> findByUser();
 
     /**
      * Поиск привычек юзера подпадающих под заданные параметры
      *
-     * @param request HTTP запрос
      * @param usefulness   полезность
      * @param active       активность
      * @param name         название
@@ -69,7 +65,6 @@ public interface HabitService {
      * @return список привычек
      */
     List<HabitGeneralDTO> findByParameters(
-            HttpServletRequest request,
             String usefulness,
             String active,
             String name,
@@ -81,36 +76,32 @@ public interface HabitService {
     /**
      * Выполнить привычку
      *
-     * @param request HTTP запрос
      * @param habitId ID привычки в строке
      * @return да или нет
      */
-    Optional<HabitGeneralDTO> perform(HttpServletRequest request, long habitId);
+    Optional<HabitGeneralDTO> perform(long habitId);
 
     /**
      * Редактировать-поменять данные привычки
      *
-     * @param request HTTP запрос
      * @param habitDTO DTO привычки под обновление
      * @return привычка с новыми данными, если получится
      */
-    Optional<HabitGeneralDTO> updateByUser(HttpServletRequest request, HabitUpdateDTO habitDTO);
+    Optional<HabitGeneralDTO> updateByUser(HabitUpdateDTO habitDTO);
 
     /**
      * Напоминание о выполнении привычек сегодня
      *
-     * @param request HTTP запрос
      * @return список привычек
      */
-    List<HabitGeneralDTO> todayPerforms(HttpServletRequest request);
+    List<HabitGeneralDTO> todayPerforms();
 
     /**
      * Вывод для юзера статистики по каждой его привычке
      *
-     * @param request HTTP запрос
      * @param dateFrom дата начала нужного периода
      * @param dateTo   дата конца нужного периода
      * @return список привычек со статистикой к каждой
      */
-    List<HabitStatisticDTO> statisticForUser(HttpServletRequest request, String dateFrom, String dateTo);
+    List<HabitStatisticDTO> statisticForUser(String dateFrom, String dateTo);
 }

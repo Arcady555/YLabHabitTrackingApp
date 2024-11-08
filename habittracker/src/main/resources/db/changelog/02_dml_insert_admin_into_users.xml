@@ -13,7 +13,7 @@
 
         <insert tableName="users" schemaName="ht_schema">
             <column name="email" value="admin@YLabHabitApp.com"/>
-            <column name="password" value="123"/>
+            <column name="password" value="$2a$10$JXHbANfjy5xamGGUT0o6puRub9o.J2HJI/7WnhE.61ZU427LhLsJO"/>
             <column name="reset_password" value="111"/>
             <column name="name" value="main admin"/>
             <column name="user_role" value="ADMIN"/>
