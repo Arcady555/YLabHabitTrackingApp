@@ -44,7 +44,7 @@
         </connectionSource>
     </appender>
     <!-- LOGGER -->
-   <logger name="console and file logger" level="INFO">
+    <logger name="console and file logger" level="INFO">
         <appender-ref ref="MyConsoleAppenderName" />
         <appender-ref ref="MyFileAppenderName" />
         <appender-ref ref="MyRollingFileAppenderName"/>

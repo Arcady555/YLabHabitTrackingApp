@@ -1,5 +1,6 @@
 package ru.parfenov.dto.user;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,9 +15,18 @@ import ru.parfenov.enums.user.Role;
 @Getter
 @Setter
 public class UserGeneralDTO {
+    @Schema(description = "Уникальный идентификатор юзера", example = "11", accessMode = Schema.AccessMode.READ_ONLY)
     private int id;
+
+    @Schema(description = "Емайл юзера", example = "user@mail.ru")
     private String email;
+
+    @Schema(description = "Имя юзера", example = "Вася", accessMode = Schema.AccessMode.READ_ONLY)
     private String name;
+
+    @Schema(description = "Роль юзера", allowableValues = {"ADMIN", "CLIENT"})
     private Role role;
+
+    @Schema(description = "Блокировка юзера")
     private boolean blocked;
 }

@@ -1,5 +1,7 @@
 package ru.parfenov.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/habits")
 @RequiredArgsConstructor
+@Tag(name = "Контроллер привычек", description = "служит для работы юзеров с привычками")
 public class HabitController {
     private final HabitService habitService;
 
@@ -29,6 +32,10 @@ public class HabitController {
      * @param habitDTO сущность Habit, обвёрнутая в DTO для подачи в виде Json
      * @return ответ сервера
      */
+    @Operation(
+            summary = "Создание",
+            description = "Создание привычки юзером, её сохранение в БД"
+    )
     @PostMapping("/create")
     @EnableParfenovCustomAspect
     public ResponseEntity<HabitGeneralDTO> create(@RequestBody HabitCreateDTO habitDTO) {
@@ -49,6 +56,10 @@ public class HabitController {
      * @param dateTo   конечная дата периода для вывода статистики
      * @return ответ сервера
      */
+    @Operation(
+            summary = "Статистика",
+            description = "Вывод списка привычек со статистикой по ним"
+    )
     @GetMapping("/statistic")
     @EnableParfenovCustomAspect
     public ResponseEntity<List<HabitStatisticDTO>> statistic(
@@ -69,6 +80,10 @@ public class HabitController {
      * @param habitId ID привычки
      * @return ответ сервера
      */
+    @Operation(
+            summary = "Выполнение",
+            description = "Выполнение юзером своей привычки"
+    )
     @PostMapping("/perform/{habitId}")
     @EnableParfenovCustomAspect
     public ResponseEntity<HabitGeneralDTO> perform(@PathVariable long habitId) {
@@ -85,6 +100,10 @@ public class HabitController {
      * @param habitDTO сущность Habit, обвёрнутая в DTO для подачи в виде Json
      * @return ответ сервера
      */
+    @Operation(
+            summary = "Обновление",
+            description = "Изменение юзером данных по своей привычке"
+    )
     @PostMapping("/update")
     @EnableParfenovCustomAspect
     public ResponseEntity<HabitGeneralDTO> update(@RequestBody HabitUpdateDTO habitDTO) {
@@ -107,6 +126,10 @@ public class HabitController {
      * @param frequency    частота выполнения в днях
      * @return ответ сервера
      */
+    @Operation(
+            summary = "Поиск по параметрам",
+            description = "Вывод списка своих привычек, отсортированных по указанным параметрам"
+    )
     @GetMapping("/your-list-by-param")
     @EnableParfenovCustomAspect
     public ResponseEntity<List<HabitGeneralDTO>> findByParam(
@@ -131,6 +154,10 @@ public class HabitController {
      *
      * @return ответ сервера
      */
+    @Operation(
+            summary = "Все привычки",
+            description = "Вывод списка своих привычек"
+    )
     @GetMapping("/your-all-list")
     @EnableParfenovCustomAspect
     public ResponseEntity<List<HabitGeneralDTO>> findYourAll() {
@@ -147,6 +174,10 @@ public class HabitController {
      *
      * @return ответ сервера
      */
+    @Operation(
+            summary = "Привычки на сегодня",
+            description = "Вывод своих привычек, намеченных на сегодня"
+    )
     @GetMapping("/your-today-list")
     @EnableParfenovCustomAspect
     public ResponseEntity<List<HabitGeneralDTO>> findTodayList() {

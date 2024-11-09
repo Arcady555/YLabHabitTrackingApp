@@ -1,5 +1,7 @@
 package ru.parfenov.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -13,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.parfenov.dto.user.UserGeneralDTO;
 import ru.parfenov.dto.user.UserSignUpDTO;
-import ru.parfenov.model.User;
 import ru.parfenov.security.JwtToken;
 import ru.parfenov.security.UserDetailsServiceImpl;
 import ru.parfenov.service.UserService;
@@ -23,6 +24,7 @@ import java.util.Optional;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "Контроллер входа в приложения", description = "служит для входа в приложение, первого и после регистрации")
 public class AuthController {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
@@ -37,6 +39,10 @@ public class AuthController {
      * @param userDTO сущность User, обвёрнутая в DTO для подачи в виде Json
      * @return ответ сервера
      */
+    @Operation(
+            summary = "Регистрация",
+            description = "Вход для регистрации"
+    )
     @PostMapping("/sign-up")
     public ResponseEntity<UserGeneralDTO> signUp(@RequestBody UserSignUpDTO userDTO) {
          Optional<UserGeneralDTO> userOptional =
@@ -60,6 +66,10 @@ public class AuthController {
      * @param userDTO сущность User, обвёрнутая в DTO для подачи в виде Json
      * @return ответ сервера
      */
+    @Operation(
+            summary = "Вход",
+            description = "Вход зарегистрированного юзера, получение токена"
+    )
     @PostMapping("/sign-in")
     public ResponseEntity<?> signIn(@RequestBody UserSignUpDTO userDTO) {
         try {

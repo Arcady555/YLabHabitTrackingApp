@@ -93,7 +93,10 @@ public class UserServiceSpringImpl implements UserService {
         Optional<User> newUserOptional = repository.findById(userId);
         if (newUserOptional.isPresent()) {
             User newUser = newUserOptional.get();
-            if (!newPassword.isEmpty()) newUser.setPassword(newPassword);
+            if (!newPassword.isEmpty()) {
+                newPassword = passwordEncoder.encode(newPassword);
+                newUser.setPassword(newPassword);
+            }
             if (!newName.isEmpty()) newUser.setName(newName);
             if (!newBlock.isEmpty()) newUser.setBlocked("true".equals(newBlock));
             if (newRole != null) newUser.setRole(newRole);

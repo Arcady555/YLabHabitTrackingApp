@@ -18,6 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 import static ru.parfenov.enums.user.Role.ADMIN;
+import static ru.parfenov.enums.user.Role.CLIENT;
 
 @Configuration
 @EnableWebSecurity
@@ -42,6 +43,10 @@ public class SecurityConfig {
                         req
                                 .requestMatchers("/sign-up", "/sign-in").permitAll()
                                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                                .requestMatchers(
+                                        "/users/request-password-reset",
+                                        "/users/reset_password"
+                                ).hasRole(CLIENT.name())
                                 .requestMatchers(
                                         "/users/**",
                                         "/audit/**"

@@ -1,5 +1,7 @@
 package ru.parfenov.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -17,11 +19,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/audit")
 @RequiredArgsConstructor
+@Tag(name = "Контроллер аудита", description = "служит для работы с логами юзеров, попавших в БД")
 public class AuditController {
     private final LogService logService;
 
     /**
-     * Данный метод, доступный только админу(через фильтр сервлетов), позволяет посмотреть те логи,
+     * Данный метод, доступный только админу(через SecurityFilterChain), позволяет посмотреть те логи,
      * которые сохранены в БД, отсортировав их по параметрам(указывать можно не все):
      *
      * @param userId       ID юзера
@@ -30,6 +33,10 @@ public class AuditController {
      * @param dateTimeTo   по какое время
      * @return ответ сервера в виде требуемого списка
      */
+    @Operation(
+            summary = "Поиск по параметрам",
+            description = "Вывод списка логов, отсортированных по указанным параметрам"
+    )
     @GetMapping("/find-by-parameters")
     public ResponseEntity<List<LogRecord>> findUsersByParam(
             @RequestParam(required = false) String userId,
