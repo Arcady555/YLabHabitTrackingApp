@@ -19,18 +19,13 @@ public class LogServiceSpringImpl implements LogService {
 
     @Override
     public List<LogRecord> findByParameters(String userEmail, String action, String dateTimeFromStr, String dateTimeToStr) {
-        List<LogRecord> result = Collections.emptyList();
+        List<LogRecord> result;
         if (userEmail.isEmpty() && action.isEmpty() && dateTimeFromStr.isEmpty() && dateTimeToStr.isEmpty()) {
-            return Collections.emptyList();
+            result = Collections.emptyList();
         } else {
-          //  try {
-               // long userId = Long.parseLong(userIdStr);
-                LocalDateTime dateTimeFrom = LocalDateTime.parse(dateTimeFromStr);
-                LocalDateTime dateTimeTo = LocalDateTime.parse(dateTimeToStr);
-                result = logRepository.findByParam(userEmail, action, dateTimeFrom, dateTimeTo);
-         //   } catch (Exception e) {
-           //     log.error("Not correct values for parsing!", e);
-           // }
+            LocalDateTime dateTimeFrom = LocalDateTime.parse(dateTimeFromStr);
+            LocalDateTime dateTimeTo = LocalDateTime.parse(dateTimeToStr);
+            result = logRepository.findByParam(userEmail, action, dateTimeFrom, dateTimeTo);
         }
         return result;
     }
