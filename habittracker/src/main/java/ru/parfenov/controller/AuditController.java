@@ -27,7 +27,7 @@ public class AuditController {
      * Данный метод, доступный только админу(через SecurityFilterChain), позволяет посмотреть те логи,
      * которые сохранены в БД, отсортировав их по параметрам(указывать можно не все):
      *
-     * @param userId       ID юзера
+     * @param userEmail       емайл юзера
      * @param action       его действие (название метода в блоке SERVICE)
      * @param dateTimeFrom с какого времени
      * @param dateTimeTo   по какое время
@@ -39,12 +39,12 @@ public class AuditController {
     )
     @GetMapping("/find-by-parameters")
     public ResponseEntity<List<LogRecord>> findUsersByParam(
-            @RequestParam(required = false) String userId,
+            @RequestParam(required = false) String userEmail,
             @RequestParam(required = false) String action,
             @RequestParam(required = false) String dateTimeFrom,
             @RequestParam(required = false) String dateTimeTo
     ) {
-        List<LogRecord> logsRecords = logService.findByParameters(userId, action, dateTimeFrom, dateTimeTo);
+        List<LogRecord> logsRecords = logService.findByParameters(userEmail, action, dateTimeFrom, dateTimeTo);
         return !logsRecords.isEmpty() ?
                 new ResponseEntity<>(logsRecords, HttpStatus.OK) :
                 new ResponseEntity<>(HttpStatus.BAD_REQUEST);

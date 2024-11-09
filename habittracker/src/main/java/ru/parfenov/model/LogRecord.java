@@ -28,9 +28,9 @@ public class LogRecord {
     private LocalDateTime dateTime;
 
     /**
-     * ID юзера, о котором запись
+     * емайл юзера, о котором запись
      */
-    private int userId;
+    private String userEmail;
 
     /**
      * Сообщение лога

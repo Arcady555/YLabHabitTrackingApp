@@ -13,7 +13,7 @@ public interface LogRepository extends CrudRepository<LogRecord, Integer> {
     /**
      * Вывод записей лога, которые ушли в базу данных, по параметрам
      *
-     * @param userId       ID юзера
+     * @param userEmail      емайл юзера
      * @param action       действие юзера
      * @param dateTimeFrom с какой даты-времени искать логи
      * @param dateTimeTo   по какую дату-время искать логи
@@ -21,12 +21,12 @@ public interface LogRepository extends CrudRepository<LogRecord, Integer> {
      */
 
     @Query("SELECT l FROM LogRecord l WHERE " +
-            "(:userId = 0 OR l.userId = :userId) AND " +
+            "(:userEmail = '' OR l.userEmail = :userEmail) AND " +
             "(:action = '' OR l.action LIKE CONCAT ('%', :action, '%')) AND" +
             "(CAST(:dateTimeFrom AS time) IS NULL OR l.dateTime > :dateTimeFrom) AND" +
             "(CAST(:dateTimeTo AS time) IS NULL OR l.dateTime < :dateTimeTo)")
     List<LogRecord> findByParam(
-            @Param("userId") long userId,
+            @Param("userEmail") String userEmail,
             @Param("action") String action,
             @Param("dateTimeFrom") LocalDateTime dateTimeFrom,
             @Param("dateTimeTo") LocalDateTime dateTimeTo
