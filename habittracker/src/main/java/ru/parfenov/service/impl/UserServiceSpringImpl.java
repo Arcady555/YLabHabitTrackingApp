@@ -124,8 +124,10 @@ public class UserServiceSpringImpl implements UserService {
     }
 
     @Override
-    public List<UserGeneralDTO> findByParameters(String role, String name, String blockStr) {
+    public List<UserGeneralDTO> findByParameters(String roleStr, String name, String blockStr) {
+        System.out.println("service start");
         boolean block = "true".equals(blockStr);
+        Role role = roleStr.isEmpty() ? null : ("ADMIN".equals(roleStr) ? Role.ADMIN : Role.CLIENT);
         return userDTOMapper.toUserGeneralDTOList(repository.findByParameters(role, name, blockStr, block));
     }
 

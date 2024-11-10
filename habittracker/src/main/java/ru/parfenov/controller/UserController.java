@@ -69,12 +69,13 @@ public class UserController {
             summary = "Поиск по параметрам",
             description = "Вывод списка юзеров, отсортированных по указанным параметрам"
     )
-    @GetMapping("/find-by_parameters")
+    @GetMapping("/find-by-parameters")
     public ResponseEntity<List<UserGeneralDTO>> findByParam(
             @RequestParam(required = false) String role,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String block
     ) {
+        System.out.println("contoller");
         List<UserGeneralDTO> userList = userService.findByParameters(role, name, block);
         if (userList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
