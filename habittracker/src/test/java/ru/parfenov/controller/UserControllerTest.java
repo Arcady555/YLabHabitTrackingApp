@@ -102,4 +102,21 @@ class UserControllerTest {
                         content().string("User is deleted")
                 );
     }
+
+    @Test
+    @WithMockUser(roles = {"ADMIN"})
+    @DisplayName("Проверка update()")
+    void update() throws Exception {
+        String json = "{\"id\": \"4\", \"password\": \"password45\", \"name\": \"user45\", \"role\": \"CLIENT\", \"blocked\": false}";
+        this.mockMvc.perform(post("/users/update").contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpectAll(
+                        status().isOk(),
+                        content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON),
+                        content().json("""
+                                {"id": 4, "email": "user4@mail.ru", "name": "user45", "role": "CLIENT", "blocked": false}
+                                """
+                        )
+                );
+    }
 }
