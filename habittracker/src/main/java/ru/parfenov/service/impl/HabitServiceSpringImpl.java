@@ -189,7 +189,7 @@ public class HabitServiceSpringImpl implements HabitService {
         List<HabitGeneralDTO> result = Collections.emptyList();
         Optional<User> userOptional = userService.findByEmail(Utility.getUserEmail());
         if (userOptional.isPresent()) {
-            result = dtoMapper.toHabitGeneralDTOList(repository.findByUserForToday(userOptional.get().getId()));
+            result = dtoMapper.toHabitGeneralDTOList(repository.findByUserForToday(userOptional.get()));
             for (HabitGeneralDTO habit : result) {
                 habit.setRemind(remind(habit.getId()));
             }

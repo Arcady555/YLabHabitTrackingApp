@@ -29,7 +29,7 @@ public class RemindViaEmail {
     public void run() {
         List<User> userList = userService.findAllForMail();
         for (User user : userList) {
-            List<Habit> todayHabitList = habitRepository.findByUserForToday(user.getId());
+            List<Habit> todayHabitList = habitRepository.findByUserForToday(user);
             if (todayHabitList.isEmpty()) {
                 continue;
             } else {

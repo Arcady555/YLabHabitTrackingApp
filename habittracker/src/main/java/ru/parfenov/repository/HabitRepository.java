@@ -35,11 +35,11 @@ public interface HabitRepository extends CrudRepository<Habit, Integer> {
     /**
      * Выборка из БД привычек по юзеру и по сегодняшней дате
      *
-     * @param userId ID юзера
+     * @param user сущность юзер
      * @return список привычек
      */
-    @Query("SELECT h FROM Habit h WHERE h.user = :userId AND h.active = true AND h.plannedNextPerform = current_date")
-    List<Habit> findByUserForToday(@Param("userId") int userId);
+    @Query("SELECT h FROM Habit h WHERE h.user = :user AND h.active = true AND h.plannedNextPerform = current_date")
+    List<Habit> findByUserForToday(@Param("user") User user);
 
     /**
      * Поиск привычки по её ID
