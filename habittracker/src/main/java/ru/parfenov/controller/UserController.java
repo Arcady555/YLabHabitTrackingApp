@@ -75,7 +75,6 @@ public class UserController {
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String block
     ) {
-        System.out.println("contoller");
         List<UserGeneralDTO> userList = userService.findByParameters(role, name, block);
         if (userList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

@@ -9,6 +9,8 @@ import ru.parfenov.dto.habit.HabitGeneralDTO;
 import ru.parfenov.dto.habit.HabitStatisticDTO;
 import ru.parfenov.dto.habit.HabitUpdateDTO;
 import ru.parfenov.dto.habit.mapper.HabitDTOMapper;
+import ru.parfenov.dto.user.UserGeneralDTO;
+import ru.parfenov.dto.user.mapper.UserDTOMapper;
 import ru.parfenov.model.Habit;
 import ru.parfenov.model.User;
 import ru.parfenov.repository.HabitRepository;
@@ -33,6 +35,7 @@ public class HabitServiceSpringImpl implements HabitService {
     private final HabitRepository repository;
     private final UserService userService;
     private final HabitDTOMapper dtoMapper;
+    private final UserDTOMapper userDTOMapper;
 
     @Override
     public Optional<HabitGeneralDTO> create(HabitCreateDTO habitDTO) {
@@ -57,7 +60,6 @@ public class HabitServiceSpringImpl implements HabitService {
             );
 
             Habit result = repository.save(habit);
-            System.out.println("finish");
             if (findById(result.getId()).isPresent()) {
                 resultDto = Optional.of(dtoMapper.toHabitGeneralDTO(result));
             }
@@ -79,8 +81,9 @@ public class HabitServiceSpringImpl implements HabitService {
     @Override
     @Transactional
     public boolean deleteWithUser(int userId) {
-        repository.deleteWithUser(userId);
-        return true;
+        Optional<User> userOptional = userService.findByIdForHabitService(userId);
+        userOptional.ifPresent(repository::deleteWithUser);
+        return findByUser().isEmpty();
     }
 
     @Override
@@ -256,12 +259,14 @@ public class HabitServiceSpringImpl implements HabitService {
      */
     private boolean validationPerform(User user, Habit habit) {
         boolean check1 = user.equals(habit.getUser());
-        LocalDate date =
+        LocalDate date1 =
                 habit.getPlannedPrevPerform() == null ?
                         habit.getPlannedFirstPerform() :
                         habit.getPlannedPrevPerform();
-        boolean check2 = LocalDate.now().isAfter(date) || LocalDate.now().isEqual(date);
-        return check1 && check2;
+        LocalDate date2 = habit.getPlannedNextPerform();
+        boolean check2 = LocalDate.now().isAfter(date1) || LocalDate.now().isEqual(date1);
+        boolean check3 = LocalDate.now().isEqual(date2) || LocalDate.now().isAfter(date2);
+        return check1 && check2 && check3;
     }
 
     private boolean checkUpdate(Habit habit, String newUsefulness, String newActive, String newName, String newDescription, int newFrequency) {

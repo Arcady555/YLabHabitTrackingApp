@@ -84,7 +84,7 @@ public class HabitController {
             summary = "Выполнение",
             description = "Выполнение юзером своей привычки"
     )
-    @PostMapping("/perform/{habitId}")
+    @GetMapping("/perform/{habitId}")
     @EnableParfenovCustomAspect
     public ResponseEntity<HabitGeneralDTO> perform(@PathVariable long habitId) {
         Optional<HabitGeneralDTO> result = habitService.perform(habitId);

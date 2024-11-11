@@ -53,6 +53,11 @@ public class UserServiceSpringImpl implements UserService {
     }
 
     @Override
+    public Optional<User> findByIdForHabitService(int userId) {
+        return repository.findById(userId);
+    }
+
+    @Override
     public Optional<User> findByEmail(String email) {
         return repository.findByEmail(email);
     }
@@ -70,13 +75,8 @@ public class UserServiceSpringImpl implements UserService {
     @Override
     @Transactional
     public boolean delete(int userId) {
-        boolean result = false;
-        Optional<User> user = repository.findById(userId);
-        if (user.isPresent()) {
-            repository.delete(user.get());
-            result = findById(userId).isEmpty();
-        }
-        return result;
+        repository.deleteById(userId);
+        return findById(userId).isEmpty();
     }
 
     @Override
@@ -125,7 +125,6 @@ public class UserServiceSpringImpl implements UserService {
 
     @Override
     public List<UserGeneralDTO> findByParameters(String roleStr, String name, String blockStr) {
-        System.out.println("service start");
         boolean block = "true".equals(blockStr);
         Role role = roleStr.isEmpty() ? null : ("ADMIN".equals(roleStr) ? Role.ADMIN : Role.CLIENT);
         return userDTOMapper.toUserGeneralDTOList(repository.findByParameters(role, name, blockStr, block));

@@ -32,6 +32,8 @@ public interface UserService {
      */
     Optional<UserGeneralDTO> findById(int userId);
 
+    Optional<User> findByIdForHabitService(int userId);
+
     /**
      * Поиск юзера по его емайл
      *

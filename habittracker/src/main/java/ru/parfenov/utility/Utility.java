@@ -43,7 +43,7 @@ public class Utility {
      */
     public static void setPlannedNextPerform(Habit habit) {
         LocalDate date = habit.getPlannedPrevPerform() != null ? habit.getPlannedPrevPerform() : habit.getPlannedFirstPerform();
-        while (date.isBefore(LocalDate.now())) {
+        while (date.isEqual(LocalDate.now())) {
             date = date.plus(habit.getFrequency());
         }
         habit.setPlannedNextPerform(date);
@@ -63,7 +63,6 @@ public class Utility {
      */
     public static String getUserEmail() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println(authentication.getName());
         return authentication.getName();
     }
 }

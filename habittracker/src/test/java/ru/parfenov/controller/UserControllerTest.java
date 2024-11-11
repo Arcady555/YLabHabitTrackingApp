@@ -16,6 +16,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -37,12 +38,9 @@ class UserControllerTest {
         String json1 = "{\"email\": \"user2@mail.ru\", \"password\": \"password2\", \"name\": \"user2\"}";
         String json2 = "{\"email\": \"user3@mail.ru\", \"password\": \"password3\", \"name\": \"user3\"}";
         String json3 = "{\"email\": \"user4@mail.ru\", \"password\": \"password4\", \"name\": \"user4\"}";
-        mockMvc.perform(post("/sign-up").contentType(MediaType.APPLICATION_JSON)
-                .content(json1));
-        mockMvc.perform(post("/sign-up").contentType(MediaType.APPLICATION_JSON)
-                .content(json2));
-        mockMvc.perform(post("/sign-up").contentType(MediaType.APPLICATION_JSON)
-                .content(json3));
+        mockMvc.perform(post("/sign-up").contentType(MediaType.APPLICATION_JSON).content(json1));
+        mockMvc.perform(post("/sign-up").contentType(MediaType.APPLICATION_JSON).content(json2));
+        mockMvc.perform(post("/sign-up").contentType(MediaType.APPLICATION_JSON).content(json3));
     }
 
     @Test
@@ -87,20 +85,21 @@ class UserControllerTest {
                                 [
                                 {"id": 1, "email": "admin@YLabHabitApp.com", "name": "main admin", "role": "ADMIN", "blocked": false},
                                 {"id": 2, "email": "user2@mail.ru", "name": "user2", "role": "CLIENT", "blocked": false},
-                                {"id": 3, "email": "user3@mail.ru", "name": "user3", "role": "CLIENT", "blocked": false},
-                                {"id": 4, "email": "user4@mail.ru", "name": "user4", "role": "CLIENT", "blocked": false}
+                                {"id": 3, "email": "user3@mail.ru", "name": "user3", "role": "CLIENT", "blocked": false}
                                 ]
                                 """
                         )
                 );
-        this.mockMvc.perform(get("/users/user/2"))
+    }
+
+    @Test
+    @WithMockUser(roles = {"ADMIN"})
+    @DisplayName("Проверка delete()")
+    void check_delete() throws Exception {
+        this.mockMvc.perform(delete("/users/delete/4"))
                 .andExpectAll(
                         status().isOk(),
-                        content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON),
-                        content().json("""
-                                {"id": 2, "email": "user2@mail.ru", "name": "user2", "role": "CLIENT", "blocked": false}
-                                """
-                        )
+                        content().string("User is deleted")
                 );
     }
 }

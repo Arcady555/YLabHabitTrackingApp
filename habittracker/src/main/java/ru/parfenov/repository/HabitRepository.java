@@ -1,8 +1,10 @@
 package ru.parfenov.repository;
 
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 import ru.parfenov.model.Habit;
 import ru.parfenov.model.User;
 
@@ -15,10 +17,12 @@ public interface HabitRepository extends CrudRepository<Habit, Integer> {
 
     /**
      * Удаление из БД всех привычек, связанных с данным юзером
-     * @param userId ID юзера
+     * @param user  сущность юзер
      */
-    @Query("DELETE FROM Habit h WHERE h.user = :userId")
-    void deleteWithUser(@Param("userId") int userId);
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM Habit h WHERE h.user = :user")
+    void deleteWithUser(@Param("user") User user);
 
     /**
      * Поиск списка привычек по их создателю-юзеру
