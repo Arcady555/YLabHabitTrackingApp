@@ -26,11 +26,9 @@
         <mapstruct.version>1.6.0.Beta1</mapstruct.version>
         <javax.mail.version>1.6.2</javax.mail.version>
         <junit.jupiter.version>5.10.1</junit.jupiter.version>
-        <mockito.version>5.2.0</mockito.version>
         <io.jsonwebtoken.version>0.11.5</io.jsonwebtoken.version>
         <parfenovstarter.version>1.0.0</parfenovstarter.version>
         <springdoc.openapi.version>2.2.0</springdoc.openapi.version>
-        <h2.version>2.3.232</h2.version>
     </properties>
 
     <dependencies>
@@ -133,12 +131,6 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
             <scope>test</scope>
         </dependency>
 
