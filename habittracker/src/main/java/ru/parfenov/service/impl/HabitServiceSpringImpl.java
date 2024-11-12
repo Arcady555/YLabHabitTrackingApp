@@ -232,7 +232,7 @@ public class HabitServiceSpringImpl implements HabitService {
             Period frequency = Period.ofDays(frequencyInt);
             result = dtoMapper.toHabitGeneralDTOList(
                     repository.findByParameters(
-                            userOptional.get().getId(),
+                            userOptional.get(),
                             usefulnessStr,
                             usefulness,
                             activeStr,

@@ -52,9 +52,11 @@ public interface HabitRepository extends CrudRepository<Habit, Integer> {
     /**
      * Поиск привычек юзера подпадающих под заданные параметры
      *
-     * @param userId ID юзера
+     * @param user юзер
      * @param usefulness   полезность
+     * @param usefulnessStr флажок, если этот параметр не задан, то параметр usefulness в поиске не участвует
      * @param active       активность
+     * @param activeStr флажок, если этот параметр не задан, то параметр active в поиске не участвует
      * @param name         название
      * @param description  описание
      * @param dateOfCreate дата создания
@@ -62,15 +64,15 @@ public interface HabitRepository extends CrudRepository<Habit, Integer> {
      * @return список привычек
      */
     @Query("SELECT h FROM Habit h WHERE " +
-            "h.user = :userId AND " +
+            "h.user = :user AND " +
             "(:usefulnessStr = '' OR h.useful = :usefulness) AND " +
             "(:activeStr = '' OR h.active = :active) AND " +
             "(:name IS NULL OR h.name = :name) AND " +
-            "(:description IS NULL OR h.description = :description) AND " +
+            "(:description IS NULL OR h.description LIKE CONCAT ('%', :description, '%')) AND " +
             "(CAST(:dateOfCreate AS date) IS NULL OR h.dateOfCreate = :dateOfCreate) AND " +
             "(CAST(:frequency AS int) = 0 OR h.frequency = :frequency)")
     List<Habit> findByParameters(
-            @Param("userId") int userId,
+            @Param("user") User user,
             @Param("usefulnessStr") String usefulnessStr,
             @Param("usefulness") boolean usefulness,
             @Param("activeStr") String activeStr,

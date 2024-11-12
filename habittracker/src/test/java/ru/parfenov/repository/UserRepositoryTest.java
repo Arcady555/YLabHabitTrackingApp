@@ -79,4 +79,24 @@ class UserRepositoryTest {
         Assertions.assertEquals(foundedUser.getRole(), Role.CLIENT);
         Assertions.assertFalse(foundedUser.isBlocked());
     }
+
+    @Test
+    @DisplayName("Проверка findByParameters()")
+    void whenFindByParametersThanOk() {
+        User foundUser = userRepository.findByParameters(
+                        Role.CLIENT,
+                        "user2",
+                        "",
+                        true
+                )
+                .get(0);
+        Assertions.assertEquals(foundUser.getId(), 2);
+        Assertions.assertEquals(foundUser.getEmail(), "user2@mail.ru");
+        Assertions.assertFalse(foundUser.isBlocked());
+        Assertions.assertEquals(foundUser.getPassword(), "password2");
+        Assertions.assertEquals(foundUser.getResetPassword(), "1111");
+        Assertions.assertEquals(foundUser.getName(), "user2");
+        Assertions.assertEquals(foundUser.getRole(), Role.CLIENT);
+        Assertions.assertFalse(foundUser.isBlocked());
+    }
 }

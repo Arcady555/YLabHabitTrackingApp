@@ -117,4 +117,34 @@ class HabitRepositoryTest {
         Assertions.assertEquals(foundedHabits.get(0).getPerformsAmount(), 0);
     }
 
+    @Test
+    @DisplayName("Проверка findByParameters()")
+    void whenFindByParametersThanOk() {
+        Habit foundedHabit = habitRepository.findByParameters(
+                user,
+                "",
+                false,
+                "active",
+                true,
+                "run",
+                "ru",
+                LocalDate.now(),
+                Period.ofDays(10)
+                )
+                .get(0);
+        Assertions.assertEquals(foundedHabit.getId(), 1);
+        Assertions.assertEquals(foundedHabit.getUser().getEmail(), user.getEmail());
+        Assertions.assertTrue(foundedHabit.isUseful());
+        Assertions.assertTrue(foundedHabit.isActive());
+        Assertions.assertEquals(foundedHabit.getStreaksAmount(), 1);
+        Assertions.assertEquals(foundedHabit.getName(), "run");
+        Assertions.assertEquals(foundedHabit.getDescription(), "run everyday");
+        Assertions.assertEquals(foundedHabit.getDateOfCreate(), LocalDate.now());
+        Assertions.assertEquals(foundedHabit.getPlannedFirstPerform(), LocalDate.now());
+        Assertions.assertNull(foundedHabit.getPlannedPrevPerform());
+        Assertions.assertEquals(foundedHabit.getPlannedNextPerform(), LocalDate.now());
+        Assertions.assertNull(foundedHabit.getLastRealPerform());
+        Assertions.assertEquals(foundedHabit.getFrequency(), Period.of(0, 0, 10));
+        Assertions.assertEquals(foundedHabit.getPerformsAmount(), 0);
+    }
 }

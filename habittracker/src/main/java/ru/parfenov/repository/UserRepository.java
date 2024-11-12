@@ -25,6 +25,7 @@ public interface UserRepository extends CrudRepository<User, Integer> {
      * @param role  роль юзера
      * @param name  имя юзера
      * @param block заблокирован ли он
+     * @param blockStr флажок, если этот параметр не задан, то параметр block в поиске не участвует
      * @return список юзеров по данным параметрам
      */
     @Query("SELECT u FROM User u WHERE " +
