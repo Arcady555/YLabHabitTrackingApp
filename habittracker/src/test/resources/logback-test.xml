@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <!-- IMPORT PROPERTIES -->
-    <property resource="application.properties" />
+    <property resource="application.yml" />
     <!-- CONSOLE APPENDER -->
     <appender name="MyConsoleAppenderName" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">

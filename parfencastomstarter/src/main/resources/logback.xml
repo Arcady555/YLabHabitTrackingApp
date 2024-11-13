@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <!-- IMPORT PROPERTIES -->
-    <property resource="application.properties" />
+    <property resource="application.yml" />
+    <springProperty name = "url" source= "spring.datasource.url"/>
+    <springProperty name = "username" source= "spring.datasource.username"/>
+    <springProperty name = "password" source= "spring.datasource.password"/>
+    <springProperty name = "driver" source= "spring.datasource.driver-class-name"/>
     <!-- CONSOLE APPENDER -->
     <appender name="MyConsoleAppenderName" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
@@ -37,10 +41,10 @@
     <!-- DATABASE APPENDER -->
     <appender name="MyDBAppenderName" class="ru.parfenov.appender.MyDBAppender">
         <connectionSource class="ch.qos.logback.core.db.DriverManagerConnectionSource">
-            <url> ${spring.datasource.url} </url>
-            <user> ${spring.datasource.username} </user>
-            <password> ${spring.datasource.password} </password>
-            <driverClass> ${spring.datasource.driver-class-name} </driverClass>
+            <url>${url}</url>
+            <user>${username}</user>
+            <password>${password}</password>
+            <driverClass>${driver}</driverClass>
         </connectionSource>
     </appender>
     <!-- LOGGER -->
