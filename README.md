@@ -7,7 +7,7 @@
 2. [ДЗ №2](https://github.com/Arcady555/YLabHabitTrackingApp/tree/homework2)
 3. [ДЗ №3](https://github.com/Arcady555/YLabHabitTrackingApp/tree/homework3)
 4. [ДЗ №4](https://github.com/Arcady555/YLabHabitTrackingApp/tree/homework4)
-5. [ДЗ №5](https://github.com/Arcady555/YLabHabitTrackingApp/pull/5)  (pull request)
+5. [ДЗ №4](https://github.com/Arcady555/YLabHabitTrackingApp/tree/homework5)
 
 
 
