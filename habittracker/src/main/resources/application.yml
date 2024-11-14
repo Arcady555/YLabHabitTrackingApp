@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: YLabHabitTracker
+  datasource:
+    url: 'jdbc:postgresql://localhost:5432/y_lab_habit_tracker'
+    username: 'role_arcady'
+    password: '8210'
+    driver-class-name: 'org.postgresql.Driver'
+  jpa:
+    show-sql: true
+  liquibase:
+    change-log: classpath:/db/changelog/changelog-master.xml
+jwt:
+  secret: 984hg493gh0439rthr0429uruj2309yh937gc763fe87t3f89723gf
+  lifetime: 604800000
+emailInfoApp: info@YLabHabitApp.com
+emailInfoPass: password
+hostForSending: smtp.mail.ru
+server:
+  port: 8080
+  contextPath: /
+logging:
+  level:
+    org:
+      springframework: INFO
+    liquibase: error
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
