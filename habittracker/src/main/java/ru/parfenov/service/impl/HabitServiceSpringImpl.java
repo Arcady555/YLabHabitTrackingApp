@@ -9,8 +9,6 @@ import ru.parfenov.dto.habit.HabitGeneralDTO;
 import ru.parfenov.dto.habit.HabitStatisticDTO;
 import ru.parfenov.dto.habit.HabitUpdateDTO;
 import ru.parfenov.dto.habit.mapper.HabitDTOMapper;
-import ru.parfenov.dto.user.UserGeneralDTO;
-import ru.parfenov.dto.user.mapper.UserDTOMapper;
 import ru.parfenov.model.Habit;
 import ru.parfenov.model.User;
 import ru.parfenov.repository.HabitRepository;
@@ -35,7 +33,6 @@ public class HabitServiceSpringImpl implements HabitService {
     private final HabitRepository repository;
     private final UserService userService;
     private final HabitDTOMapper dtoMapper;
-    private final UserDTOMapper userDTOMapper;
 
     @Override
     public Optional<HabitGeneralDTO> create(HabitCreateDTO habitDTO) {
