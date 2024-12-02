@@ -1,3 +1,9 @@
+package Easy;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Roman numerals are represented by seven different symbols: I, V, X, L, C, D and M.
  *
